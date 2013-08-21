@@ -29,7 +29,7 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kuser.h>
-#include <kemailsettings.h>
+// #include <kemailsettings.h>
 
 #include <QLineEdit>
 #include <QStackedWidget>
@@ -84,8 +84,8 @@ KoConfigAuthorPage::KoConfigAuthorPage()
     aUi->leFullName->setText(user.property(KUser::FullName).toString());
     aUi->lePhoneWork->setText(user.property(KUser::WorkPhone).toString());
     aUi->lePhoneHome->setText(user.property(KUser::HomePhone).toString());
-    KEMailSettings eMailSettings;
-    aUi->leEmail->setText(eMailSettings.getSetting(KEMailSettings::EmailAddress));
+//     KEMailSettings eMailSettings;
+//     aUi->leEmail->setText(eMailSettings.getSetting(KEMailSettings::EmailAddress));
     d->profileUiList.append(aUi);
 
     // Add all the user defined profiles
