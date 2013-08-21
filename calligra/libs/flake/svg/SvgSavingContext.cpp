@@ -165,7 +165,7 @@ QString SvgSavingContext::createFileName(const QString &extension)
     // check if file exists already
     int i = 0;
     // change filename as long as the filename already exists
-    while (KIO::NetAccess::exists(url, KIO::NetAccess::DestinationSide, 0))
+    while (QFile(url.toLocalFile()).exists())
         url.setFileName(fname + QString("_%1").arg(++i) + extension);
 
     return url.fileName();
@@ -198,8 +198,7 @@ QString SvgSavingContext::saveImage(const QImage &image)
             QString dstFilename = createFileName(ext);
 
             // move the temp file to the destination directory
-            KIO::Job * job = KIO::move(KUrl(imgFile.fileName()), KUrl(dstFilename));
-            if (job && KIO::NetAccess::synchronousRun(job, 0))
+            if ( QFile::rename(imgFile.fileName(), dstFilename) )
                 return dstFilename;
             else
                 KIO::NetAccess::removeTempFile(imgFile.fileName());
@@ -236,8 +235,7 @@ QString SvgSavingContext::saveImage(KoImageData *image)
             QString dstFilename = createFileName(ext);
 
             // move the temp file to the destination directory
-            KIO::Job * job = KIO::move(KUrl(imgFile.fileName()), KUrl(dstFilename));
-            if (job && KIO::NetAccess::synchronousRun(job, 0))
+            if ( QFile::rename(imgFile.fileName(), dstFilename) )
                 return dstFilename;
             else
                 KIO::NetAccess::removeTempFile(imgFile.fileName());
