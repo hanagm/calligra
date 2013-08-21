@@ -108,7 +108,8 @@ void CalendarTool::insertCalendar(const QDate &start, const QDate &end)
         }
     }
 
-    KCalendarSystem *cs = KCalendarSystem::create(KLocale::GregorianCalendar);
+    //KCalendarSystem *cs = KCalendarSystem::create(KLocale::GregorianCalendar);
+    KCalendarSystem *cs = KCalendarSystem::create();
 
     Q_ASSERT(cs);
 
@@ -149,7 +150,8 @@ void CalendarTool::insertCalendar(const QDate &start, const QDate &end)
 
         if (yearheader) {
             kDebug() << "inserting year" + QString::number(current.year());
-            setText(sheet, row, colstart + 6, cs->formatDate(current, KLocale::Year, KLocale::LongNumber));
+            //setText(sheet, row, colstart + 6, cs->formatDate(current, KLocale::Year, KLocale::LongNumber));
+            setText(sheet, row, colstart + 6, QString::number(current.year()));
 
             row += 2;
             yearheader = false;
