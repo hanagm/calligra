@@ -31,7 +31,7 @@
 #include <klocalizedstring.h>
 #include <QLineEdit>
 #include <ksqueezedtextlabel.h>
-#include <khistorycombobox.h>
+//#include <khistorycombobox.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kcolorscheme.h>
@@ -71,14 +71,14 @@ KoFindToolbar::KoFindToolbar(KoFindBase *finder, KActionCollection *ac, QWidget 
 
     layout->addWidget(new QLabel(i18nc("Label for the Find text input box", "Find:"), this), 0, 1, Qt::AlignRight);
 
-    d->searchLine = new KHistoryComboBox(true, this);
-    d->searchLine->setCompletedItems(d->searchCompletionItems);
-    d->searchLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    connect(d->searchLine, SIGNAL(editTextChanged(QString)), d->textTimeout, SLOT(start()));
-    connect(d->searchLine, SIGNAL(returnPressed()), d->finder, SLOT(findNext()));
-    connect(d->searchLine, SIGNAL(returnPressed(QString)), d->searchLine, SLOT(addToHistory(QString)));
-    connect(d->searchLine, SIGNAL(cleared()), finder, SLOT(finished()));
-    layout->addWidget(d->searchLine, 0, 2);
+//     d->searchLine = new KHistoryComboBox(true, this);
+//     d->searchLine->setCompletedItems(d->searchCompletionItems);
+//     d->searchLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+//     connect(d->searchLine, SIGNAL(editTextChanged(QString)), d->textTimeout, SLOT(start()));
+//     connect(d->searchLine, SIGNAL(returnPressed()), d->finder, SLOT(findNext()));
+//     connect(d->searchLine, SIGNAL(returnPressed(QString)), d->searchLine, SLOT(addToHistory(QString)));
+//     connect(d->searchLine, SIGNAL(cleared()), finder, SLOT(finished()));
+//     layout->addWidget(d->searchLine, 0, 2);
 
     d->nextButton = new QToolButton(this);
     d->nextButton->setIcon(koIcon("go-down-search"));
@@ -131,11 +131,11 @@ KoFindToolbar::KoFindToolbar(KoFindBase *finder, KActionCollection *ac, QWidget 
     d->replaceLabel = new QLabel(i18nc("Label for the Replace text input box", "Replace:"), this);
     layout->addWidget(d->replaceLabel, 1, 1, Qt::AlignRight);
 
-    d->replaceLine = new KHistoryComboBox(true, this);
-    d->replaceLine->setHistoryItems(d->replaceCompletionItems);
-    d->replaceLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    connect(d->replaceLine, SIGNAL(returnPressed()), this, SLOT(replace()));
-    layout->addWidget(d->replaceLine, 1, 2);
+//     d->replaceLine = new KHistoryComboBox(true, this);
+//     d->replaceLine->setHistoryItems(d->replaceCompletionItems);
+//     d->replaceLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+//     connect(d->replaceLine, SIGNAL(returnPressed()), this, SLOT(replace()));
+//     layout->addWidget(d->replaceLine, 1, 2);
 
     d->replaceButton = new QToolButton(this);
     d->replaceButton->setText(i18nc("Replace the current match", "Replace"));
@@ -172,14 +172,14 @@ KoFindToolbar::~KoFindToolbar()
 void KoFindToolbar::activateSearch()
 {
     d->replaceLabel->setVisible(false);
-    d->replaceLine->setVisible(false);
+//     d->replaceLine->setVisible(false);
     d->replaceButton->setVisible(false);
     d->replaceAllButton->setVisible(false);
 
     if(!isVisible()) {
         show();
     }
-    d->searchLine->setFocus();
+//     d->searchLine->setFocus();
 
     if(d->finder->matches().size() == 0) {
         d->textTimeout->start();
@@ -191,10 +191,10 @@ void KoFindToolbar::activateReplace()
     if(!isVisible()) {
         show();
     }
-    d->searchLine->setFocus();
+//     d->searchLine->setFocus();
 
     d->replaceLabel->setVisible(true);
-    d->replaceLine->setVisible(true);
+//     d->replaceLine->setVisible(true);
     d->replaceButton->setVisible(true);
     d->replaceAllButton->setVisible(true);
 
@@ -205,20 +205,20 @@ void KoFindToolbar::activateReplace()
 
 void KoFindToolbar::Private::matchFound()
 {
-    QPalette current = searchLine->palette();
-    KColorScheme::adjustBackground(current, KColorScheme::PositiveBackground);
-    searchLine->setPalette(current);
-    replaceLine->setPalette(current);
+//     QPalette current = searchLine->palette();
+//     KColorScheme::adjustBackground(current, KColorScheme::PositiveBackground);
+//     searchLine->setPalette(current);
+//     replaceLine->setPalette(current);
 
     information->setText(i18ncp("Total number of matches", "1 match found", "%1 matches found", finder->matches().count()));
 }
 
 void KoFindToolbar::Private::noMatchFound()
 {
-    QPalette current = searchLine->palette();
-    KColorScheme::adjustBackground(current, KColorScheme::NegativeBackground);
-    searchLine->setPalette(current);
-    replaceLine->setPalette(current);
+//     QPalette current = searchLine->palette();
+//     KColorScheme::adjustBackground(current, KColorScheme::NegativeBackground);
+//     searchLine->setPalette(current);
+//     replaceLine->setPalette(current);
 
     information->setText(i18n("No matches found"));
 }
@@ -234,7 +234,7 @@ void KoFindToolbar::Private::searchWrapped(bool direction)
 
 void KoFindToolbar::Private::addToHistory()
 {
-    searchLine->addToHistory(searchLine->currentText());
+//     searchLine->addToHistory(searchLine->currentText());
 }
 
 void KoFindToolbar::Private::find(const QString &pattern)
@@ -246,8 +246,8 @@ void KoFindToolbar::Private::find(const QString &pattern)
     } else {
         finder->finished();
         information->setText(QString());
-        searchLine->setPalette(qApp->palette());
-        replaceLine->setPalette(qApp->palette());
+//         searchLine->setPalette(qApp->palette());
+//         replaceLine->setPalette(qApp->palette());
     }
 }
 
@@ -256,25 +256,25 @@ void KoFindToolbar::Private::optionChanged()
     QAction *action = qobject_cast<QAction *>(q->sender());
     if(action) {
         finder->options()->setOptionValue(action->objectName(), action->isChecked());
-        find(searchLine->currentText());
+//         find(searchLine->currentText());
     }
 }
 
 void KoFindToolbar::Private::replace()
 {
-    finder->replaceCurrent(replaceLine->currentText());
-    replaceLine->addToHistory(replaceLine->currentText());
+//     finder->replaceCurrent(replaceLine->currentText());
+//     replaceLine->addToHistory(replaceLine->currentText());
 }
 
 void KoFindToolbar::Private::replaceAll()
 {
-    finder->replaceAll(replaceLine->currentText());
-    replaceLine->addToHistory(replaceLine->currentText());
+//     finder->replaceAll(replaceLine->currentText());
+//     replaceLine->addToHistory(replaceLine->currentText());
 }
 
 void KoFindToolbar::Private::inputTimeout()
 {
-    find(searchLine->currentText());
+//     find(searchLine->currentText());
 }
 
 #include "moc_KoFindToolbar.cpp"

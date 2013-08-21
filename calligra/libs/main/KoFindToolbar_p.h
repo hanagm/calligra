@@ -32,7 +32,7 @@
 #include <klocalizedstring.h>
 #include <QLineEdit>
 #include <ksqueezedtextlabel.h>
-#include <khistorycombobox.h>
+//#include <khistorycombobox.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kcolorscheme.h>
@@ -63,8 +63,8 @@ public:
     KoFindBase *finder;
 
     QToolButton *closeButton;
-    KHistoryComboBox *searchLine;
-    KHistoryComboBox *replaceLine;
+//    KHistoryComboBox *searchLine;
+//    KHistoryComboBox *replaceLine;
     QToolButton *previousButton;
     QToolButton *nextButton;
     QToolButton *optionsButton;
