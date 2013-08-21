@@ -96,7 +96,7 @@ KoDocumentInfoPropsPage::KoDocumentInfoPropsPage(KPropertiesDialog *props,
     Q_FOREACH(KPageWidgetItem* page, d->m_dlg->pages()) {
         KPageWidgetItem* myPage = new KPageWidgetItem(page->widget(), page->header());
         myPage->setIcon(page->icon());
-        props->addPage(myPage);
+//        props->addPage(myPage);
     }
 }
 
