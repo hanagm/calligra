@@ -106,10 +106,10 @@ KoRecentDocumentsPane::KoRecentDocumentsPane(QWidget* parent, const KComponentDa
             if (!url.isLocalFile() || QFile::exists(url.toLocalFile())) {
                 KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, url);
                 fileList.prepend(fileItem);
-                const QIcon icon = KIcon(fileItem.iconName());
-                KoFileListItem* item = new KoFileListItem(icon, name, fileItem);
-                item->setEditable(false);
-                rootItem->insertRow(0, item);
+//                 const QIcon icon = KIcon(fileItem.iconName());
+//                 KoFileListItem* item = new KoFileListItem(icon, name, fileItem);
+//                 item->setEditable(false);
+//                 rootItem->insertRow(0, item);
             }
         }
 
@@ -152,18 +152,18 @@ void KoRecentDocumentsPane::selectionChanged(const QModelIndex& index)
         QPixmap preview = item->data(PreviewRole).value<QPixmap>();
         if (preview.isNull()) {
             // need to fetch preview
-            const KFileItemList fileList = KFileItemList() << fileItem;
-#if KDE_IS_VERSION(4,6,80)
-            QStringList availablePlugins = KIO::PreviewJob::availablePlugins();
-            KIO::PreviewJob *previewJob = KIO::filePreview(fileList, QSize(PreviewExtent, PreviewExtent), &availablePlugins);
-#else
-            KIO::PreviewJob *previewJob = KIO::filePreview(fileList, PreviewExtent, PreviewExtent, 0);
-#endif
+//             const KFileItemList fileList = KFileItemList() << fileItem;
+// #if KDE_IS_VERSION(4,6,80)
+//             QStringList availablePlugins = KIO::PreviewJob::availablePlugins();
+//             KIO::PreviewJob *previewJob = KIO::filePreview(fileList, QSize(PreviewExtent, PreviewExtent), &availablePlugins);
+// #else
+//             KIO::PreviewJob *previewJob = KIO::filePreview(fileList, PreviewExtent, PreviewExtent, 0);
+// #endif
 
-            d->m_previewJobs.append(previewJob);
-            connect(previewJob, SIGNAL(result(KJob*)), SLOT(previewResult(KJob*)));
-            connect(previewJob, SIGNAL(gotPreview(KFileItem,QPixmap)),
-                    SLOT(updatePreview(KFileItem,QPixmap)));
+//             d->m_previewJobs.append(previewJob);
+//             connect(previewJob, SIGNAL(result(KJob*)), SLOT(previewResult(KJob*)));
+//             connect(previewJob, SIGNAL(gotPreview(KFileItem,QPixmap)),
+//                     SLOT(updatePreview(KFileItem,QPixmap)));
 
             // for now set preview to icon
             preview = item->icon().pixmap(PreviewExtent);
