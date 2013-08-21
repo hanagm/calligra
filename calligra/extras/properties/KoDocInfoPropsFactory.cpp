@@ -26,9 +26,10 @@
 static QObject* createDocInfoPropsPage(QWidget* w, QObject* parent, const QVariantList& args)
 {
     Q_UNUSED(w);
-    KPropertiesDialog* props = qobject_cast<KPropertiesDialog *>(parent);
-    Q_ASSERT(props);
-    return new KoDocumentInfoPropsPage(props, args);
+//     KPropertiesDialog* props = qobject_cast<KPropertiesDialog *>(parent);
+//     Q_ASSERT(props);
+//     return new KoDocumentInfoPropsPage(props, args);
+    return new KoDocumentInfoPropsPage(0, args);
 }
 
 K_PLUGIN_FACTORY_WITH_JSON(PropsDlgFactory, "calligradocinfopropspage.json", registerPlugin<KoDocumentInfoPropsPage>(QString(), createDocInfoPropsPage);)
