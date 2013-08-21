@@ -70,7 +70,7 @@
 #include <kactionmenu.h>
 #include <kactioncollection.h>
 #include <kfilewidget.h>
-#include <kurlcombobox.h>
+// #include <kurlcombobox.h>
 #include <kdiroperator.h>
 #include <QMenuBar>
 
@@ -1444,7 +1444,7 @@ public:
 
         KUrl url = m_fileWidget->dirOperator()->url();
         url.adjustPath(KUrl::AddTrailingSlash);
-        url.setFileName(m_fileWidget->locationEdit()->currentText());
+//         url.setFileName(m_fileWidget->locationEdit()->currentText());
         return url;
     }
     KoPageLayout pageLayout() const {
