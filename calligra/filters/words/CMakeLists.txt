@@ -33,17 +33,6 @@ TRY_RUN( MODERN_ICONV_RUN MODERN_ICONV_COMPILE
                      "-DINCLUDE_DIRECTORIES:STRING=${ICONV_INCLUDE_DIR}"
          COMPILE_DEFINITIONS ${ICONV_COMPILE_DEFINITIONS} )
 
-IF( MODERN_ICONV_RUN GREATER 0 OR NOT MODERN_ICONV_COMPILE )
-  MESSAGE( STATUS "wv2 depends on a modern iconv installation, supporting UNICODELITTLE and" )
-  MESSAGE( STATUS "UNICODEBIG. The detected iconv version doesn't support these conversions." )
-  MESSAGE( STATUS "" )
-  MESSAGE( STATUS "Please get a new libiconv from http://www.gnu.org/software/libiconv/" )
-  MESSAGE( STATUS "You might want to install the library to some alternative directory, in" )
-  MESSAGE( STATUS "order not to overwrite your current installation. Please use the options" )
-  MESSAGE( STATUS "-DICONV_INCLUDE_DIR=DIR and -DICONV_LIBRARIES=DIR to specify the location." )
-  MESSAGE( STATUS "" )
-  set(ICONV_FOUND FALSE)
-ENDIF( MODERN_ICONV_RUN GREATER 0 OR NOT MODERN_ICONV_COMPILE )
 
 
 include_directories(${KOMAIN_INCLUDES} )
