@@ -32,7 +32,7 @@
 #include "KoDocumentEntry.h"
 #include "KoDocument.h"
 #include "KoMainWindow.h"
-#include "KoAutoSaveRecoveryDialog.h"
+//#include "KoAutoSaveRecoveryDialog.h"
 #include <KoDpi.h>
 #include "KoPart.h"
 
@@ -316,23 +316,23 @@ bool KoApplication::start()
         }
 
         // Allow the user to make their selection
-        if (autoSaveFiles.size() > 0) {
-            KoAutoSaveRecoveryDialog dlg(autoSaveFiles);
-            if (dlg.exec() == QDialog::Accepted) {
-                QStringList filesToRecover = dlg.recoverableFiles();
-                foreach (const QString &autosaveFile, autoSaveFiles) {
-                    if (!filesToRecover.contains(autosaveFile)) {
-                        // remove the files the user didn't want to recover
-                        QFile::remove(QDir::homePath() + "/" + autosaveFile);
-                    }
-                }
-                autoSaveFiles = filesToRecover;
-            }
-            else {
-                // don't recover any of the files, but don't delete them either
-                autoSaveFiles.clear();
-            }
-        }
+//         if (autoSaveFiles.size() > 0) {
+//             KoAutoSaveRecoveryDialog dlg(autoSaveFiles);
+//             if (dlg.exec() == QDialog::Accepted) {
+//                 QStringList filesToRecover = dlg.recoverableFiles();
+//                 foreach (const QString &autosaveFile, autoSaveFiles) {
+//                     if (!filesToRecover.contains(autosaveFile)) {
+//                         // remove the files the user didn't want to recover
+//                         QFile::remove(QDir::homePath() + "/" + autosaveFile);
+//                     }
+//                 }
+//                 autoSaveFiles = filesToRecover;
+//             }
+//             else {
+//                 // don't recover any of the files, but don't delete them either
+//                 autoSaveFiles.clear();
+//             }
+//         }
 
         if (autoSaveFiles.size() > 0) {
             short int numberOfOpenDocuments = 0; // number of documents open

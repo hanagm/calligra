@@ -21,7 +21,7 @@
 
 #include <KoStore.h>
 
-#include <kwidgetitemdelegate.h>
+//#include <kwidgetitemdelegate.h>
 #include <klocale.h>
 
 #include <QVBoxLayout>
@@ -51,79 +51,79 @@ struct FileItem {
     bool checked;
 };
 
-class FileItemDelegate : public KWidgetItemDelegate
-{
-public:
-
-    FileItemDelegate(QAbstractItemView *itemView, KoAutoSaveRecoveryDialog *dlg)
-        : KWidgetItemDelegate(itemView, dlg)
-        , m_parent(dlg)
-    {
-    }
-
-    QList<QWidget*> createItemWidgets() const
-    {
-        // a lump of coal and a piece of elastic will get you through the world
-        QModelIndex idx = property("goya:creatingWidgetForIndex").value<QModelIndex>();
-
-        QWidget *page = new QWidget;
-        QHBoxLayout *layout = new QHBoxLayout(page);
-
-        QCheckBox *checkBox = new QCheckBox;
-        checkBox->setProperty("fileitem", idx.data());
-
-        connect(checkBox, SIGNAL(toggled(bool)), m_parent, SLOT(toggleFileItem(bool)));
-        QLabel *thumbnail = new QLabel;
-        QLabel *filename = new QLabel;
-        QLabel *dateModified = new QLabel;
-
-        layout->addWidget(checkBox);
-        layout->addWidget(thumbnail);
-        layout->addWidget(filename);
-        layout->addWidget(dateModified);
-
-        page->setFixedSize(600, 200);
-
-        return QList<QWidget*>() << page;
-    }
-
-    void updateItemWidgets(const QList<QWidget*> widgets,
-                           const QStyleOptionViewItem &option,
-                           const QPersistentModelIndex &index) const
-    {
-        FileItem *fileItem = (FileItem*)index.data().value<void*>();
-
-        QWidget* page= widgets[0];
-        QHBoxLayout* layout = qobject_cast<QHBoxLayout*>(page->layout());
-        QCheckBox *checkBox = qobject_cast<QCheckBox*>(layout->itemAt(0)->widget());
-        QLabel *thumbnail = qobject_cast<QLabel*>(layout->itemAt(1)->widget());
-        QLabel *filename = qobject_cast<QLabel*>(layout->itemAt(2)->widget());
-        QLabel *modified = qobject_cast<QLabel*>(layout->itemAt(3)->widget());
-
-        checkBox->setChecked(fileItem->checked);
-        thumbnail->setPixmap(QPixmap::fromImage(fileItem->thumbnail));
-        filename->setText(fileItem->name);
-        modified->setText(fileItem->date);
-
-        // move the page _up_ otherwise it will draw relative to the actual postion
-        page->setGeometry(option.rect.translated(0, -option.rect.y()));
-    }
-
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &/*index*/) const
-    {
-        //paint background for selected or hovered item
-        QStyleOptionViewItemV4 opt = option;
-        itemView()->style()->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, 0);
-    }
-
-    QSize sizeHint(const QStyleOptionViewItem&, const QModelIndex&) const
-    {
-        return QSize(600, 200);
-    }
-
-
-    KoAutoSaveRecoveryDialog *m_parent;
-};
+// class FileItemDelegate : public KWidgetItemDelegate
+// {
+// public:
+// 
+//     FileItemDelegate(QAbstractItemView *itemView, KoAutoSaveRecoveryDialog *dlg)
+//         : KWidgetItemDelegate(itemView, dlg)
+//         , m_parent(dlg)
+//     {
+//     }
+// 
+//     QList<QWidget*> createItemWidgets() const
+//     {
+//         // a lump of coal and a piece of elastic will get you through the world
+//         QModelIndex idx = property("goya:creatingWidgetForIndex").value<QModelIndex>();
+// 
+//         QWidget *page = new QWidget;
+//         QHBoxLayout *layout = new QHBoxLayout(page);
+// 
+//         QCheckBox *checkBox = new QCheckBox;
+//         checkBox->setProperty("fileitem", idx.data());
+// 
+//         connect(checkBox, SIGNAL(toggled(bool)), m_parent, SLOT(toggleFileItem(bool)));
+//         QLabel *thumbnail = new QLabel;
+//         QLabel *filename = new QLabel;
+//         QLabel *dateModified = new QLabel;
+// 
+//         layout->addWidget(checkBox);
+//         layout->addWidget(thumbnail);
+//         layout->addWidget(filename);
+//         layout->addWidget(dateModified);
+// 
+//         page->setFixedSize(600, 200);
+// 
+//         return QList<QWidget*>() << page;
+//     }
+// 
+//     void updateItemWidgets(const QList<QWidget*> widgets,
+//                            const QStyleOptionViewItem &option,
+//                            const QPersistentModelIndex &index) const
+//     {
+//         FileItem *fileItem = (FileItem*)index.data().value<void*>();
+// 
+//         QWidget* page= widgets[0];
+//         QHBoxLayout* layout = qobject_cast<QHBoxLayout*>(page->layout());
+//         QCheckBox *checkBox = qobject_cast<QCheckBox*>(layout->itemAt(0)->widget());
+//         QLabel *thumbnail = qobject_cast<QLabel*>(layout->itemAt(1)->widget());
+//         QLabel *filename = qobject_cast<QLabel*>(layout->itemAt(2)->widget());
+//         QLabel *modified = qobject_cast<QLabel*>(layout->itemAt(3)->widget());
+// 
+//         checkBox->setChecked(fileItem->checked);
+//         thumbnail->setPixmap(QPixmap::fromImage(fileItem->thumbnail));
+//         filename->setText(fileItem->name);
+//         modified->setText(fileItem->date);
+// 
+//         // move the page _up_ otherwise it will draw relative to the actual postion
+//         page->setGeometry(option.rect.translated(0, -option.rect.y()));
+//     }
+// 
+//     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &/*index*/) const
+//     {
+//         //paint background for selected or hovered item
+//         QStyleOptionViewItemV4 opt = option;
+//         itemView()->style()->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, 0);
+//     }
+// 
+//     QSize sizeHint(const QStyleOptionViewItem&, const QModelIndex&) const
+//     {
+//         return QSize(600, 200);
+//     }
+// 
+// 
+//     KoAutoSaveRecoveryDialog *m_parent;
+// };
 
 class KoAutoSaveRecoveryDialog::FileItemModel : public QAbstractListModel
 {
@@ -193,8 +193,8 @@ KoAutoSaveRecoveryDialog::KoAutoSaveRecoveryDialog(const QStringList &filenames,
 
     m_listView = new QListView();
     m_listView->setAcceptDrops(false);
-    KWidgetItemDelegate *delegate = new FileItemDelegate(m_listView, this);
-    m_listView->setItemDelegate(delegate);
+    //KWidgetItemDelegate *delegate = new FileItemDelegate(m_listView, this);
+    //m_listView->setItemDelegate(delegate);
 
     QList<FileItem*> fileItems;
     foreach(const QString &filename, filenames) {
