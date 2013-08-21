@@ -145,6 +145,7 @@ words_export.h
 KWPage.h
 KWPageManager.h
 KWPageStyle.h
+KWPart.h
 Words.h
 KWCanvasBase.h
 KWCanvas.h
