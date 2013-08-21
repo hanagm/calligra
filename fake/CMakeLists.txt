@@ -1,0 +1,242 @@
+find_package(ZLIB)
+set_package_properties(ZLIB PROPERTIES DESCRIPTION "Support for gzip compressed files and data streams"
+                       URL "http://www.zlib.net"
+                       TYPE REQUIRED
+                       PURPOSE "Required by core Calligra kofake-library to read/write compressed zip archive files"
+                      )
+
+set(kofake_LIB_SRCS
+    karchive.cpp
+    kdatewidget.cpp
+    kbuttongroup.cpp
+    kcomponentdata.cpp
+    #kconfigbase.cpp
+    kencodingprober.cpp
+    kfilterbase.cpp
+    kfilterdev.cpp
+    kgzipfilter.cpp
+    klimitediodevice.cpp
+    ktar.cpp
+    kzip.cpp
+    kio/job.cpp
+    kaction.cpp
+    kdialog.cpp
+    kocursor.cpp
+    krun.cpp
+    klocale.cpp
+    kcalendarsystem.cpp
+    kstandardaction.cpp
+    probers/CharDistribution.cpp
+    probers/ChineseGroupProber.cpp
+    probers/JapaneseGroupProber.cpp
+    probers/JpCntx.cpp
+    probers/LangBulgarianModel.cpp
+    probers/LangCyrillicModel.cpp
+    probers/LangGreekModel.cpp
+    probers/LangHebrewModel.cpp
+    probers/LangHungarianModel.cpp
+    probers/LangThaiModel.cpp
+    probers/UnicodeGroupProber.cpp
+    probers/nsBig5Prober.cpp
+    probers/nsCharSetProber.cpp
+    probers/nsEUCJPProber.cpp
+    probers/nsEUCKRProber.cpp
+    probers/nsEUCTWProber.cpp
+    probers/nsEscCharsetProber.cpp
+    probers/nsEscSM.cpp
+    probers/nsGB2312Prober.cpp
+    probers/nsHebrewProber.cpp
+    probers/nsLatin1Prober.cpp
+    probers/nsMBCSGroupProber.cpp
+    probers/nsMBCSSM.cpp
+    probers/nsSBCSGroupProber.cpp
+    probers/nsSBCharSetProber.cpp
+    probers/nsSJISProber.cpp
+    probers/nsUniversalDetector.cpp
+
+)
+
+set(kofake_HEADERS_ONLY 
+    kcolorbutton.h
+    kencodingprober.h
+    kstatusbar.h
+    kcombobox.h
+    kurlrequester.h
+    kuser.h
+    kicon.h
+    kreplacedialog.h
+    kfind.h
+    kxmlguiwindow.h
+    kmessagebox.h
+    krecentdocument.h
+    kfilewidget.h
+    kparts/componentfactory.h
+    kparts/browserextension.h
+    kparts/browserinterface.h
+    kparts/factory.h
+    kparts/mainwindow.h
+    kparts/part.h
+    kparts/partmanager.h
+    kparts/plugin.h
+    kparts/event.h
+    kfontsizeaction.h
+    klimitediodevice_p.h
+    klistwidgetsearchline.h
+    kselectaction.h
+    kpagewidget.h
+    config.h
+    knuminput.h
+    kstandarddirs.h
+    ktoggleaction.h
+    kstandardguiitem.h
+    kshortcut.h
+    kpagedialog.h
+    kmenu.h
+    kactionmenu.h
+    kcolormimedata.h
+    kmimetype.h
+    kemailsettings.h
+    klineedit.h
+    kxmlguifactory.h
+    kcompletion.h
+    kcmdlineargs.h
+    kinputdialog.h
+    kpluginselector.h
+    kofake_export.h
+    kxmlguiclient.h
+    klistwidget.h
+    kio/global.h
+    kio/udsentry.h
+    kio/previewjob.h
+    kio/jobuidelegate.h
+    kio/renamedialog.h
+    kio/kfileitem.h
+    kio/netaccess.h
+    kio/copyjob.h
+    kio/kjob.h
+    kdiroperator.h
+    kcolordialog.h
+    #kdesktopfile.h
+    kassistantdialog.h
+    knotifyconfigwidget.h
+    knewpassworddialog.h
+    kwordwrap.h
+    klocalizedstring.h
+    ktoolbar.h
+    kpagewidgetitem.h
+    sonnet/dialog.h
+    sonnet/speller.h
+    sonnet/configwidget.h
+    sonnet/configdialog.h
+    sonnet/backgroundchecker.h
+    kfile.h
+    #kservicetypetrader.h
+    kdatetime.h
+    kde_file.h
+    kstringhandler.h
+    kpushbutton.h
+    kwindowsystem.h
+    kmainwindow.h
+    kcolorscheme.h
+    kselector.h
+    kglobalsettings.h
+    kseparator.h
+    #ksharedconfig.h
+    kdeprintdialog.h
+    kaboutdata.h
+    kurlcombobox.h
+    kimageio.h
+    kpassworddialog.h
+    kcolorutils.h
+    kactioncollection.h
+    ktextedit.h
+    kfinddialog.h
+    kurlcompletion.h
+    kfontaction.h
+    kcodecs.h
+    krecentfilesaction.h
+    kiconloader.h
+    ktabwidget.h
+    kcolorcombo.h
+    kfilefiltercombo.h
+    soprano/soprano.h
+    kicondialog.h
+    kreplace.h
+    krecentdirs.h
+    kstandardshortcut.h
+    khistorycombobox.h
+    knotification.h
+    kcharsets.h
+    kcharselect.h
+    kpagewidgetmodel.h
+    kglobal.h
+    kpassivepopup.h
+    kfiledialog.h
+    kfontchooser.h
+    #kconfig.h
+    ksharedptr.h
+    kfileitem.h
+    #klibloader.h
+    kpropertiesdialog.h
+    kurl.h
+    kdemacros.h
+    kdebug.h
+    kvbox.h
+    kmenubar.h
+    #kservice.h
+    ktoolinvocation.h
+    kedittoolbar.h
+    ksqueezedtextlabel.h
+    #kservicetype.h
+    knumvalidator.h
+    ktemporaryfile.h
+    ktextbrowser.h
+    #kconfiggroup.h
+    config-compression.h
+    kjob.h
+    kwidgetitemdelegate.h
+    kxyselector.h
+    kdeversion.h
+    kfontdialog.h
+    kguiitem.h
+)
+
+set(kofake_HEADERS 
+    ${kofake_HEADERS_ONLY}
+    karchive.h
+    kbuttongroup.h
+    kcomponentdata.h
+    #kconfigbase.h
+    kdatewidget.h
+    kfilterbase.h
+    kfilterdev.h
+    kgzipfilter.h
+    ktar.h
+    kzip.h
+    kio/job.h
+    kaction.h
+    kdialog.h
+    kocursor.h
+    kprocess.h
+    krun.h
+    klocale.h
+    kcalendarsystem.h
+    kocursor_p.h
+    kstandardaction.h
+)
+
+add_subdirectory(kservice)
+add_subdirectory(kconfig)
+
+QT5_WRAP_CPP(kofake_HEADERS_MOC ${kofake_HEADERS_ONLY})
+
+kde4_add_library(kofake SHARED ${kofake_LIB_SRCS} ${kofake_HEADERS_MOC})
+
+target_link_libraries(kofake Qt5::Widgets Qt5::Xml ${ZLIB_LIBRARIES} KService KConfigCore)
+target_link_libraries(kofake LINK_INTERFACE_LIBRARIES Qt5::Widgets Qt5::Xml KService KConfigCore)
+
+set_target_properties(kofake PROPERTIES
+    VERSION ${GENERIC_CALLIGRA_LIB_VERSION} SOVERSION ${GENERIC_CALLIGRA_LIB_SOVERSION}
+)
+install(TARGETS kofake ${INSTALL_TARGETS_DEFAULT_ARGS} )
+
