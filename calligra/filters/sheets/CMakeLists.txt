@@ -15,8 +15,8 @@ if(SHOULD_BUILD_FILTER_QUATTROPRO_TO_SHEETS)
     add_subdirectory( qpro )
 endif(SHOULD_BUILD_FILTER_QUATTROPRO_TO_SHEETS)
 
-add_subdirectory( html )
-add_subdirectory( latex )
+#add_subdirectory( html )
+#add_subdirectory( latex )
 
 add_subdirectory( excel )
 
