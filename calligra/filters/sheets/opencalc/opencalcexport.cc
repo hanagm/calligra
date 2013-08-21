@@ -752,7 +752,7 @@ void OpenCalcExport::exportDefaultCellStyle(QDomDocument & doc, QDomElement & of
     QDomElement style = doc.createElement("style:properties");
     style.setAttribute("style:font-name", font.family());
     style.setAttribute("fo:font-size", QString("%1pt").arg(font.pointSize()));
-    style.setAttribute("style:decimal-places", QString::number(locale->decimalPlaces()));
+//     style.setAttribute("style:decimal-places", QString::number(locale->decimalPlaces()));
     style.setAttribute("fo:language", language);
     style.setAttribute("fo:country", country);
     style.setAttribute("style:font-name-asian", "HG Mincho Light J");
