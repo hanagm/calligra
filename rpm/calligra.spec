@@ -15,7 +15,6 @@ BuildRequires: cmake, automoc4
 BuildRequires: pkgconfig(QtCore)
 BuildRequires: pkgconfig(shared-mime-info)
 BuildRequires: boost-devel
-BuildRequires: libkok-devel
 BuildRequires: pkgconfig(libgsf-1)
 BuildRequires: libjpeg-devel
 BuildRequires: pkgconfig(libpng)
@@ -25,7 +24,7 @@ BuildRequires: pkgconfig(QtOpenGL)
 BuildRequires: pkgconfig(QtWebKit)
 BuildRequires: pkgconfig(QtDBus)
 BuildRequires: pkgconfig(openssl)
-BuildRequires: pkgconfig(phonon)
+BuildRequires: calligra-extra-cmake-modules
 %if 0%{?krita}
 BuildRequires: lcms-devel exiv2-devel giflib-devel
 %endif
