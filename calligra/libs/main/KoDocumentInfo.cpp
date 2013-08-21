@@ -36,7 +36,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kuser.h>
-#include <kemailsettings.h>
+// #include <kemailsettings.h>
 
 
 KoDocumentInfo::KoDocumentInfo(QObject *parent) : QObject(parent)
@@ -431,8 +431,8 @@ void KoDocumentInfo::updateParameters()
             setActiveAuthorInfo("creator", user.property(KUser::FullName).toString());
             setActiveAuthorInfo("telephone-work", user.property(KUser::WorkPhone).toString());
             setActiveAuthorInfo("telephone", user.property(KUser::HomePhone).toString());
-            KEMailSettings eMailSettings;
-            setActiveAuthorInfo("email", eMailSettings.getSetting(KEMailSettings::EmailAddress));
+//             KEMailSettings eMailSettings;
+//             setActiveAuthorInfo("email", eMailSettings.getSetting(KEMailSettings::EmailAddress));
         }
         setActiveAuthorInfo("initial", "");
         setActiveAuthorInfo("author-title", "");
