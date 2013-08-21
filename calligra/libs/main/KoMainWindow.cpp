@@ -1422,7 +1422,7 @@ public:
 
         m_fileWidget = new KFileWidget(startUrl, this);
         m_fileWidget->setOperationMode(KFileWidget::Saving);
-        m_fileWidget->setMode(KFile::File);
+//        m_fileWidget->setMode(KFile::File);
         m_fileWidget->setMimeFilter(QStringList() << "application/pdf");
         connect(m_fileWidget, SIGNAL(accepted()), this, SLOT(accept()));
 
@@ -1442,7 +1442,8 @@ public:
         // selectedUrl()( does not return the expected result. So, build up the KUrl the more complicated way
         //return m_fileWidget->selectedUrl();
 
-        KUrl url = m_fileWidget->dirOperator()->url();
+//         KUrl url = m_fileWidget->dirOperator()->url();
+        KUrl url;
         url.adjustPath(KUrl::AddTrailingSlash);
 //         url.setFileName(m_fileWidget->locationEdit()->currentText());
         return url;
