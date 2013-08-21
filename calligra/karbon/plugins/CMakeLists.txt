@@ -1,0 +1,7 @@
+add_subdirectory( flattenpath )
+add_subdirectory( roundcorners )
+add_subdirectory( refinepath )
+add_subdirectory( whirlpinch )
+add_subdirectory( tools )
+add_subdirectory( dockers )
+add_subdirectory( filtereffects )
