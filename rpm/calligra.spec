@@ -7,18 +7,21 @@ Name: calligra
 Version: 2.7.8+afae6db
 Release: 1%{?dist}
 Group: Applications/Productivity
-Source0: calligra-latest.tar.xz
+Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Summary: Calligra Suite
 License: Open
 BuildRequires: cmake, automoc4
-BuildRequires: libqt5-qtbase-devel
+BuildRequires: pkgconfig(Qt5DBus)
 BuildRequires: pkgconfig(Qt5Declarative)
 BuildRequires: pkgconfig(Qt5Quick)
 BuildRequires: pkgconfig(Qt5Script)
 BuildRequires: pkgconfig(Qt5Svg)
-BuildRequires: libqt5-qttools-devel
-BuildRequires: libQt5Svg-private-headers-devel, libQt5Declarative-private-headers-devel, libQt5Script-private-headers-devel
+BuildRequires: pkgconfig(Qt5Widgets)
+BuildRequires: pkgconfig(Qt5Xml)
+BuildRequires: pkgconfig(Qt5XmlPatterns)
+BuildRequires: pkgconfig(Qt5Gui)
+#BuildRequires: libQt5Svg-private-headers-devel, libQt5Declarative-private-headers-devel, libQt5Script-private-headers-devel
 BuildRequires: pkgconfig(shared-mime-info)
 BuildRequires: boost-devel
 BuildRequires: pkgconfig(libgsf-1)
@@ -26,7 +29,6 @@ BuildRequires: libjpeg-devel
 BuildRequires: pkgconfig(libpng)
 BuildRequires: pkgconfig(eigen2)
 BuildRequires: pkgconfig(x11)
-BuildRequires: pkgconfig(QtDBus)
 BuildRequires: pkgconfig(openssl)
 BuildRequires: calligra-extra-cmake-modules
 %if 0%{?krita}
