@@ -12,7 +12,13 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Summary: Calligra Suite
 License: Open
 BuildRequires: cmake, automoc4
-BuildRequires: pkgconfig(QtCore)
+BuildRequires: pkgconfig(qt5-qtbase)
+BuildRequires: pkgconfig(Qt5Declarative)
+BuildRequires: pkgconfig(Qt5Quick)
+BuildRequires: pkgconfig(Qt5Script)
+BuildRequires: pkgconfig(Qt5Svg)
+BuildRequires: libqt5-qttools-devel
+BuildRequires: libQt5Svg-private-headers-devel, libQt5Declarative-private-headers-devel, libQt5Script-private-headers-devel
 BuildRequires: pkgconfig(shared-mime-info)
 BuildRequires: boost-devel
 BuildRequires: pkgconfig(libgsf-1)
@@ -20,8 +26,6 @@ BuildRequires: libjpeg-devel
 BuildRequires: pkgconfig(libpng)
 BuildRequires: pkgconfig(eigen2)
 BuildRequires: pkgconfig(x11)
-BuildRequires: pkgconfig(QtOpenGL)
-BuildRequires: pkgconfig(QtWebKit)
 BuildRequires: pkgconfig(QtDBus)
 BuildRequires: pkgconfig(openssl)
 BuildRequires: calligra-extra-cmake-modules
@@ -1235,6 +1239,7 @@ mkdir build && cd build
 cmake \
     -DPRODUCTSET=Libraries \
     -DKDE4_BUILD_TESTS=OFF \
+    -DWITH_KActivities=OFF \
     -DCMAKE_INSTALL_PREFIX=/usr/ \
     -DBUILD_TESTING=ON \
     -DCMAKE_BUILD_TYPE=Release \
