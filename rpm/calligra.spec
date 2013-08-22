@@ -7,11 +7,11 @@ Name: calligra
 Version: 2.7.8+afae6db
 Release: 1%{?dist}
 Group: Applications/Productivity
+URL: http://www.calligra.org/
 Source0: %{name}-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Summary: Calligra Suite
 License: Open
-BuildRequires: cmake 
+BuildRequires: cmake
 BuildRequires: pkgconfig(Qt5DBus)
 BuildRequires: pkgconfig(Qt5Quick)
 BuildRequires: pkgconfig(Qt5Script)
@@ -517,51 +517,51 @@ Requires: libkok-devel
 # %{_datadir}/kde5/services/kspreadmathmodule.desktop
 # %{_datadir}/sheets/functions/math.xml
 # %{_libdir}/kde5/kspreadmathmodule.so
-# 
+#
 # %{_datadir}/kde5/services/kspreadreferencemodule.desktop
 # %{_datadir}/sheets/functions/reference.xml
 # %{_libdir}/kde5/kspreadreferencemodule.so
-# 
+#
 # %{_datadir}/kde5/services/kspreadstatisticalmodule.desktop
 # %{_datadir}/sheets/functions/statistical.xml
 # %{_libdir}/kde5/kspreadstatisticalmodule.so
-# 
+#
 # %{_datadir}/kde5/services/kspreadtextmodule.desktop
 # %{_datadir}/sheets/functions/text.xml
 # %{_libdir}/kde5/kspreadtextmodule.so
-# 
+#
 # %{_datadir}/kde5/services/kspreadtrigonometrymodule.desktop
 # %{_datadir}/sheets/functions/trig.xml
 # %{_libdir}/kde5/kspreadtrigonometrymodule.so
-# 
+#
 # %{_datadir}/kde5/services/kspreadbitopsmodule.desktop
 # %{_datadir}/sheets/functions/bitops.xml
 # %{_libdir}/kde5/kspreadbitopsmodule.so
-# 
+#
 # %{_datadir}/kde5/services/kspreadconversionmodule.desktop
 # %{_datadir}/sheets/functions/conversion.xml
 # %{_libdir}/kde5/kspreadconversionmodule.so
-# 
+#
 # %{_datadir}/kde5/services/kspreaddatabasemodule.desktop
 # %{_datadir}/sheets/functions/database.xml
 # %{_libdir}/kde5/kspreaddatabasemodule.so
-# 
+#
 # %{_datadir}/kde5/services/kspreaddatetimemodule.desktop
 # %{_datadir}/sheets/functions/datetime.xml
 # %{_libdir}/kde5/kspreaddatetimemodule.so
-# 
+#
 # %{_datadir}/kde5/services/kspreadengineeringmodule.desktop
 # %{_datadir}/sheets/functions/engineering.xml
 # %{_libdir}/kde5/kspreadengineeringmodule.so
-# 
+#
 # %{_datadir}/kde5/services/kspreadfinancialmodule.desktop
 # %{_datadir}/sheets/functions/financial.xml
 # %{_libdir}/kde5/kspreadfinancialmodule.so
-# 
+#
 # %{_datadir}/kde5/services/kspreadinformationmodule.desktop
 # %{_datadir}/sheets/functions/information.xml
 # %{_libdir}/kde5/kspreadinformationmodule.so
-# 
+#
 # %{_datadir}/kde5/services/kspreadlogicmodule.desktop
 # %{_datadir}/sheets/functions/logic.xml
 # %{_libdir}/kde5/kspreadlogicmodule.so
@@ -1054,19 +1054,19 @@ Requires: libkok-devel
 %defattr(-,root,root,-)
 # %{_datadir}/kde5/services/kspread_xlsx_import.desktop
 # %{_libdir}/kde5/xlsximport.so
-# 
+#
 # %{_datadir}/kde5/services/sheets_excel_thumbnail.desktop
 # %{_datadir}/kde5/services/sheets_xlsx_thumbnail.desktop
-# 
+#
 # %{_datadir}/kde5/services/kspread_excel_import.desktop
 # %{_libdir}/kde5/excelimporttodoc.so
-# 
+#
 # %{_libdir}/kde5/applixspreadimport.so
 # %{_datadir}/kde5/services/kspread_applixspread_import.desktop
-# 
+#
 # %{_libdir}/kde5/csvimport.so
 # %{_datadir}/kde5/services/kspread_csv_import.desktop
-# 
+#
 # %{_libdir}/kde5/dbaseimport.so
 # %{_datadir}/kde5/services/kspread_dbase_import.desktop
 # %{_libdir}/kde5/gnumericexport.so
@@ -1085,10 +1085,10 @@ Requires: libkok-devel
 %defattr(-,root,root,-)
 # %{_datadir}/kde5/services/kpresenter_powerpoint_import.desktop
 # %{_libdir}/kde5/powerpointimport.so
-# 
+#
 # %{_datadir}/kde5/services/kpresenter_pptx_import.desktop
 # %{_libdir}/kde5/pptximport.so
-# 
+#
 # %{_datadir}/kde5/services/Filterkpr2odf.desktop
 # %{_libdir}/kde5/Filterkpr2odf.so
 
@@ -1173,7 +1173,7 @@ Requires: libkok-devel
 %{_datadir}/calligra/icons
 %{_datadir}/calligra/palettes
 %{_datadir}/calligra/styles
-%{_datadir}/icons
+%{_datadir}/icons/*
 %if 0%{?freoffice}
 %exclude %{_datadir}/icons/hicolor/64x64/apps/freoffice.png
 %exclude %{_datadir}/icons/hicolor/178x200/apps/freoffice.png
@@ -1247,7 +1247,7 @@ Requires: libkok-devel
 
 
 %prep
-%setup -q -c -n %{name}-%{version}/calligra
+%setup -q -n %{name}-%{version}/calligra
 
 %build
 mkdir -p build && cd build
@@ -1290,17 +1290,10 @@ cmake \
 make %{?_smp_mflags}
 
 %install
-rm -Rf %{buildroot}
 cd build
 make install DESTDIR=%{buildroot}
-
-#cp ../debian/defaults/ksycoca4 %{buildroot}%{_datadir}/kde5/services/
 mkdir -p %{buildroot}/%{_datadir}/applications
 
 %if 0%{?freoffice}
 mv %{buildroot}/%{_datadir}/applications/hildon/freoffice.desktop %{buildroot}/%{_datadir}/applications/
 %endif
-
-
-%clean
-rm -Rf %{buildroot}
