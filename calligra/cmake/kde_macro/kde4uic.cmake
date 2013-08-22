@@ -4,7 +4,7 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-set(KDE_UIC_EXECUTABLE uic)
+set(KDE_UIC_EXECUTABLE uic -qt=5)
   EXECUTE_PROCESS(COMMAND ${KDE_UIC_EXECUTABLE}
     -tr tr2i18n
     ${KDE_UIC_FILE}
