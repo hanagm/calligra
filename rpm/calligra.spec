@@ -28,7 +28,7 @@ BuildRequires: pkgconfig(eigen2)
 BuildRequires: pkgconfig(x11)
 BuildRequires: pkgconfig(QtDBus)
 BuildRequires: pkgconfig(openssl)
-#BuildRequires: calligra-extra-cmake-modules
+BuildRequires: calligra-extra-cmake-modules
 %if 0%{?krita}
 BuildRequires: lcms-devel exiv2-devel giflib-devel
 %endif
