@@ -13,15 +13,11 @@ Summary: Calligra Suite
 License: Open
 BuildRequires: cmake, automoc4
 BuildRequires: pkgconfig(Qt5DBus)
-BuildRequires: pkgconfig(Qt5Declarative)
 BuildRequires: pkgconfig(Qt5Quick)
 BuildRequires: pkgconfig(Qt5Script)
 BuildRequires: pkgconfig(Qt5Svg)
-BuildRequires: pkgconfig(Qt5Widgets)
 BuildRequires: pkgconfig(Qt5Xml)
 BuildRequires: pkgconfig(Qt5XmlPatterns)
-BuildRequires: pkgconfig(Qt5Gui)
-#BuildRequires: libQt5Svg-private-headers-devel, libQt5Declarative-private-headers-devel, libQt5Script-private-headers-devel
 BuildRequires: pkgconfig(shared-mime-info)
 BuildRequires: boost-devel
 BuildRequires: pkgconfig(libgsf-1)
