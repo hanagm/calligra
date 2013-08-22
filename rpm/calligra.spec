@@ -4,7 +4,7 @@
 #define kexi 0
 
 Name: calligra
-Version: 2.6~gitafae6db30cb24721531c02b6b100e203bd377b77
+Version: 2.7.8+afae6db
 Release: 1%{?dist}
 Group: Applications/Productivity
 Source0: calligra-latest.tar.xz
