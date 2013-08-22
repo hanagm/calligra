@@ -11,13 +11,16 @@ Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Summary: Calligra Suite
 License: Open
-BuildRequires: cmake, automoc4
+BuildRequires: cmake 
 BuildRequires: pkgconfig(Qt5DBus)
 BuildRequires: pkgconfig(Qt5Quick)
 BuildRequires: pkgconfig(Qt5Script)
 BuildRequires: pkgconfig(Qt5Svg)
 BuildRequires: pkgconfig(Qt5Xml)
 BuildRequires: pkgconfig(Qt5XmlPatterns)
+BuildRequires: pkgconfig(Qt5Test)
+BuildRequires: pkgconfig(Qt5PrintSupport)
+BuildRequires: pkgconfig(Qt5Concurrent)
 BuildRequires: pkgconfig(shared-mime-info)
 BuildRequires: boost-devel
 BuildRequires: pkgconfig(libgsf-1)
@@ -28,14 +31,15 @@ BuildRequires: pkgconfig(x11)
 BuildRequires: pkgconfig(openssl)
 BuildRequires: calligra-extra-cmake-modules
 %if 0%{?krita}
-BuildRequires: lcms-devel exiv2-devel giflib-devel
+BuildRequires: pkgconfig(lcms)
+BuildRequires: exiv2-devel giflib-devel
 %endif
 %if 0%{?karbon}
 BuildRequires: pkgconfig(poppler-qt4)
-BuildRequires: fontconfig-devel
+BuildRequires: pkgconfig(fontconfig)
 %endif
 %if 0%{?kexi}
-BuildRequires: sqlite-devel
+BuildRequires: pkgconfig(sqlite3)
 %endif
 
 Requires: %{name}-words-core
@@ -506,9 +510,10 @@ Requires: libkok-devel
 
 %files sheets-core-plugins
 %defattr(-,root,root,-)
-%{_bindir}/calligra/plugins/sheetssolver.so
-%{_datadir}/kde5/services/sheetssolver.desktop
-%{_datadir}/sheets/viewplugins/solver.rc
+# %{_bindir}/calligra/plugins/sheetssolver.so
+# %{_datadir}/kde5/services/sheetssolver.desktop
+# %{_datadir}/sheets/viewplugins/solver.rc
+
 # %{_datadir}/kde5/services/kspreadmathmodule.desktop
 # %{_datadir}/sheets/functions/math.xml
 # %{_libdir}/kde5/kspreadmathmodule.so
@@ -1245,7 +1250,7 @@ Requires: libkok-devel
 %setup -q -c -n %{name}-%{version}/calligra
 
 %build
-mkdir build && cd build
+mkdir -p build && cd build
 cmake \
     -DPRODUCTSET=Libraries \
     -DKDE4_BUILD_TESTS=OFF \
