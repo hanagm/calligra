@@ -420,7 +420,6 @@ Summary: Calligra Konqueror service menus
 %package devel
 Summary: Calligra development files
 Group: Development/Libraries
-Requires: libkok-devel
 
 %description devel
 %{summary}.
