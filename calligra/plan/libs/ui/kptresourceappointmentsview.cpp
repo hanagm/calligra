@@ -47,8 +47,6 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kactioncollection.h>
-#include <kxmlguifactory.h>
-
 
 namespace KPlato
 {
@@ -87,11 +85,11 @@ void ResourceAppointmentsDisplayOptionsPanel::setDefault()
 
 //----
 ResourceAppointmentsSettingsDialog::ResourceAppointmentsSettingsDialog( ViewBase *view, ResourceAppointmentsItemModel *model, QWidget *parent )
-    : KPageDialog( parent ),
+    : KoPageDialog( parent ),
     m_view( view )
 {
     ResourceAppointmentsDisplayOptionsPanel *panel = new ResourceAppointmentsDisplayOptionsPanel( model );
-    KPageWidgetItem *page = addPage( panel, i18n( "General" ) );
+    KFakePageWidgetItem *page = addPage( panel, i18n( "General" ) );
     page->setHeader( i18n( "Resource Assignments View Settings" ) );
 
     QTabWidget *tab = new QTabWidget();

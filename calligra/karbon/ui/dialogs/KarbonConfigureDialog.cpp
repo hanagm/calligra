@@ -35,7 +35,7 @@ the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 #include <klocale.h>
 
 KarbonConfigureDialog::KarbonConfigureDialog(KarbonView* parent)
-    : KPageDialog(parent)
+    : KoPageDialog(parent)
 {
     setFaceType(List);
     setCaption(i18n("Configure"));
@@ -43,7 +43,7 @@ KarbonConfigureDialog::KarbonConfigureDialog(KarbonView* parent)
     setDefaultButton(KDialog::Ok);
 
     m_interfacePage = new KarbonConfigInterfacePage(parent);
-    KPageWidgetItem* item = addPage(m_interfacePage, i18n("Interface"));
+    KFakePageWidgetItem* item = addPage(m_interfacePage, i18n("Interface"));
     item->setHeader(i18n("Interface"));
     item->setIcon(koIcon("preferences-desktop-theme"));
 

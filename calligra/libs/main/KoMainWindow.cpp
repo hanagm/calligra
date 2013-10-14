@@ -49,7 +49,7 @@
 #if KDE_IS_VERSION(4,6,0)
 #include <krecentdirs.h>
 #endif
-//#include <khelpmenu.h>
+#include <khelpmenu.h>
 #include <krecentfilesaction.h>
 #include <kaboutdata.h>
 #include <ktoggleaction.h>
@@ -58,9 +58,7 @@
 #include <kio/netaccess.h>
 #include <kedittoolbar.h>
 #include <ktemporaryfile.h>
-#include <krecentdocument.h>
 #include <klocale.h>
-#include <kstatusbar.h>
 #include <kglobalsettings.h>
 #include <ktoolinvocation.h>
 #include <kxmlguifactory.h>
@@ -84,6 +82,7 @@
 #include <QLayout>
 #include <QLabel>
 #include <QProgressBar>
+#include <QStatusBar>
 #include <QTabBar>
 #include <QPrinter>
 #include <QPrintDialog>
@@ -137,7 +136,7 @@ public:
         activityResource = 0;
 #endif
         themeManager = 0;
-//        m_helpMenu = 0;
+        m_helpMenu = 0;
 
         // PartManger
         m_activeWidget = 0;
@@ -165,7 +164,7 @@ public:
         if (title.isEmpty()) {
             // #139905
             const QString programName = parent->componentData().aboutData() ?
-                                        parent->componentData().aboutData()->programName() : parent->componentData().componentName();
+                                        parent->componentData().aboutData()->displayName() : parent->componentData().componentName();
             title = i18n("%1 unsaved document (%2)", programName,
                          KGlobal::locale()->formatDate(QDate::currentDate(), KLocale::ShortDate));
         }
@@ -199,18 +198,18 @@ public:
     bool windowSizeDirty;
     bool readOnly;
 
-    KAction *showDocumentInfo;
-    KAction *saveAction;
-    KAction *saveActionAs;
-    KAction *printAction;
-    KAction *printActionPreview;
-    KAction *sendFileAction;
-    KAction *exportPdf;
-    KAction *closeFile;
-    KAction *reloadFile;
-    KAction *showFileVersions;
-    KAction *importFile;
-    KAction *exportFile;
+    QAction *showDocumentInfo;
+    QAction *saveAction;
+    QAction *saveActionAs;
+    QAction *printAction;
+    QAction *printActionPreview;
+    QAction *sendFileAction;
+    QAction *exportPdf;
+    QAction *closeFile;
+    QAction *reloadFile;
+    QAction *showFileVersions;
+    QAction *importFile;
+    QAction *exportFile;
     KToggleAction *toggleDockers;
     KRecentFilesAction *recent;
 
@@ -236,7 +235,9 @@ public:
 
     Digikam::ThemeManager *themeManager;
 
-//    KHelpMenu *m_helpMenu;
+    KComponentData componentData;
+
+    KHelpMenu *m_helpMenu;
 
 
 };
@@ -280,7 +281,7 @@ KoMainWindow::KoMainWindow(const QByteArray nativeMimeType, const KComponentData
     d->printAction = actionCollection()->addAction(KStandardAction::Print,  "file_print", this, SLOT(slotFilePrint()));
     d->printActionPreview = actionCollection()->addAction(KStandardAction::PrintPreview,  "file_print_preview", this, SLOT(slotFilePrintPreview()));
 
-    d->exportPdf  = new KAction(i18n("Export as PDF..."), this);
+    d->exportPdf  = new QAction(i18n("Export as PDF..."), this);
     d->exportPdf->setIcon(koIcon("application-pdf"));
     actionCollection()->addAction("file_export_pdf", d->exportPdf);
     connect(d->exportPdf, SIGNAL(triggered()), this, SLOT(exportToPdf()));
@@ -290,30 +291,30 @@ KoMainWindow::KoMainWindow(const QByteArray nativeMimeType, const KComponentData
     d->closeFile = actionCollection()->addAction(KStandardAction::Close,  "file_close", this, SLOT(slotFileClose()));
     actionCollection()->addAction(KStandardAction::Quit,  "file_quit", this, SLOT(slotFileQuit()));
 
-    d->reloadFile  = new KAction(i18n("Reload"), this);
+    d->reloadFile  = new QAction(i18n("Reload"), this);
     actionCollection()->addAction("file_reload_file", d->reloadFile);
     connect(d->reloadFile, SIGNAL(triggered(bool)), this, SLOT(slotReloadFile()));
 
-    d->showFileVersions  = new KAction(i18n("Versions..."), this);
+    d->showFileVersions  = new QAction(i18n("Versions..."), this);
     actionCollection()->addAction("file_versions_file", d->showFileVersions);
     connect(d->showFileVersions, SIGNAL(triggered(bool)), this, SLOT(slotVersionsFile()));
 
-    d->importFile  = new KAction(koIcon("document-import"), i18n("Open ex&isting Document as Untitled Document..."), this);
+    d->importFile  = new QAction(koIcon("document-import"), i18n("Open ex&isting Document as Untitled Document..."), this);
     actionCollection()->addAction("file_import_file", d->importFile);
     connect(d->importFile, SIGNAL(triggered(bool)), this, SLOT(slotImportFile()));
 
-    d->exportFile  = new KAction(koIcon("document-export"), i18n("E&xport..."), this);
+    d->exportFile  = new QAction(koIcon("document-export"), i18n("E&xport..."), this);
     actionCollection()->addAction("file_export_file", d->exportFile);
     connect(d->exportFile, SIGNAL(triggered(bool)), this, SLOT(slotExportFile()));
 
-    KAction *actionNewView  = new KAction(koIcon("window-new"), i18n("&New View"), this);
+    QAction *actionNewView  = new QAction(koIcon("window-new"), i18n("&New View"), this);
     actionCollection()->addAction("view_newview", actionNewView);
     connect(actionNewView, SIGNAL(triggered(bool)), this, SLOT(newView()));
 
 
     /* The following entry opens the document information dialog.  Since the action is named so it
         intends to show data this entry should not have a trailing ellipses (...).  */
-    d->showDocumentInfo  = new KAction(koIcon("document-properties"), i18n("Document Information"), this);
+    d->showDocumentInfo  = new QAction(koIcon("document-properties"), i18n("Document Information"), this);
     actionCollection()->addAction("file_documentinfo", d->showDocumentInfo);
     connect(d->showDocumentInfo, SIGNAL(triggered(bool)), this, SLOT(slotDocumentInfo()));
 
@@ -362,41 +363,37 @@ KoMainWindow::KoMainWindow(const QByteArray nativeMimeType, const KComponentData
     createMainwindowGUI();
     d->mainWindowGuiIsBuilt = true;
 
-    // if the user didn's specify the geometry on the command line (does anyone do that still?),
-    // we first figure out some good default size and restore the x,y position. See bug 285804Z.
-    if (!initialGeometrySet()) {
-
-        const int scnum = QApplication::desktop()->screenNumber(parentWidget());
-        QRect desk = QApplication::desktop()->availableGeometry(scnum);
-        // if the desktop is virtual then use virtual screen size
-        if (QApplication::desktop()->isVirtualDesktop()) {
-            desk = QApplication::desktop()->availableGeometry(QApplication::desktop()->screen());
-            desk = QApplication::desktop()->availableGeometry(QApplication::desktop()->screen(scnum));
-        }
-
-        quint32 x = desk.x();
-        quint32 y = desk.y();
-        quint32 w = 0;
-        quint32 h = 0;
-
-        // Default size -- maximize on small screens, something useful on big screens
-        const int deskWidth = desk.width();
-        if (deskWidth > 1024) {
-            // a nice width, and slightly less than total available
-            // height to componensate for the window decs
-            w = ( deskWidth / 3 ) * 2;
-            h = desk.height();
-        }
-        else {
-            w = desk.width();
-            h = desk.height();
-        }
-        // KDE doesn't restore the x,y position, so let's do that ourselves
-        KConfigGroup cfg(KGlobal::config(), "MainWindow");
-        x = cfg.readEntry("ko_x", x);
-        y = cfg.readEntry("ko_y", y);
-        setGeometry(x, y, w, h);
+    const int scnum = QApplication::desktop()->screenNumber(parentWidget());
+    QRect desk = QApplication::desktop()->availableGeometry(scnum);
+    // if the desktop is virtual then use virtual screen size
+    if (QApplication::desktop()->isVirtualDesktop()) {
+        desk = QApplication::desktop()->availableGeometry(QApplication::desktop()->screen());
+        desk = QApplication::desktop()->availableGeometry(QApplication::desktop()->screen(scnum));
     }
+
+    quint32 x = desk.x();
+    quint32 y = desk.y();
+    quint32 w = 0;
+    quint32 h = 0;
+
+    // Default size -- maximize on small screens, something useful on big screens
+    const int deskWidth = desk.width();
+    if (deskWidth > 1024) {
+        // a nice width, and slightly less than total available
+        // height to componensate for the window decs
+        w = ( deskWidth / 3 ) * 2;
+        h = desk.height();
+    }
+    else {
+        w = desk.width();
+        h = desk.height();
+    }
+    // KDE doesn't restore the x,y position, so let's do that ourselves
+    KConfigGroup cfg(KGlobal::config(), "MainWindow");
+    x = cfg.readEntry("ko_x", x);
+    y = cfg.readEntry("ko_y", y);
+    setGeometry(x, y, w, h);
+
 
     // Now ask kde to restore the size of the window; this could probably be replaced by
     // QWidget::saveGeometry and QWidget::restoreGeometry, but let's stay with the KDE
@@ -499,9 +496,6 @@ void KoMainWindow::setRootDocument(KoDocument *doc, KoPart *part)
 
     if (doc) {
         d->dockWidgetMenu->setVisible(true);
-
-        // don't add parts more than once :)
-        Q_ASSERT(d->m_registeredPart.isNull());
         d->m_registeredPart = d->rootPart.data();
 
         KoView *view = d->rootPart->createView(doc, this);
@@ -581,25 +575,7 @@ void KoMainWindow::addRecentURL(const KUrl& url)
     // Add entry to recent documents list
     // (call coming from KoDocument because it must work with cmd line, template dlg, file/open, etc.)
     if (!url.isEmpty()) {
-        bool ok = true;
-        if (url.isLocalFile()) {
-            QString path = url.toLocalFile(KUrl::RemoveTrailingSlash);
-            const QStringList tmpDirs = KGlobal::dirs()->resourceDirs("tmp");
-            for (QStringList::ConstIterator it = tmpDirs.begin() ; ok && it != tmpDirs.end() ; ++it)
-                if (path.contains(*it))
-                    ok = false; // it's in the tmp resource
-            if (ok) {
-                KRecentDocument::add(path);
-#if KDE_IS_VERSION(4,6,0)
-                KRecentDirs::add(":OpenDialog", QFileInfo(path).dir().canonicalPath());
-#endif
-            }
-        } else {
-            KRecentDocument::add(url.url(KUrl::RemoveTrailingSlash), true);
-        }
-        if (ok) {
-            d->recent->addUrl(url);
-        }
+        d->recent->addUrl(url);
         saveRecentFiles();
 
 #ifdef HAVE_KACTIVITIES
@@ -1164,7 +1140,7 @@ void KoMainWindow::saveWindowSettings()
 
         // Save window size into the config file of our componentData
         kDebug(30003) << "KoMainWindow::saveWindowSettings";
-        saveWindowSize(config->group("MainWindow"));
+        //saveWindowSize(config->group("MainWindow"));
         config->sync();
         d->windowSizeDirty = false;
     }
@@ -1413,11 +1389,11 @@ void KoMainWindow::slotFilePrintPreview()
     delete preview;
 }
 
-class ExportPdfDialog : public KPageDialog
+class ExportPdfDialog : public KoPageDialog
 {
 public:
-    ExportPdfDialog(const KUrl &startUrl, const KoPageLayout &pageLayout) : KPageDialog() {
-        setFaceType(KPageDialog::List);
+    ExportPdfDialog(const KUrl &startUrl, const KoPageLayout &pageLayout) : KoPageDialog() {
+        setFaceType(KoPageDialog::List);
         setCaption(i18n("Export to PDF"));
 
         m_fileWidget = new KFileWidget(startUrl, this);
@@ -1426,13 +1402,13 @@ public:
         m_fileWidget->setMimeFilter(QStringList() << "application/pdf");
         connect(m_fileWidget, SIGNAL(accepted()), this, SLOT(accept()));
 
-        KPageWidgetItem *fileItem = new KPageWidgetItem(m_fileWidget, i18n( "File" ));
+        KFakePageWidgetItem *fileItem = new KFakePageWidgetItem(m_fileWidget, i18n( "File" ));
         fileItem->setIcon(koIcon("document-open"));
         addPage(fileItem);
 
         m_pageLayoutWidget = new KoPageLayoutWidget(this, pageLayout);
         m_pageLayoutWidget->showUnitchooser(false);
-        KPageWidgetItem *optionsItem = new KPageWidgetItem(m_pageLayoutWidget, i18n("Configure"));
+        KFakePageWidgetItem *optionsItem = new KFakePageWidgetItem(m_pageLayoutWidget, i18n("Configure"));
         optionsItem->setIcon(koIcon("configure"));
         addPage(optionsItem);
 
@@ -1456,7 +1432,7 @@ protected:
         if (button == KDialog::Ok) {
             m_fileWidget->slotOk();
         } else {
-            KPageDialog::slotButtonClicked(button);
+            KoPageDialog::slotButtonClicked(button);
         }
     }
 private:
@@ -1572,8 +1548,8 @@ void KoMainWindow::slotConfigureKeys()
 
 void KoMainWindow::slotConfigureToolbars()
 {
-    if (rootDocument())
-        saveMainWindowSettings(KGlobal::config()->group(d->rootPart->componentData().componentName()));
+//    if (rootDocument())
+//        saveMainWindowSettings(KGlobal::config()->group(d->rootPart->componentData().componentName()));
     KEditToolBar edit(factory(), this);
     connect(&edit, SIGNAL(newToolBarConfig()), this, SLOT(slotNewToolbarConfig()));
     (void) edit.exec();
@@ -1606,8 +1582,8 @@ void KoMainWindow::slotToolbarToggled(bool toggle)
         else
             bar->hide();
 
-        if (rootDocument())
-            saveMainWindowSettings(KGlobal::config()->group(d->rootPart->componentData().componentName()));
+//        if (rootDocument())
+//            saveMainWindowSettings(KGlobal::config()->group(d->rootPart->componentData().componentName()));
     } else
         kWarning(30003) << "slotToolbarToggled : Toolbar " << sender()->objectName() << " not found!";
 }
@@ -1828,6 +1804,16 @@ void KoMainWindow::setPartToOpen(KoPart *part)
     d->partToOpen = part;
 }
 
+KComponentData KoMainWindow::componentData() const
+{
+    return d->componentData;
+}
+
+void KoMainWindow::setComponentData(const KComponentData &componentData)
+{
+    d->componentData = componentData;
+}
+
 QDockWidget* KoMainWindow::createDockWidget(KoDockFactoryBase* factory)
 {
     QDockWidget* dockWidget = 0;
@@ -2004,8 +1990,9 @@ void KoMainWindow::newView()
 
 void KoMainWindow::createMainwindowGUI()
 {
-//    if ( isHelpMenuEnabled() && !d->m_helpMenu )
-//        d->m_helpMenu = new KHelpMenu( this, componentData().aboutData(), true, actionCollection() );
+    if ( isHelpMenuEnabled() && !d->m_helpMenu ) {
+        d->m_helpMenu = new KHelpMenu(this, componentData().componentName(), true);
+    }
 
     QString f = xmlFile();
     setXMLFile( KStandardDirs::locate( "config", "ui/ui_standards.rc", componentData() ) );

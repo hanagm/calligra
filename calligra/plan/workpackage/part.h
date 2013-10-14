@@ -43,9 +43,10 @@ class KoView;
 class KoStore;
 
 class KProcess;
-class KAction;
+class QAction;
 
 class QAction;
+class QFileSystemWatcher;
 
 namespace KPlato
 {
@@ -129,6 +130,7 @@ protected:
     QFileInfo m_fileinfo;
     bool m_editormodified;
     bool m_filemodified;
+    QFileSystemWatcher *m_fileSystemWatcher;
 };
 
 /**
@@ -256,6 +258,7 @@ private:
     bool m_loadingFromProjectStore;
 
     KUndo2QStack *m_undostack;
+
 
 };
 

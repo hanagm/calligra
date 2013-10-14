@@ -1,5 +1,6 @@
 project(calligra)
 
+
 cmake_minimum_required(VERSION 2.8.10 FATAL_ERROR)
 
 cmake_policy(SET CMP0002 OLD)
@@ -90,6 +91,11 @@ option(SHOULD_BUILD_PLAN_APP "Build directory plan" OFF)
 option(SHOULD_BUILD_DOC "Build documetation" OFF)
 set(SHOULD_BUILD_LIB_KOPROPERTY FALSE)
 set(SHOULD_BUILD_LIB_KOREPORT FALSE)
+
+option(DISABLE_KDEBUG "Disable non-critical output of kdebug.h" OFF)
+if(DISABLE_KDEBUG)
+    add_definitions(-DDISABLE_KDEBUG)
+endif()
 
 # temporary migration support
 set(PRODUCTSET_DEFAULT "ALL")
@@ -235,7 +241,7 @@ calligra_define_product(FILTER_SVG_TO_KARBON "Karbon SVG import filter"  NEEDS K
 calligra_define_product(FILTER_KARBON_TO_WMF "Karbon WMF export filter"  NEEDS KARBON_APP)
 calligra_define_product(FILTER_WMF_TO_SVG "WMF to SVG filter"  NEEDS LIB_KOVECTORIMAGE CALLIGRA_LIBS)
 calligra_define_product(FILTER_KARBON1X_TO_KARBON "Karbon 1.x import filter"  NEEDS KARBON_APP)
-calligra_define_product(FILTER_KARBON_IMPORT "All Karbon import filter"  WANTS FILTER_EPS_TO_SVG_AI FILTER_PDF_TO_SVG FILTER_WPG_TO_SVG FILTER_SVG_TO_KARBON FILTER_WMF_TO_SVG FILTER_KARBON1X_TO_KARBON)
+calligra_define_product(FILTER_KARBON_IMPORT "All Karbon import filter"  WANTS FILTER_EPS_TO_SVG_AI FILTER_XFIG_TO_ODG FILTER_PDF_TO_SVG FILTER_WPG_TO_SVG FILTER_SVG_TO_KARBON FILTER_WMF_TO_SVG FILTER_KARBON1X_TO_KARBON)
 calligra_define_product(FILTER_KARBON_EXPORT "All Karbon export filter"  WANTS FILTER_KARBON_TO_IMAGE FILTER_KARBON_TO_SVG FILTER_KARBON_TO_WMF)
 calligra_define_product(FILTER_KARBON "All Karbon filter"  WANTS FILTER_KARBON_IMPORT FILTER_KARBON_EXPORT)
 # meta apps
@@ -250,6 +256,7 @@ calligra_define_product(FLOW "Full Flow (for Desktop)"  NEEDS FLOW_APP  WANTS FI
 calligra_define_product(PLAN "Full Plan (for Desktop)"  NEEDS PLAN_APP  WANTS FILTER_PLAN)
 calligra_define_product(BRAINDUMP "Full Braindump (for Desktop)"  NEEDS BRAINDUMP_APP)
 calligra_define_product(ACTIVE "Calligra Active"  NEEDS SHEETS_PART STAGE_PART WORDS_PART)
+calligra_define_product(COMPONENTS "Calligra QtQuick Components" NEEDS WORDS_PART SHEETS_PART STAGE_PART)
 calligra_define_product(CALLIGRA ""  NEEDS CALLIGRA_LIBS)
 # developer utils
 calligra_define_product(DEVTOOLS "Tools for developers")
@@ -272,8 +279,10 @@ calligra_set_productset(${PRODUCTSET})
 # this gives us the KDE install dir variables (instead of defining them in FindKDE4Internal.cmake),
 # RPATH handling and test settings. It does not need the actual KF5 modules
 find_package(KF5 REQUIRED MODULE COMPONENTS CMake Compiler InstallDirs)
+set(kdelibs_SOURCE_DIR TRUE)
 # override the kf5 plugin installdir
-set(PLUGIN_INSTALL_DIR ${BIN_INSTALL_DIR}/calligra/plugins)
+set(PLUGIN_INSTALL_DIR ${LIB_INSTALL_DIR}/calligra)
+
 
 # Use the KDE4 macros, they are very convenient. There's a copy in cmake/kde4_macros
 include(KDE4Macros)
@@ -355,15 +364,26 @@ add_definitions(${Qt5Widgets_DEFINITIONS} ${QT_DEFINITIONS} )
 add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 remove_definitions(-DQT3_SUPPORT_WARNINGS -DQT3_SUPPORT)
-remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FROM_BYTEARRAY -DQT_NO_KEYWORDS)
+remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FROM_BYTEARRAY -DQT_NO_KEYWORDS -DQT_NO_SIGNALS_SLOTS_KEYWORDS)
 
 SET(KDE4_KDECORE_LIBS ${QT_QTGUI_LIBRARIES} kofake)
 SET(KDE4_KDEUI_LIBS ${KDE4_KDECORE_LIBS})
 
+set(CXX11 "")
+if(CMAKE_COMPILER_IS_GNUCXX)
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.7")
+        set(CXX11 "-std=c++0x")
+    else(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.7")
+        set(CXX11 "-std=c++11")
+    endif(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.7")
+endif(CMAKE_COMPILER_IS_GNUCXX)
+
 SET(WARN "${WARN} -Wno-unused-parameter -Wno-unused-function -Wno-undef")
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${WARN}")
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WARN}")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WARN} ${CXX11}")
 
+# Now first build the kf5 frameworks we need
+add_subdirectory(kf5)
 
  ########################
 #########################
@@ -782,15 +802,45 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CM
 
 # for the fake kde headers during transition
 include_directories(${CMAKE_SOURCE_DIR}/fake
-                    ${CMAKE_SOURCE_DIR}/fake/kservice/src/plugin
-                    ${CMAKE_SOURCE_DIR}/fake/kservice/src/services
-                    ${CMAKE_SOURCE_DIR}/fake/kservice/src/kdeinit
-                    ${CMAKE_SOURCE_DIR}/fake/kservice/src/sycoca
-                    ${CMAKE_BINARY_DIR}/fake/kservice/src
-                    ${CMAKE_BINARY_DIR}/fake/kservice/
-                    ${CMAKE_SOURCE_DIR}/fake/kconfig/src/core/
-                    ${CMAKE_BINARY_DIR}/fake/kconfig/src/core
-                    ${CMAKE_BINARY_DIR}/fake/kconfig
+
+                    ${CMAKE_SOURCE_DIR}/kf5/kservice/src/plugin
+                    ${CMAKE_SOURCE_DIR}/kf5/kservice/src/services
+                    ${CMAKE_SOURCE_DIR}/kf5/kservice/src/sycoca
+                    ${CMAKE_BINARY_DIR}/kf5/kservice/src
+                    ${CMAKE_BINARY_DIR}/kf5/kservice
+
+                    ${CMAKE_SOURCE_DIR}/kf5/kconfig/src/core
+                    ${CMAKE_BINARY_DIR}/kf5/kconfig/src/core
+                    ${CMAKE_SOURCE_DIR}/kf5/kconfig/src/gui
+                    ${CMAKE_BINARY_DIR}/kf5/kconfig/src/gui
+                    ${CMAKE_BINARY_DIR}/kf5/kconfig
+
+                    ${CMAKE_SOURCE_DIR}/kf5/kcoreaddons/src
+                    ${CMAKE_BINARY_DIR}/kf5/kcoreaddons/src
+                    ${CMAKE_SOURCE_DIR}/kf5/kcoreaddons/src/caching
+                    ${CMAKE_SOURCE_DIR}/kf5/kcoreaddons/src/io
+                    ${CMAKE_SOURCE_DIR}/kf5/kcoreaddons/src/jobs
+                    ${CMAKE_SOURCE_DIR}/kf5/kcoreaddons/src/randomness
+                    ${CMAKE_SOURCE_DIR}/kf5/kcoreaddons/src/text
+                    ${CMAKE_SOURCE_DIR}/kf5/kcoreaddons/src/util
+
+                    ${CMAKE_SOURCE_DIR}/kf5/kcodec/src
+                    ${CMAKE_BINARY_DIR}/kf5/kcodec/src
+
+                    ${CMAKE_SOURCE_DIR}/kf5/kwidgetsaddons/src
+                    ${CMAKE_BINARY_DIR}/kf5/kwidgetsaddons/src
+
+                    ${CMAKE_SOURCE_DIR}/kf5/xmlgui/src
+                    ${CMAKE_BINARY_DIR}/kf5/xmlgui/src
+
+                    ${CMAKE_SOURCE_DIR}/kf5/kconfigwidgets/src/
+                    ${CMAKE_BINARY_DIR}/kf5/kconfigwidgets/src/
+
+                    ${CMAKE_SOURCE_DIR}/kf5/ki18n/src/
+                    ${CMAKE_BINARY_DIR}/kf5/ki18n/src/
+
+                    ${CMAKE_SOURCE_DIR}/kf5/kcodecs/src
+                    ${CMAKE_BINARY_DIR}/kf5/kcodecs/src
 )
 
 # koplugin is at the bottom of the stack
@@ -922,6 +972,11 @@ set(KOODF2_INCLUDES
     ${CMAKE_SOURCE_DIR}/filters/libodf2
 )
 
+# libodfreader
+set(KOODFREADER_INCLUDES
+    ${CMAKE_SOURCE_DIR}/filters/libodfreader
+)
+
  #########################################
 ##########################################
 ## Detect which products can be compile ##
@@ -1050,7 +1105,7 @@ calligra_drop_unbuildable_products()
 #############################################
 ####     Setup product-depending vars    ####
 #############################################
-
+set (SHOULD_BUILD_RDF FALSE)
 if(SHOULD_BUILD_RDF)
    add_definitions( -DSHOULD_BUILD_RDF )
 endif(SHOULD_BUILD_RDF)
@@ -1100,6 +1155,10 @@ endif(SHOULD_BUILD_ACTIVE)
 if(SHOULD_BUILD_DOC)
 #    add_subdirectory(doc)
 endif(SHOULD_BUILD_DOC)
+
+if(SHOULD_BUILD_COMPONENTS)
+    add_subdirectory(components)
+endif(SHOULD_BUILD_COMPONENTS)
 
 # non-app directories are moved here because they can depend on SHOULD_BUILD_{appname} variables set above
 add_subdirectory(libs)

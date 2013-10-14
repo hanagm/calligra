@@ -37,7 +37,7 @@
 
 #include <kcombobox.h>
 #include <kconfig.h>
-#include <kstatusbar.h>
+#include <QStatusBar>
 #include <knuminput.h>
 #include <kmessagebox.h>
 
@@ -57,7 +57,7 @@ using namespace Calligra::Sheets;
 class DocumentSettingsDialog::Private
 {
 public:
-    KPageWidgetItem* page1;
+    KFakePageWidgetItem* page1;
 
     // Locale Options
     parameterLocale* localePage;
@@ -65,7 +65,7 @@ public:
 
 
 DocumentSettingsDialog::DocumentSettingsDialog(Selection* selection, QWidget* parent)
-        : KPageDialog(parent)
+        : KoPageDialog(parent)
         , d(new Private)
 {
     setObjectName(QLatin1String("DocumentSettingsDialog"));

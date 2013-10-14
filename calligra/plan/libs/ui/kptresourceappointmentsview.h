@@ -27,7 +27,7 @@
 #include "kptviewbase.h"
 #include "kptresourceappointmentsmodel.h"
 
-#include <kpagedialog.h>
+#include <kopagedialog.h>
 
 class KoDocument;
 
@@ -71,7 +71,7 @@ private:
     ResourceAppointmentsItemModel *m_model;
 };
 
-class ResourceAppointmentsSettingsDialog : public KPageDialog
+class ResourceAppointmentsSettingsDialog : public KoPageDialog
 {
     Q_OBJECT
 public:
@@ -173,9 +173,9 @@ private slots:
 private:
     ResourceAppointmentsTreeView *m_view;
 
-    KAction *actionAddResource;
-    KAction *actionAddGroup;
-    KAction *actionDeleteSelection;
+    QAction *actionAddResource;
+    QAction *actionAddGroup;
+    QAction *actionDeleteSelection;
 
 };
 

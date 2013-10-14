@@ -23,6 +23,7 @@
 
 #include <QWidget>
 #include <kxmlguiclient.h>
+#include <kcomponentdata.h>
 #include "komain_export.h"
 
 class KoPart;
@@ -34,12 +35,12 @@ class KoZoomController;
 struct KoPageLayout;
 
 // KDE classes
-class KStatusBar;
 class KXmlGuiWindow;
-class KAction;
+class QAction;
 
 // Qt classes
 class QToolBar;
+class QStatusBar;
 class QDragEnterEvent;
 class QDropEvent;
 class QPrintDialog;
@@ -229,7 +230,7 @@ public:
    /**
      * @return the statusbar of the KoMainWindow in which this view is currently.
      */
-    KStatusBar * statusBar() const;
+    QStatusBar * statusBar() const;
 
     /**
      * This adds a widget to the statusbar for this view.
@@ -238,8 +239,8 @@ public:
      * and readding them when it is reactivated.
      * The parameters are the same as QStatusBar::addWidget().
      *
-     * Note that you can't use KStatusBar methods (inserting text items by id).
-     * But you can create a KStatusBarLabel with a dummy id instead, and use
+     * Note that you can't use QStatusBar methods (inserting text items by id).
+     * But you can create a QStatusBarLabel with a dummy id instead, and use
      * it directly, to get the same look and feel.
      */
     void addStatusBarItem(QWidget * widget, int stretch = 0, bool permanent = false);

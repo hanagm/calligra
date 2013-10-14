@@ -27,6 +27,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDirIterator>
+#include <QDir>
 
 KoJsonTrader::KoJsonTrader()
 {
@@ -40,11 +41,46 @@ KoJsonTrader* KoJsonTrader::self()
     return s_instance;
 }
 
-QList<QPluginLoader *> KoJsonTrader::query(const QString &servicetype, const QString &mimetype) const
+QList<QPluginLoader *> KoJsonTrader::query(const QString &servicetype, const QString &mimetype)
 {
-//    qDebug() << servicetype << mimetype;
+
+    if (m_pluginPath.isEmpty()) {
+        QDir appDir(qApp->applicationDirPath());
+        appDir.cdUp();
+        foreach(QString entry, appDir.entryList()) {
+            QFileInfo info(appDir, entry);
+            if (info.isDir() && info.fileName().contains("lib")) {
+                QDir libDir(info.absoluteFilePath());
+
+                // on many systems this will be the actual lib dir (and calligra subdir contains plugins)
+                if (libDir.entryList(QStringList() << "calligra").size() > 0) {
+                    m_pluginPath = info.absoluteFilePath() + "/calligra";
+                    break;
+                }
+
+                // on debian at least the actual libdir is a subdir named like "lib/x86_64-linux-gnu"
+                // so search there for the calligra subdir which will contain our plugins
+                foreach(QString subEntry, libDir.entryList()) {
+                    QFileInfo subInfo(libDir, subEntry);
+                    if (subInfo.isDir()) {
+                        if (QDir(subInfo.absoluteFilePath()).entryList(QStringList() << "calligra").size() > 0) {
+                            m_pluginPath = subInfo.absoluteFilePath() + "/calligra";
+                            break; // will only break inner loop so we need the extra check below
+                        }
+                    }
+                }
+
+                if (!m_pluginPath.isEmpty()) {
+                    break;
+                }
+            }
+        }
+        kDebug() << "KoJsonTrader will load its plugins from" << m_pluginPath;
+
+    }
+
     QList<QPluginLoader *>list;
-    QDirIterator dirIter(QCoreApplication::applicationDirPath() + "/calligra/plugins/", QDirIterator::Subdirectories);
+    QDirIterator dirIter(m_pluginPath, QDirIterator::Subdirectories);
     while (dirIter.hasNext()) {
         dirIter.next();
         if (dirIter.fileInfo().isFile()) {
@@ -52,11 +88,7 @@ QList<QPluginLoader *> KoJsonTrader::query(const QString &servicetype, const QSt
             QJsonObject json = loader->metaData().value("MetaData").toObject();
 
             if (json.isEmpty()) {
-                qDebug() << dirIter.filePath() << "has no json!";
-                //            foreach(QString key, loader->metaData().keys()) {
-                //                qDebug() << key << loader->metaData().value(key);
-                //            }
-
+                kDebug() << dirIter.filePath() << "has no json!";
             }
             if (!json.isEmpty()) {
                 if (! json.value("X-KDE-ServiceTypes").toArray().contains(QJsonValue(servicetype))) {

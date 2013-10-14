@@ -27,9 +27,7 @@
 
 class KPrDocument;
 class KPrPart;
-#ifndef CALLIGRA_DISABLE_DBUS
 class KPrViewAdaptor;
-#endif
 class KPrViewModeNotes;
 class KPrViewModeSlidesSorter;
 class KPrViewModePresentation;
@@ -52,12 +50,10 @@ public:
      * Get the document object the view was initialised with
      */
     KPrDocument * kprDocument() const;
-#ifndef CALLIGRA_DISABLE_DBUS
     /**
      * Get the view's dbus adaptor
      */
     virtual KPrViewAdaptor * dbusObject() const;
-#endif
     /**
      * Get the presentation view mode
      */
@@ -156,24 +152,22 @@ protected slots:
 private:
     KPrPart *m_part;
     KActionMenu *m_actionStartPresentation;
-    KAction *m_actionCreateAnimation;
-    KAction *m_actionViewModeNormal;
-    KAction *m_actionViewModeNotes;
-    KAction *m_actionViewModeSlidesSorter;
-    KAction *m_actionEditCustomSlideShows;
-    KAction *m_actionExportHtml;
-    KAction *m_actionInsertPictures;
-    KAction *m_actionDrawOnPresentation;
-    KAction *m_actionHighlightPresentation;
-    KAction *m_actionBlackPresentation;
+    QAction *m_actionCreateAnimation;
+    QAction *m_actionViewModeNormal;
+    QAction *m_actionViewModeNotes;
+    QAction *m_actionViewModeSlidesSorter;
+    QAction *m_actionEditCustomSlideShows;
+    QAction *m_actionExportHtml;
+    QAction *m_actionInsertPictures;
+    QAction *m_actionDrawOnPresentation;
+    QAction *m_actionHighlightPresentation;
+    QAction *m_actionBlackPresentation;
 
     KPrViewModePresentation *m_presentationMode;
     KoPAViewMode *m_normalMode;
     KPrViewModeNotes *m_notesMode;
     KPrViewModeSlidesSorter *m_slidesSorterMode;
-#ifndef CALLIGRA_DISABLE_DBUS
     KPrViewAdaptor *m_dbus;
-#endif
     int m_zoom;
     KoZoomMode::Mode m_zoomMode;
 
