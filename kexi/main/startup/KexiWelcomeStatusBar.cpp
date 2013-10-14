@@ -32,7 +32,7 @@
 #include <kstandarddirs.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include <kaction.h>
+#include <QAction>
 #include <kstandardguiitem.h>
 #include <kfadewidgeteffect.h>
 #include <kconfiggroup.h>
@@ -134,11 +134,11 @@ void KexiWelcomeStatusBarGuiUpdater::slotRedirectLoaded()
     KIO::Job* sendJob = KIO::storedHttpPost(postData,
                                             KUrl(uiPath(".list")),
                                             KIO::HideProgressInfo);
-    connect(sendJob, SIGNAL(result(KJob*)), this, SLOT(sendRequestListFilesFinished(KJob*)));
+    connect(sendJob, SIGNAL(result(KFakeJob*)), this, SLOT(sendRequestListFilesFinished(KJob*)));
     sendJob->addMetaData("content-type", "Content-Type: application/x-www-form-urlencoded");
 }
 
-void KexiWelcomeStatusBarGuiUpdater::sendRequestListFilesFinished(KJob* job)
+void KexiWelcomeStatusBarGuiUpdater::sendRequestListFilesFinished(KFakeJob* job)
 {
     if (job->error()) {
         kWarning() << "Error while receiving .list file - no files will be updated";
@@ -202,7 +202,7 @@ void KexiWelcomeStatusBarGuiUpdater::sendRequestListFilesFinished(KJob* job)
     KIO::CopyJob *copyJob = KIO::copy(sourceFiles,
                                         KUrl("file://" + tempDir.path() + "/"),
                                         KIO::HideProgressInfo | KIO::Overwrite);
-    connect(copyJob, SIGNAL(result(KJob*)), this, SLOT(filesCopyFinished(KJob*)));
+    connect(copyJob, SIGNAL(result(KFakeJob*)), this, SLOT(filesCopyFinished(KJob*)));
         //kDebug() << "copying from" << KUrl(uiPath(fname)) << "to"
 //            << (dir + fname);
 }
@@ -235,7 +235,7 @@ void KexiWelcomeStatusBarGuiUpdater::checkFile(const QByteArray &hash,
     }
 }
 
-void KexiWelcomeStatusBarGuiUpdater::filesCopyFinished(KJob* job)
+void KexiWelcomeStatusBarGuiUpdater::filesCopyFinished(KFakeJob* job)
 {
     if (job->error()) {
         //! @todo error...
@@ -700,9 +700,9 @@ public:
     QVBoxLayout *lyr;
     QPointer<KexiContextMessageWidget> msgWidget;
     QFont smallFont;
-    KAction *helpAction;
-    KAction *shareAction;
-    KAction *cancelAction;
+    QAction *helpAction;
+    QAction *shareAction;
+    QAction *cancelAction;
     QString label_involved_text_mask;
     QString link_share_more_usage_info_mask;
     QPointer<QGridLayout> contributionHelpLayout;
@@ -829,16 +829,16 @@ void KexiWelcomeStatusBar::showShareUsageInfo()
     KexiContextMessage msg(lbl->text());
     delete widget;
     if (!d->helpAction) {
-        d->helpAction = new KAction(KStandardGuiItem::help().icon(),
+        d->helpAction = new QAction(KStandardGuiItem::help().icon(),
                                     KStandardGuiItem::help().text(), this);
         connect(d->helpAction, SIGNAL(triggered()), this, SLOT(showContributionHelp()));
     }
     if (!d->shareAction) {
-        d->shareAction = new KAction(KStandardGuiItem::yes().icon(), i18n("Share"), this);
+        d->shareAction = new QAction(KStandardGuiItem::yes().icon(), i18n("Share"), this);
         connect(d->shareAction, SIGNAL(triggered()), this, SLOT(slotShareFeedback()));
     }
     if (!d->cancelAction) {
-        d->cancelAction = new KAction(KStandardGuiItem::cancel().icon(),
+        d->cancelAction = new QAction(KStandardGuiItem::cancel().icon(),
                                       KStandardGuiItem::cancel().text(), this);
         QObject::connect(d->cancelAction, SIGNAL(triggered()), this, SLOT(slotCancelled()));
     }

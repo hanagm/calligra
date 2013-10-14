@@ -34,6 +34,7 @@
 #include "KoMainWindow.h"
 #include "KoAutoSaveRecoveryDialog.h"
 #include <KoDpi.h>
+#include <KoJsonTrader.h>
 #include "KoPart.h"
 
 #include <kdeversion.h>
@@ -123,10 +124,10 @@ KoApplication::KoApplication(int argc, char** argv, const QByteArray &nativeMime
         setStyle("Oxygen");
     }
 
-    setApplicationName(aboutData->appName());
+    setApplicationName(aboutData->componentName());
     setApplicationVersion(aboutData->version());
     setOrganizationDomain(aboutData->organizationDomain());
-    setApplicationDisplayName(aboutData->programName());
+    setApplicationDisplayName(aboutData->displayName());
 
 }
 
@@ -201,7 +202,14 @@ bool KoApplication::start()
     ResetStarting resetStarting(d->splashScreen); // reset m_starting to false when we're done
     Q_UNUSED(resetStarting);
 
-    KoDocumentEntry entry = KoDocumentEntry::queryByMimeType(d->nativeMimeType); // FIXME QPluginLOader not KoServiceProvider::readNativeService());
+    KoDocumentEntry entry;
+    Q_FOREACH (QPluginLoader *loader, KoJsonTrader::self()->query("Calligra/Part", d->nativeMimeType)) {
+        if (loader->fileName().contains(qApp->applicationName()+QString("part"))) {
+            entry = KoDocumentEntry(loader);
+            break;
+        }
+    }
+
 
     if (entry.isEmpty()) {
         kError(30003) << KGlobal::mainComponent().componentName() << "part.desktop not found." << endl;

@@ -62,6 +62,8 @@ set(kritaui_LIB_SRCS
     kis_bookmarked_configurations_model.cc
     kis_bookmarked_filter_configurations_model.cc
     kis_canvas_resource_provider.cpp
+    kis_categories_mapper.cpp
+    kis_categorized_list_model.cpp
     kis_categorized_item_delegate.cpp
     kis_clipboard.cc
     kis_config.cc
@@ -96,6 +98,9 @@ set(kritaui_LIB_SRCS
     kis_painting_assistant.cc
     kis_painting_assistants_manager.cc
     kis_paintop_box.cc
+    kis_paintop_option.cpp
+    kis_paintop_options_model.cpp
+    kis_paintop_options_widget.cpp
     kis_palette_manager.cpp
     kis_popup_palette.cpp
     kis_png_converter.cpp
@@ -154,7 +159,7 @@ set(kritaui_LIB_SRCS
     tool/kis_tool_ellipse_base.cpp
     tool/kis_tool_rectangle_base.cpp
     tool/kis_tool_polyline_base.cpp
-    tool/kis_color_picker_utils.cpp
+    tool/kis_tool_utils.cpp
     tool/kis_resources_snapshot.cpp
     tool/kis_smoothing_options.cpp
     tool/strokes/freehand_stroke.cpp
@@ -213,6 +218,7 @@ set(kritaui_LIB_SRCS
     input/kis_single_action_shortcut.cpp
     input/kis_stroke_shortcut.cpp
     input/kis_shortcut_matcher.cpp
+    input/kis_select_layer_action.cpp
     operations/kis_operation.cpp
     operations/kis_operation_configuration.cpp
     operations/kis_operation_registry.cpp
@@ -237,6 +243,7 @@ set(kritaui_LIB_SRCS
     input/config/kis_mouse_input_editor.cpp
     input/config/kis_wheel_input_editor.cpp
     input/config/kis_key_input_editor.cpp
+    processing/fill_processing_visitor.cpp
 )
 
 if(HAVE_OPENGL)
@@ -378,4 +385,8 @@ install( FILES
 #    kis_tool_types.h
 #    KoInputDevice.h
 #    canvas/kis_perspective_grid_manager.h
+    kis_paintop_option.h
+    kis_paintop_options_model.h
+    kis_paintop_options_widget.h
+    processing/fill_processing_visitor.h
    DESTINATION ${INCLUDE_INSTALL_DIR}/krita)

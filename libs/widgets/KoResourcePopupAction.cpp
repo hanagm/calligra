@@ -39,6 +39,7 @@
 #include <QGradient>
 #include <QToolButton>
 #include <QRect>
+#include <QWidgetAction>
 
 class KoResourcePopupAction::Private
 {
@@ -52,7 +53,7 @@ public:
 };
 
 KoResourcePopupAction::KoResourcePopupAction(KoAbstractResourceServerAdapter *resourceAdapter, QObject *parent)
-:  KAction(parent)
+:  QAction(parent)
 , d(new Private())
 {
     Q_ASSERT(resourceAdapter);

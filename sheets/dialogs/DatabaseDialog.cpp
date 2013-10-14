@@ -343,7 +343,7 @@ DatabaseDialog::DatabaseDialog(QWidget* parent, Selection* selection)
     m_result = new KPageWidgetItem(resultFrame, i18n("Result"));
     addPage(m_result);
 
-    enableButton(KDialog::User1, false);   // Finish
+    //enableButton(KDialog::User1, false);   // Finish
 
     // signals and slots connections
     connect(m_orBox, SIGNAL(clicked()), this, SLOT(orBox_clicked()));
@@ -360,7 +360,7 @@ DatabaseDialog::DatabaseDialog(QWidget* parent, Selection* selection)
     QStringList str = QSqlDatabase::drivers();
     m_driver->insertItems(0, QSqlDatabase::drivers());
 
-    showButton(KDialog::Help, false);
+    //showButton(KDialog::Help, false);
     setValid(m_database, false);
     setValid(m_table, false);
     setValid(m_columns, false);

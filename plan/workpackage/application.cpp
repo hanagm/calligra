@@ -40,7 +40,7 @@
 #include <KoView.h>
 
 #include <kaboutdata.h>
-#include <kaction.h>
+#include <QAction>
 #include <kactioncollection.h>
 #include <QApplication>
 #include <kcmdlineargs.h>
@@ -62,7 +62,6 @@
 #include <kstandarddirs.h>
 #include <ktemporaryfile.h>
 #include <ktoolinvocation.h>
-#include <kxmlguifactory.h>
 
 #include "debugarea.h"
 

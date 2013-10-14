@@ -27,10 +27,10 @@
 #include <KoIcon.h>
 
 #include <QToolButton>
-#include <kaction.h>
+#include <QAction>
 #include <ktoggleaction.h>
 #include <kactioncollection.h>
-#include <kpagedialog.h>
+#include <kopagedialog.h>
 #include <ktextedit.h>
 #include <ktoolbar.h>
 
@@ -219,7 +219,7 @@ void KexiFormManager::createActions(KActionCollection* collection)
 #ifdef KEXI_DEBUG_GUI
     KConfigGroup generalGroup(KGlobal::config()->group("General"));
     if (generalGroup.readEntry("ShowInternalDebugger", false)) {
-        KAction *a = new KAction(koIcon("run-build-file"), i18n("Show Form UI Code"), this);
+        QAction *a = new QAction(koIcon("run-build-file"), i18n("Show Form UI Code"), this);
         d->collection->addAction("show_form_ui", a);
         a->setShortcut(Qt::CTRL + Qt::Key_U);
         connect(a, SIGNAL(triggered()), this, SLOT(showFormUICode()));
@@ -291,13 +291,14 @@ void KexiFormManager::createActions(KActionCollection* collection)
         }
 
         QSet<QString> iconOnlyActions;
-        iconOnlyActions << "show_form_ui";
+        //appendWidgetToToolbar doesn't work: iconOnlyActions << "show_form_ui";
         const QList<QAction*> actions( d->collection->actions() );
         foreach( QAction *a, actions ) {
             if (iconOnlyActions.contains(a->objectName())) { // icon only
                 KexiSmallToolButton *btn = new KexiSmallToolButton(a, win->toolBar("form"));
                 btn->setToolButtonStyle(Qt::ToolButtonIconOnly);
                 win->appendWidgetToToolbar("form", btn);
+                win->setWidgetVisibleInToolbar(btn, true);
             }
             else {
                 win->addToolBarAction("form", a);
@@ -489,8 +490,8 @@ void KexiFormManager::showFormUICode()
         return;
     }
 
-    KPageDialog uiCodeDialog;
-    uiCodeDialog.setFaceType(KPageDialog::Tabbed);
+    KoPageDialog uiCodeDialog;
+    uiCodeDialog.setFaceType(KoPageDialog::Tabbed);
     uiCodeDialog.setModal(true);
     uiCodeDialog.setWindowTitle(i18n("Form's UI Code"));
     uiCodeDialog.setButtons(KDialog::Close);

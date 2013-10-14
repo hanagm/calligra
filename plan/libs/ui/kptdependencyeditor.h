@@ -39,13 +39,13 @@
 
 #include "KoView.h"
 
-#include <kpagedialog.h>
+#include <kopagedialog.h>
 
 class KoPageLayoutWidget;
 
 class QModelIndex;
 
-class KAction;
+class QAction;
 
 namespace KPlato
 {
@@ -488,7 +488,7 @@ private:
 };
 
 //--------------------
-class DependencyeditorConfigDialog : public KPageDialog {
+class DependencyeditorConfigDialog : public KoPageDialog {
     Q_OBJECT
 public:
     DependencyeditorConfigDialog( ViewBase *view, QWidget *parent );
@@ -578,11 +578,11 @@ private:
 
     KActionMenu *menuAddTask;
     KActionMenu *menuAddSubTask;
-    KAction *actionAddTask;
-    KAction *actionAddMilestone;
-    KAction *actionAddSubtask;
-    KAction *actionAddSubMilestone;
-    KAction *actionDeleteTask;
+    QAction *actionAddTask;
+    QAction *actionAddMilestone;
+    QAction *actionAddSubtask;
+    QAction *actionAddSubMilestone;
+    QAction *actionDeleteTask;
 };
 
 

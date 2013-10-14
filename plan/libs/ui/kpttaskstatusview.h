@@ -44,7 +44,7 @@ class KoDocument;
 class KoPageLayoutWidget;
 class PrintingHeaderFooter;
 
-class KAction;
+class QAction;
 
 namespace KDChart
 {
@@ -482,7 +482,7 @@ public:
 
 };
 
-class ProjectStatusViewSettingsDialog : public KPageDialog
+class ProjectStatusViewSettingsDialog : public KoPageDialog
 {
     Q_OBJECT
 public:

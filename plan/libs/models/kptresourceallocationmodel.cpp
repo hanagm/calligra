@@ -35,12 +35,10 @@
 #include <QObject>
 #include <QStringList>
 
-#include <kaction.h>
+#include <QAction>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kactioncollection.h>
-#include <kxmlguifactory.h>
-
 
 namespace KPlato
 {

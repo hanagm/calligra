@@ -97,15 +97,15 @@ public:
 
     int dialogType, dialogOptions;
 
-    KPageWidgetItem *pageTemplates, *pageOpenExisting, *pageOpenRecent;
+    KFakePageWidgetItem *pageTemplates, *pageOpenExisting, *pageOpenRecent;
 
     // subpages within "templates" page
-    KPageWidgetItem *templPageWidgetItem_BlankDatabase,
+    KFakePageWidgetItem *templPageWidgetItem_BlankDatabase,
     *templPageWidgetItem_ImportExisting, *templPageWidgetItem_CreateFromTemplate;
     //int pageTemplatesID;
     //int pageOpenExistingID, pageOpenRecentID;
     //int templatesSectionID_blank, templatesSectionID_import;
-//#ifdef DB_TEMPLATES
+//#ifdef KEXI_PROJECT_TEMPLATES
 // int templatesSectionID_templates; //, templatesSectionID_custom2;
 //#endif
     QCheckBox *chkDoNotShow;
@@ -158,7 +158,7 @@ KexiStartupDialog::KexiStartupDialog(
     int dialogType, int dialogOptions,
     KexiDBConnectionSet& connSet, KexiProjectSet& recentProjects,
     QWidget *parent)
-        : KPageDialog(parent)
+        : KoPageDialog(parent)
         , d(new Private())
 {
     d->singlePage = dialogType == KexiStartupDialog::Templates
@@ -179,7 +179,7 @@ KexiStartupDialog::KexiStartupDialog(
 
     setSizeGripEnabled(true);
 // int id=0;
-    KPageWidgetItem *firstPage = 0;
+    KFakePageWidgetItem *firstPage = 0;
     if (d->dialogType & Templates) {
         setupPageTemplates();
         //d->pageTemplatesID = id++;
@@ -207,8 +207,8 @@ KexiStartupDialog::KexiStartupDialog(
 #endif
 
     if (!d->singlePage) {
-        connect(this, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)),
-                this, SLOT(slotCurrentPageChanged(KPageWidgetItem*,KPageWidgetItem*)));
+        connect(this, SIGNAL(currentPageChanged(KFakePageWidgetItem*,KFakePageWidgetItem*)),
+                this, SLOT(slotCurrentPageChanged(KFakePageWidgetItem*,KFakePageWidgetItem*)));
         d->templatesWidget->setFocus();
     }
     connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
@@ -230,7 +230,7 @@ bool KexiStartupDialog::shouldBeShown()
 
 void KexiStartupDialog::showEvent(QShowEvent *e)
 {
-    KPageDialog::showEvent(e);
+    KoPageDialog::showEvent(e);
     //just some cleanup
     //d->existingUrlToOpen = KUrl();
     d->result = -1;
@@ -254,13 +254,13 @@ void KexiStartupDialog::done(int r)
     if (r == QDialog::Rejected) {
         d->result = CancelResult;
     } else {
-        KPageWidgetItem *currentPageWidgetItem = currentPage();
+        KFakePageWidgetItem *currentPageWidgetItem = currentPage();
 
         if (currentPageWidgetItem == d->pageTemplates) {
-            KPageWidgetItem *currenTemplatesPageWidgetItem = d->templatesWidget->currentPage();
+            KFakePageWidgetItem *currenTemplatesPageWidgetItem = d->templatesWidget->currentPage();
             if (currenTemplatesPageWidgetItem == d->templPageWidgetItem_BlankDatabase)
                 d->result = CreateBlankResult;
-#ifdef DB_TEMPLATES
+#ifdef KEXI_PROJECT_TEMPLATES
             else if (currenTemplatesPageWidgetItem == d->templPageWidgetItem_CreateFromTemplate)
                 d->result = CreateFromTemplateResult;
 #endif
@@ -298,13 +298,13 @@ void KexiStartupDialog::done(int r)
 
     group.sync();
 
-    KPageDialog::done(r);
+    KoPageDialog::done(r);
 }
 
 void KexiStartupDialog::reject()
 {
 // d->result = CancelResult;
-    KPageDialog::reject();
+    KoPageDialog::reject();
 }
 
 void KexiStartupDialog::setupPageTemplates()
@@ -333,8 +333,8 @@ void KexiStartupDialog::setupPageTemplates()
             d->templatesWidget_IconListView->installEventFilter(this);
     }
     lyr->addWidget(d->templatesWidget);
-    connect(d->templatesWidget, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)),
-            this, SLOT(slotCurrentTemplatesubpageChanged(KPageWidgetItem*,KPageWidgetItem*)));
+    connect(d->templatesWidget, SIGNAL(currentPageChanged(KFakePageWidgetItem*,KFakePageWidgetItem*)),
+            this, SLOT(slotCurrentTemplatesubpageChanged(KFakePageWidgetItem*,KFakePageWidgetItem*)));
 
     if (d->dialogOptions & CheckBoxDoNotShowAgain) {
         d->chkDoNotShow = new QCheckBox(i18n("Do not show me this dialog again"), pageTemplatesFrame);
@@ -365,7 +365,7 @@ void KexiStartupDialog::setupPageTemplates()
     tmplyr->addWidget(lbl_blank);
     tmplyr->addStretch(1);
 
-#ifdef DB_TEMPLATES
+#ifdef KEXI_PROJECT_TEMPLATES
     //- page "templates"
 // d->templatesSectionID_templates = itemID++;
     QString none;
@@ -416,7 +416,7 @@ void KexiStartupDialog::setupPageTemplates()
       connect(d->viewBusinessTempl->templates,SIGNAL(returnPressed(QIconViewItem*)),this,SLOT(templateItemExecuted(QIconViewItem*)));
       connect(d->viewBusinessTempl->templates,SIGNAL(currentChanged(QIconViewItem*)),this,SLOT(templateItemSelected(QIconViewItem*)));
     */
-#endif //DB_TEMPLATES
+#endif //KEXI_PROJECT_TEMPLATES
 
     //- page "import db"
 // d->templatesSectionID_import = itemID++;
@@ -438,21 +438,21 @@ void KexiStartupDialog::setupPageTemplates()
     tmplyr->addStretch(1);
 }
 
-void KexiStartupDialog::slotCurrentPageChanged(KPageWidgetItem* current,
-        KPageWidgetItem* before)
+void KexiStartupDialog::slotCurrentPageChanged(KFakePageWidgetItem* current,
+        KFakePageWidgetItem* before)
 {
     Q_UNUSED(before);
     updateDialogOKButton(current);
 }
 
-void KexiStartupDialog::slotCurrentTemplatesubpageChanged(KPageWidgetItem* current,
-        KPageWidgetItem* before)
+void KexiStartupDialog::slotCurrentTemplatesubpageChanged(KFakePageWidgetItem* current,
+        KFakePageWidgetItem* before)
 {
     Q_UNUSED(before);
     if (current == d->templPageWidgetItem_BlankDatabase) {//blank
     } else if (current == d->templPageWidgetItem_ImportExisting) {
     }
-#ifdef DB_TEMPLATES
+#ifdef KEXI_PROJECT_TEMPLATES
     else if (current == d->templPageWidgetItem_CreateFromTemplate) {
         d->viewTemplates->populate();
     }
@@ -494,7 +494,7 @@ void KexiStartupDialog::templateItemExecuted(Q3IconViewItem *item)
     if (!item)
         return;
 // updateSelectedTemplateKeyInfo();
-#ifdef DB_TEMPLATES
+#ifdef KEXI_PROJECT_TEMPLATES
     accept();
 #endif
 }
@@ -511,7 +511,7 @@ void KexiStartupDialog::updateSelectedTemplateKeyInfo()
     } else if (d->templatesWidget->activePageIndex() == d->templatesSectionID_import) {
         d->selectedTemplateKey = "import";
     }
-#ifdef DB_TEMPLATES
+#ifdef KEXI_PROJECT_TEMPLATES
     else if (d->templatesWidget->activePageIndex() == d->templatesSectionID_templates) {
         item = d->viewTemplates->templates->currentItem();
         if (!item) {
@@ -543,7 +543,7 @@ void KexiStartupDialog::tabShown(QWidget *w)
   }
 }*/
 
-void KexiStartupDialog::updateDialogOKButton(KPageWidgetItem *pageWidgetItem)
+void KexiStartupDialog::updateDialogOKButton(KFakePageWidgetItem *pageWidgetItem)
 {
     if (!pageWidgetItem) {
         pageWidgetItem = currentPage();
@@ -561,8 +561,9 @@ void KexiStartupDialog::updateDialogOKButton(KPageWidgetItem *pageWidgetItem)
     bool enable = true;
     if (pageWidgetItem == d->pageTemplates) {
         //int t_id = d->templatesWidget->activePageIndex();
-        KPageWidgetItem *currenTemplatesPageWidgetItem = d->templatesWidget->currentPage();
 #ifdef DB_TEMPLATES
+        KFakePageWidgetItem *currenTemplatesPageWidgetItem = d->templatesWidget->currentPage();
+#ifdef KEXI_PROJECT_TEMPLATES
         enable =
             currenTemplatesPageWidgetItem == d->templPageWidgetItem_BlankDatabase
             || currenTemplatesPageWidgetItem == d->templPageWidgetItem_ImportExisting
@@ -749,7 +750,7 @@ bool KexiStartupDialog::eventFilter(QObject *o, QEvent *e)
         }
 
         if (tryAcept) {
-            KPageWidgetItem *currentTemplatesPageWidgetItem = d->templatesWidget->currentPage();
+            KFakePageWidgetItem *currentTemplatesPageWidgetItem = d->templatesWidget->currentPage();
             if (   currentTemplatesPageWidgetItem == d->templPageWidgetItem_BlankDatabase
                 || currentTemplatesPageWidgetItem == d->templPageWidgetItem_ImportExisting)
             {
@@ -757,7 +758,7 @@ bool KexiStartupDialog::eventFilter(QObject *o, QEvent *e)
             }
         }
     }
-    return KPageDialog::eventFilter(o, e);
+    return KoPageDialog::eventFilter(o, e);
 }
 
 // internal reimplementation

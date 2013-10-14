@@ -38,7 +38,7 @@ namespace KPlato
 {
 
 AccountsviewConfigDialog::AccountsviewConfigDialog( ViewBase *view, AccountsTreeView *treeview, QWidget *p)
-    : KPageDialog(p),
+    : KoPageDialog(p),
     m_view( view ),
     m_treeview( treeview )
 {
@@ -75,7 +75,7 @@ AccountsviewConfigDialog::AccountsviewConfigDialog( ViewBase *view, AccountsTree
     m_panel->ui_cumulative->setChecked( treeview->cumulative() );
     m_panel->ui_showBox->setCurrentIndex( treeview->showMode() );
 
-    KPageWidgetItem *page = addPage( m_panel, i18n( "General" ) );
+    KFakePageWidgetItem *page = addPage( m_panel, i18n( "General" ) );
     page->setHeader( i18n( "View Settings" ) );
 
     QTabWidget *tab = new QTabWidget();

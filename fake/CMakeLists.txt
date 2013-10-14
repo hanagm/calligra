@@ -11,7 +11,6 @@ set(kofake_LIB_SRCS
     kbuttongroup.cpp
     kcomponentdata.cpp
     #kconfigbase.cpp
-    kencodingprober.cpp
     kfilterbase.cpp
     kfilterdev.cpp
     kgzipfilter.cpp
@@ -25,85 +24,56 @@ set(kofake_LIB_SRCS
     krun.cpp
     klocale.cpp
     kcalendarsystem.cpp
-    kstandardaction.cpp
-    probers/CharDistribution.cpp
-    probers/ChineseGroupProber.cpp
-    probers/JapaneseGroupProber.cpp
-    probers/JpCntx.cpp
-    probers/LangBulgarianModel.cpp
-    probers/LangCyrillicModel.cpp
-    probers/LangGreekModel.cpp
-    probers/LangHebrewModel.cpp
-    probers/LangHungarianModel.cpp
-    probers/LangThaiModel.cpp
-    probers/UnicodeGroupProber.cpp
-    probers/nsBig5Prober.cpp
-    probers/nsCharSetProber.cpp
-    probers/nsEUCJPProber.cpp
-    probers/nsEUCKRProber.cpp
-    probers/nsEUCTWProber.cpp
-    probers/nsEscCharsetProber.cpp
-    probers/nsEscSM.cpp
-    probers/nsGB2312Prober.cpp
-    probers/nsHebrewProber.cpp
-    probers/nsLatin1Prober.cpp
-    probers/nsMBCSGroupProber.cpp
-    probers/nsMBCSSM.cpp
-    probers/nsSBCSGroupProber.cpp
-    probers/nsSBCharSetProber.cpp
-    probers/nsSJISProber.cpp
-    probers/nsUniversalDetector.cpp
-
+    #kstandardaction.cpp
 )
 
 set(kofake_HEADERS_ONLY 
-    kcolorbutton.h
-    kencodingprober.h
-    kstatusbar.h
+    #kcolorbutton.h
+    #kencodingprober.h
+    #kstatusbar.h
     kcombobox.h
     kurlrequester.h
-    kuser.h
     kicon.h
     kreplacedialog.h
     kfind.h
-    kxmlguiwindow.h
-    kmessagebox.h
-    krecentdocument.h
+    #kxmlguiwindow.h
+    #kmessagebox.h
+    #krecentdocument.h
     kfilewidget.h
-    kparts/componentfactory.h
-    kparts/browserextension.h
-    kparts/browserinterface.h
-    kparts/factory.h
-    kparts/mainwindow.h
-    kparts/part.h
-    kparts/partmanager.h
-    kparts/plugin.h
-    kparts/event.h
-    kfontsizeaction.h
+    #kparts/componentfactory.h
+    #kparts/browserextension.h
+    #kparts/browserinterface.h
+    #kparts/factory.h
+    #kparts/mainwindow.h
+    #kparts/part.h
+    #kparts/partmanager.h
+    #kparts/plugin.h
+    #kparts/event.h
+    #kfontsizeaction.h
     klimitediodevice_p.h
-    klistwidgetsearchline.h
-    kselectaction.h
-    kpagewidget.h
+    #klistwidgetsearchline.h
+    #kselectaction.h
+    #kpagewidget.h
     config.h
     knuminput.h
     kstandarddirs.h
-    ktoggleaction.h
-    kstandardguiitem.h
+    #ktoggleaction.h
+    #kstandardguiitem.h
     kshortcut.h
-    kpagedialog.h
+    kopagedialog.h
     kmenu.h
-    kactionmenu.h
+    #kactionmenu.h
     kcolormimedata.h
     kmimetype.h
     kemailsettings.h
     klineedit.h
-    kxmlguifactory.h
+    #kxmlguifactory.h
     kcompletion.h
     kcmdlineargs.h
     kinputdialog.h
     kpluginselector.h
     kofake_export.h
-    kxmlguiclient.h
+    #kxmlguiclient.h
     klistwidget.h
     kio/global.h
     kio/udsentry.h
@@ -113,17 +83,16 @@ set(kofake_HEADERS_ONLY
     kio/kfileitem.h
     kio/netaccess.h
     kio/copyjob.h
-    kio/kjob.h
     kdiroperator.h
     kcolordialog.h
     #kdesktopfile.h
-    kassistantdialog.h
+    #kassistantdialog.h
     knotifyconfigwidget.h
-    knewpassworddialog.h
+    #knewpassworddialog.h
     kwordwrap.h
-    klocalizedstring.h
-    ktoolbar.h
-    kpagewidgetitem.h
+    #klocalizedstring.h
+    #ktoolbar.h
+    kfakepagewidgetitem.h
     sonnet/dialog.h
     sonnet/speller.h
     sonnet/configwidget.h
@@ -133,48 +102,48 @@ set(kofake_HEADERS_ONLY
     #kservicetypetrader.h
     kdatetime.h
     kde_file.h
-    kstringhandler.h
+    #kstringhandler.h
     kpushbutton.h
     kwindowsystem.h
-    kmainwindow.h
+    #kmainwindow.h
     kcolorscheme.h
-    kselector.h
+    #kselector.h
     kglobalsettings.h
-    kseparator.h
+    #kseparator.h
     #ksharedconfig.h
     kdeprintdialog.h
-    kaboutdata.h
+    #kaboutdata.h
     kurlcombobox.h
     kimageio.h
-    kpassworddialog.h
+    #kpassworddialog.h
     kcolorutils.h
-    kactioncollection.h
+    #kactioncollection.h
     ktextedit.h
     kfinddialog.h
     kurlcompletion.h
-    kfontaction.h
-    kcodecs.h
-    krecentfilesaction.h
+    #kfontaction.h
+    #kcodecs.h
+    #krecentfilesaction.h
     kiconloader.h
     ktabwidget.h
-    kcolorcombo.h
+    #kcolorcombo.h
     kfilefiltercombo.h
     soprano/soprano.h
     kicondialog.h
     kreplace.h
     krecentdirs.h
-    kstandardshortcut.h
+    #kstandardshortcut.h
     khistorycombobox.h
     knotification.h
-    kcharsets.h
+    #kcharsets.h
     kcharselect.h
-    kpagewidgetmodel.h
+    #kpagewidgetmodel.h
     kglobal.h
-    kpassivepopup.h
+    #kpassivepopup.h
     kfiledialog.h
-    kfontchooser.h
+    #kfontchooser.h
     #kconfig.h
-    ksharedptr.h
+    #ksharedptr.h
     kfileitem.h
     #klibloader.h
     kpropertiesdialog.h
@@ -185,20 +154,19 @@ set(kofake_HEADERS_ONLY
     kmenubar.h
     #kservice.h
     ktoolinvocation.h
-    kedittoolbar.h
-    ksqueezedtextlabel.h
+    #kedittoolbar.h
+    #ksqueezedtextlabel.h
     #kservicetype.h
     knumvalidator.h
     ktemporaryfile.h
     ktextbrowser.h
     #kconfiggroup.h
     config-compression.h
-    kjob.h
-    kwidgetitemdelegate.h
-    kxyselector.h
+    #kwidgetitemdelegate.h
+    #kxyselector.h
     kdeversion.h
     kfontdialog.h
-    kguiitem.h
+    #kguiitem.h
 )
 
 set(kofake_HEADERS 
@@ -217,23 +185,20 @@ set(kofake_HEADERS
     kaction.h
     kdialog.h
     kocursor.h
-    kprocess.h
+    #kprocess.h
     krun.h
     klocale.h
     kcalendarsystem.h
     kocursor_p.h
-    kstandardaction.h
+    #kstandardaction.h
 )
-
-add_subdirectory(kservice)
-add_subdirectory(kconfig)
 
 QT5_WRAP_CPP(kofake_HEADERS_MOC ${kofake_HEADERS_ONLY})
 
 kde4_add_library(kofake SHARED ${kofake_LIB_SRCS} ${kofake_HEADERS_MOC})
 
-target_link_libraries(kofake Qt5::Widgets Qt5::Xml ${ZLIB_LIBRARIES} KService KConfigCore)
-target_link_libraries(kofake LINK_INTERFACE_LIBRARIES Qt5::Widgets Qt5::Xml KService KConfigCore)
+target_link_libraries(kofake Qt5::Widgets Qt5::Xml ${ZLIB_LIBRARIES} KService KConfigCore KCoreAddons KWidgetsAddons KI18n KConfigWidgets XmlGui)
+target_link_libraries(kofake LINK_INTERFACE_LIBRARIES Qt5::Widgets Qt5::Xml KService KConfigCore KCoreAddons KWidgetsAddons KI18n KConfigWidgets XmlGui) 
 
 set_target_properties(kofake PROPERTIES
     VERSION ${GENERIC_CALLIGRA_LIB_VERSION} SOVERSION ${GENERIC_CALLIGRA_LIB_SOVERSION}

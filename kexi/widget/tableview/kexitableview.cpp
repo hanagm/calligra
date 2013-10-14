@@ -48,7 +48,6 @@
 #include <QDropEvent>
 #include <QPixmap>
 #include <QDesktopWidget>
-#include <QMatrix>
 #include <QScrollArea>
 
 #include <kglobal.h>
@@ -56,7 +55,7 @@
 #include <kdebug.h>
 #include <QApplication>
 #include <kmessagebox.h>
-#include <kaction.h>
+#include <QAction>
 
 #ifndef KEXI_NO_PRINT
 #include <QPrinter>
@@ -1289,7 +1288,7 @@ static bool overrideEditorShortcutNeeded(QKeyEvent *e)
 bool KexiTableView::shortCutPressed(QKeyEvent *e, const QString &action_name)
 {
     const int k = e->key();
-    KAction *action = dynamic_cast<KAction*>(m_sharedActions.value(action_name));
+    QAction *action = dynamic_cast<QAction*>(m_sharedActions.value(action_name));
     if (action) {
         if (!action->isEnabled())//this action is disabled - don't process it!
             return false;

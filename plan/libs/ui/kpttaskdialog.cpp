@@ -38,14 +38,14 @@ namespace KPlato
 {
 
 TaskDialog::TaskDialog( Project &project, Task &task, Accounts &accounts, QWidget *p)
-    : KPageDialog(p),
+    : KoPageDialog(p),
     m_project( project ),
     m_node( &task )
 {
     setCaption( i18n("Task Settings") );
     setButtons( Ok|Cancel );
     setDefaultButton( Ok );
-    setFaceType( KPageDialog::Tabbed );
+    setFaceType( KoPageDialog::Tabbed );
     showButtonSeparator( true );
     KVBox *page;
 
@@ -74,7 +74,7 @@ TaskDialog::TaskDialog( Project &project, Task &task, Accounts &accounts, QWidge
 
     enableButtonOk(false);
 
-    connect(this, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)), SLOT(slotCurrentChanged(KPageWidgetItem*,KPageWidgetItem*)));
+    connect(this, SIGNAL(currentPageChanged(KFakePageWidgetItem*,KFakePageWidgetItem*)), SLOT(slotCurrentChanged(KFakePageWidgetItem*,KFakePageWidgetItem*)));
 
     connect(m_generalTab, SIGNAL(obligatedFieldsFilled(bool)), this, SLOT(enableButtonOk(bool)));
     connect(m_resourcesTab, SIGNAL(changed()), m_generalTab, SLOT(checkAllFieldsFilled()));
@@ -85,10 +85,10 @@ TaskDialog::TaskDialog( Project &project, Task &task, Accounts &accounts, QWidge
     connect(&project, SIGNAL(nodeRemoved(Node*)), this, SLOT(slotTaskRemoved(Node*)));
 }
 
-void TaskDialog::slotCurrentChanged( KPageWidgetItem *current, KPageWidgetItem */*prev*/ )
+void TaskDialog::slotCurrentChanged( KFakePageWidgetItem *current, KFakePageWidgetItem */*prev*/ )
 {
     //kDebug(planDbg())<<current->widget()<<m_descriptionTab->parent();
-    // HACK: KPageDialog grabs focus when a tab is clicked.
+    // HACK: KoPageDialog grabs focus when a tab is clicked.
     // KRichTextWidget still flashes the caret so the user thinks it has the focus.
     // For now, just give the KRichTextWidget focus.
     if ( current->widget() == m_descriptionTab->parent() ) {
