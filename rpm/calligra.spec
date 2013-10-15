@@ -27,7 +27,6 @@ BuildRequires: pkgconfig(libgsf-1)
 BuildRequires: libjpeg-devel
 BuildRequires: pkgconfig(libpng)
 BuildRequires: pkgconfig(eigen2)
-BuildRequires: pkgconfig(x11)
 BuildRequires: pkgconfig(openssl)
 BuildRequires: calligra-extra-cmake-modules
 %if 0%{?krita}
@@ -57,7 +56,7 @@ Requires: %{name}-kexi
 
 %define calligra_runtime_requires %{name}-plugins %{name}-data oxygen-icon-theme
 
-%define datadir %{_datadir}
+#%define datadir %{_datadir}
 
 %description
 %{summary}.
@@ -332,6 +331,13 @@ KDESYCOCA=/usr/share/kde5/services/ksycoca4 /usr/bin/kbuildsycoca4 2> /dev/null 
 
 %postun libs -p  /sbin/ldconfig
 
+%package components
+Summary: Qt Quick components for showing documents using Calligra
+Group: Development/Libraries
+
+%description components
+%{summary}.
+
 %package filters
 Summary: Calligra input/output filters
 Requires: %{name}-words-filters = %{version}-%{release}
@@ -442,7 +448,7 @@ Group: Development/Libraries
 %defattr(-,root,root,-)
 %{_datadir}/kde5/services/wordspart.desktop
 %{_libdir}/libwordsprivate.so.*
-%{_bindir}/calligra/plugins/wordspart.so
+%{_libdir}/calligra/wordspart.so
 /usr/etc/xdg/wordsrc
 %{_datadir}/words/styles/defaultstyles.xml
 %{_datadir}/words/words.rc
@@ -482,11 +488,11 @@ Group: Development/Libraries
 %files sheets-core
 %defattr(-,root,root,-)
 %{_datadir}/kde5/services/sheetspart.desktop
-%{_bindir}/calligra/plugins/calligrasheetspart.so
+%{_libdir}/calligra/calligrasheetspart.so
 %{_libdir}/libcalligrasheetsodf.so.*
 %{_libdir}/libcalligrasheetscommon.so.*
-%{_bindir}/calligra/plugins/calligra_shape_spreadsheet.so
-%{_bindir}/calligra/plugins/calligra_shape_spreadsheet-deferred.so
+%{_libdir}/calligra/calligra_shape_spreadsheet.so
+%{_libdir}/calligra/calligra_shape_spreadsheet-deferred.so
 %{_datadir}/kde5/servicetypes/sheets_plugin.desktop
 %{_datadir}/kde5/servicetypes/sheets_viewplugin.desktop
 %{_datadir}/kde5/services/calligra_shape_spreadsheet-deferred.desktop
@@ -509,9 +515,9 @@ Group: Development/Libraries
 
 %files sheets-core-plugins
 %defattr(-,root,root,-)
-# %{_bindir}/calligra/plugins/sheetssolver.so
-# %{_datadir}/kde5/services/sheetssolver.desktop
-# %{_datadir}/sheets/viewplugins/solver.rc
+%{_libdir}/calligra/sheetssolver.so
+%{_datadir}/kde5/services/sheetssolver.desktop
+%{_datadir}/sheets/viewplugins/solver.rc
 
 # %{_datadir}/kde5/services/kspreadmathmodule.desktop
 # %{_datadir}/sheets/functions/math.xml
@@ -585,7 +591,7 @@ Group: Development/Libraries
 %files stage-core
 %defattr(-,root,root,-)
 %{_datadir}/kde5/services/stagepart.desktop
-%{_bindir}/calligra/plugins/calligrastagepart.so
+%{_libdir}/calligra/calligrastagepart.so
 %{_libdir}/libcalligrastageprivate.so.*
 %{_datadir}/kde5/servicetypes/presentationeventaction.desktop
 %{_datadir}/kde5/servicetypes/kpr_pageeffect.desktop
@@ -623,19 +629,19 @@ Group: Development/Libraries
 %{_datadir}/kde5/services/kpr_pageeffect_spacerotation.desktop
 %{_datadir}/kde5/services/kpr_pageeffect_swapeffect.desktop
 %{_datadir}/kde5/services/kpr_shapeanimation_example.desktop
-%{_bindir}/calligra/plugins/kpr_pageeffect_barwipe.so
-%{_bindir}/calligra/plugins/kpr_pageeffect_clockwipe.so
-%{_bindir}/calligra/plugins/kpr_pageeffect_edgewipe.so
-%{_bindir}/calligra/plugins/kpr_pageeffect_fade.so
-%{_bindir}/calligra/plugins/kpr_pageeffect_iriswipe.so
-%{_bindir}/calligra/plugins/kpr_pageeffect_matrixwipe.so
-%{_bindir}/calligra/plugins/kpr_pageeffect_slidewipe.so
-%{_bindir}/calligra/plugins/kpr_pageeffect_spacerotation.so
-%{_bindir}/calligra/plugins/kpr_pageeffect_swapeffect.so
-%{_bindir}/calligra/plugins/kpr_shapeanimation_example.so
-%{_bindir}/calligra/plugins/calligrastageeventactions.so
-%{_bindir}/calligra/plugins/calligrastagetoolanimation.so
-%{_bindir}/calligra/plugins/kprvariables.so
+%{_libdir}/calligra/kpr_pageeffect_barwipe.so
+%{_libdir}/calligra/kpr_pageeffect_clockwipe.so
+%{_libdir}/calligra/kpr_pageeffect_edgewipe.so
+%{_libdir}/calligra/kpr_pageeffect_fade.so
+%{_libdir}/calligra/kpr_pageeffect_iriswipe.so
+%{_libdir}/calligra/kpr_pageeffect_matrixwipe.so
+%{_libdir}/calligra/kpr_pageeffect_slidewipe.so
+%{_libdir}/calligra/kpr_pageeffect_spacerotation.so
+%{_libdir}/calligra/kpr_pageeffect_swapeffect.so
+%{_libdir}/calligra/kpr_shapeanimation_example.so
+%{_libdir}/calligra/calligrastageeventactions.so
+%{_libdir}/calligra/calligrastagetoolanimation.so
+%{_libdir}/calligra/kprvariables.so
 
 %if 0%{?krita}
 %files krita
@@ -971,10 +977,24 @@ Group: Development/Libraries
 
 %files libs
 %defattr(-,root,root,-)
+%{_bindir}/preparetips
 %{_libdir}/libKConfigCore.so*
 %{_libdir}/libKService.so*
+%{_libdir}/libItemViews.so*
+%{_libdir}/libKCodecs.so*
+%{_libdir}/libKConfigGui.so*
+%{_libdir}/libKConfigWidgets.so*
+%{_libdir}/libKCoreAddons.so*
+%{_libdir}/libKI18n.so*
+%{_libdir}/libKWidgetsAddons.so*
+%{_libdir}/libXmlGui.so*
 %{_libdir}/libkofake.so*
 %{_datadir}/kde5/servicetypes/kplugininfo.desktop
+%{_datadir}/dbus-1/interfaces/org.kde.KGlobalAccel.xml
+%{_datadir}/dbus-1/interfaces/org.kde.kglobalaccel.Component.xml
+%{_datadir}/kconfigwidgets/pics/ktip-bulb.png
+%{_datadir}/xmlgui/pics/*.png
+/usr/etc/xdg/ui/ui_standards.rc
 
 %{_libdir}/libpigmentcms.so.*
 %{_libdir}/libkowidgets.so.*
@@ -994,7 +1014,7 @@ Group: Development/Libraries
 #%{_libdir}/libRtfReader.so*
 %{_libdir}/libkowidgetutils.so*
 
-%{_bindir}/calligra/plugins/calligra_tool_basicflakes.so
+%{_libdir}/calligra/calligra_tool_basicflakes.so
 %{_datadir}/kde5/services/calligra_tool_basicflakes.desktop
 #%{_libdir}/kde5/calligradocinfopropspage.so
 #%{_datadir}/kde5/services/calligradocinfopropspage.desktop
@@ -1006,7 +1026,9 @@ Group: Development/Libraries
 %{_datadir}/kde5/servicetypes/calligra_part.desktop
 %{_datadir}/kde5/servicetypes/calligradocker.desktop
 
-
+%files components
+%defattr(-,root,root,-)
+%{_libdir}/calligra/org/kde/calligra
 
 %files filters-libs
 %defattr(-,root,root,-)
@@ -1124,30 +1146,30 @@ Group: Development/Libraries
 # %{_libdir}/kde5/videoshape.so
 
 %{_datadir}/kde5/services/calligra_shape_text.desktop
-%{_bindir}/calligra/plugins/calligra_shape_text.so
+%{_libdir}/calligra/calligra_shape_text.so
 
 %{_datadir}/kde5/services/calligra_textinlineobject_variables.desktop
-%{_bindir}/calligra/plugins/calligra_textinlineobject_variables.so
+%{_libdir}/calligra/calligra_textinlineobject_variables.so
 
 %{_datadir}/kde5/services/calligra_shape_paths.desktop
-%{_bindir}/calligra/plugins/calligra_shape_paths.so
+%{_libdir}/calligra/calligra_shape_paths.so
 
 %{_datadir}/kde5/services/calligra_shape_picture.desktop
-%{_bindir}/calligra/plugins/calligra_shape_picture.so
+%{_libdir}/calligra/calligra_shape_picture.so
 
 %{_datadir}/kde5/services/calligra_shape_plugin.desktop
-%{_bindir}/calligra/plugins/calligra_shape_plugin.so
+%{_libdir}/calligra/calligra_shape_plugin.so
 
 # maybe needs to be its own package
 %{_datadir}/kde5/services/calligra_shape_spreadsheet.desktop
-%{_bindir}/calligra/plugins/calligra_shape_spreadsheet.so
+%{_libdir}/calligra/calligra_shape_spreadsheet.so
 
 %{_datadir}/kde5/services/calligra_shape_chart.desktop
 # %{_libdir}/libchartshapelib.so.*
-%{_bindir}/calligra/plugins/calligra_shape_chart.so
+%{_libdir}/calligra/calligra_shape_chart.so
 
 %{_datadir}/kde5/services/calligra_tool_defaults.desktop
-%{_bindir}/calligra/plugins/calligra_tool_defaults.so
+%{_libdir}/calligra/calligra_tool_defaults.so
 
 # %{_datadir}/kde5/services/kchartpart.desktop
 
@@ -1158,7 +1180,7 @@ Group: Development/Libraries
 #%{_libdir}/kde5/kofficethumbnail.so
 
 %{_datadir}/kde5/services/kopabackgroundtool.desktop
-%{_bindir}/calligra/plugins/kopabackgroundtool.so
+%{_libdir}/calligra/kopabackgroundtool.so
 
 # staging
 #%{_datadir}/kpresenter/kpartplugins/googledocs-kpresenter.rc
