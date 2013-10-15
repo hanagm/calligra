@@ -95,7 +95,7 @@ generate_export_header(XmlGui)
 target_link_libraries(XmlGui LINK_PUBLIC
     Qt5::Widgets
     Qt5::DBus
-    Qt5::X11Extras
+#    Qt5::X11Extras
     Qt5::Xml
     Qt5::Network
     Qt5::PrintSupport
