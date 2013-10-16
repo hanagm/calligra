@@ -59,9 +59,13 @@ namespace std {
 bool isnan(const qreal& x) { return std::isnan((double)x); }
 bool isinf(const qreal& x) { return std::isinf((double)x); }
 }
+#warning on darwin, cygwin or cpp11
 #else
 #define ISNAN(x) isnan(x)
 #define ISINF(x) isinf(x)
+bool isnan(const qreal& x) { return isnan((double)x); }
+bool isinf(const qreal& x) { return isinf((double)x); }
+#warning on something else...
 #endif
 
 
