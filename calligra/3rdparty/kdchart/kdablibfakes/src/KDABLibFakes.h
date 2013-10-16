@@ -56,15 +56,15 @@
 #define ISNAN(x) std::isnan(x)
 #define ISINF(x) std::isinf(x)
 namespace std {
-bool isnan(const qreal& x) { return std::isnan((double)x); }
-bool isinf(const qreal& x) { return std::isinf((double)x); }
+bool isnan(const qreal& x) { return std::isnan(static_cast<double>(x)); }
+bool isinf(const qreal& x) { return std::isinf(static_cast<double>(x)); }
 }
 #warning on darwin, cygwin or cpp11
 #else
 #define ISNAN(x) isnan(x)
 #define ISINF(x) isinf(x)
-bool isnan(const qreal& x) { return isnan((double)x); }
-bool isinf(const qreal& x) { return isinf((double)x); }
+bool isnan(const qreal& x) { return isnan(static_cast<double>(x)); }
+bool isinf(const qreal& x) { return isinf(static_cast<double>(x)); }
 #warning on something else...
 #endif
 
