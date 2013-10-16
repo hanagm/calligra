@@ -56,8 +56,8 @@
 #define ISNAN(x) std::isnan(x)
 #define ISINF(x) std::isinf(x)
 namespace std {
-bool isnan(const qreal& x) { return isnan((double)x); }
-bool isinf(const qreal& x) { return isinf((double)x); }
+bool isnan(const qreal& x) { return std::isnan((double)x); }
+bool isinf(const qreal& x) { return std::isinf((double)x); }
 }
 #else
 #define ISNAN(x) isnan(x)
