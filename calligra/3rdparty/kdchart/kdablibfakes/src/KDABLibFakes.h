@@ -58,8 +58,6 @@
 #else
 #define ISNAN(x) isnan(x)
 #define ISINF(x) isinf(x)
-bool isnan(const qreal& x) { return isnan((double)x); }
-bool isinf(const qreal& x) { return isinf((double)x); }
 #endif
 
 
