@@ -515,9 +515,9 @@ Group: Development/Libraries
 
 %files sheets-core-plugins
 %defattr(-,root,root,-)
-%{_libdir}/calligra/sheetssolver.so
-%{_datadir}/kde5/services/sheetssolver.desktop
-%{_datadir}/sheets/viewplugins/solver.rc
+#%{_libdir}/calligra/sheetssolver.so
+#%{_datadir}/kde5/services/sheetssolver.desktop
+#%{_datadir}/sheets/viewplugins/solver.rc
 
 # %{_datadir}/kde5/services/kspreadmathmodule.desktop
 # %{_datadir}/sheets/functions/math.xml
