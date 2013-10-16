@@ -52,20 +52,12 @@
 #include <float.h>
 #define ISNAN(x ) _isnan(x )
 #define ISINF(x ) (!(_finite(x ) + _isnan(x ) ) )
-#elif defined (Q_OS_DARWIN) || defined (Q_OS_CYGWIN) || __cplusplus >= 201103L
+#elif defined (Q_OS_DARWIN) || defined (Q_OS_CYGWIN) || __cplusplus >= 201103L || defined(CALLIGRA_CPP11)
 #define ISNAN(x) std::isnan(x)
-#define ISINF(x) std::isinf(x)
-namespace std {
-bool isnan(const qreal& x) { return std::isnan(static_cast<double>(x)); }
-bool isinf(const qreal& x) { return std::isinf(static_cast<double>(x)); }
-}
-#warning on darwin, cygwin or cpp11
+#define ISINF(x) std::isinf(x) 
 #else
 #define ISNAN(x) isnan(x)
 #define ISINF(x) isinf(x)
-bool isnan(const qreal& x) { return isnan(static_cast<double>(x)); }
-bool isinf(const qreal& x) { return isinf(static_cast<double>(x)); }
-#warning on something else...
 #endif
 
 
