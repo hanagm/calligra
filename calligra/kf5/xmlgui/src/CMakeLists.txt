@@ -8,12 +8,12 @@ set_package_properties(LibAttica PROPERTIES DESCRIPTION "A Qt library that imple
                        TYPE OPTIONAL
                       )
 
-# if (X11_FOUND)
-#    set (HAVE_X11 1)
-#    set (XMLGUI_EXTRA_LIBS ${XMLGUI_EXTRA_LIBS} ${X11_LIBRARIES})
-# else ()
+if (X11_FOUND)
+   set (HAVE_X11 1)
+   set (XMLGUI_EXTRA_LIBS ${XMLGUI_EXTRA_LIBS} ${X11_LIBRARIES})
+else ()
    set (HAVE_X11 0)
-# endif ()
+endif ()
 
 if (LibAttica_FOUND)
    set (HAVE_ATTICA 1)
