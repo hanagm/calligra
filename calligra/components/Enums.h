@@ -17,50 +17,57 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef CALLIGRA_COMPONENTS_VIEW_H
-#define CALLIGRA_COMPONENTS_VIEW_H
+#ifndef CALLIGRA_COMPONENTS_ENUMS_H
+#define CALLIGRA_COMPONENTS_ENUMS_H
 
-#include <QtQuick/QQuickPaintedItem>
+#include <QtCore/QObject>
 
 namespace Calligra {
 namespace Components {
 
-class Document;
-
-/**
- * \brief The view provides a View object for viewing Documents.
- *
- */
-
-class View : public QQuickPaintedItem
+class DocumentType : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(Calligra::Components::Document* document READ document WRITE setDocument NOTIFY documentChanged)
+    Q_ENUMS(Type)
 
 public:
-    View(QQuickItem* parent = 0);
-    virtual ~View();
-
-    virtual void paint(QPainter* painter) Q_DECL_OVERRIDE;
-
-    Document* document() const;
-    void setDocument(Document* newDocument);
-
-Q_SIGNALS:
-    void linkClicked(const QUrl& url);
-    void documentChanged();
-
-protected:
-    virtual void geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry) Q_DECL_OVERRIDE;
-
-private:
-    class Private;
-    Private* const d;
+    enum Type {
+        Unknown, ///< An unknown document.
+        TextDocument, ///< A text document, for example an OpenDocument Text document.
+        Spreadsheet, ///< A spreadsheet, for example an Excel document.
+        Presentation, ///< A presentation, for example a Keynote document.
+        StaticTextDocument, ///< An unmodifiable text document, for example a PDF document.
+    };
 };
+
+class DocumentStatus : public QObject
+{
+    Q_OBJECT
+    Q_ENUMS(Status)
+
+public:
+    enum Status {
+        Unloaded,
+        Loading,
+        Loaded,
+        Failed,
+    };
+};
+
+// class ZoomMode : public QObject
+// {
+//     Q_OBJECT
+//     Q_ENUMS(Mode)
+//
+// public:
+//     enum Mode {
+//         Constant,
+//         FitPage,
+//         FitWidth,
+//     };
+// };
 
 } // Namespace Components
 } // Namespace Calligra
 
-Q_DECLARE_METATYPE(Calligra::Components::View*)
-
-#endif // CALLIGRA_COMPONENTS_VIEW_H
+#endif // CALLIGRA_COMPONENTS_ENUMS_H

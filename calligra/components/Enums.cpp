@@ -17,32 +17,4 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef CALLIGRA_COMPONENTS_SPREADSHEETIMPL_H
-#define CALLIGRA_COMPONENTS_SPREADSHEETIMPL_H
-
-#include "DocumentImpl.h"
-
-namespace Calligra {
-namespace Components {
-
-class SpreadsheetImpl  : public DocumentImpl
-{
-    Q_OBJECT
-public:
-    SpreadsheetImpl(QObject* parent = 0);
-    ~SpreadsheetImpl();
-
-    virtual bool load(const QUrl& url);
-
-private Q_SLOTS:
-    void updateDocumentSize(const QSize& size);
-
-private:
-    class Private;
-    Private* const d;
-};
-
-} // Namespace Components
-} // Namespace Calligra
-
-#endif // CALLIGRA_COMPONENTS_SPREADSHEETIMPL_H
+#include "Enums.h"
