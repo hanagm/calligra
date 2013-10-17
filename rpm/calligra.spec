@@ -1274,6 +1274,7 @@ Group: Development/Libraries
 mkdir -p build && cd build
 cmake \
     -DPRODUCTSET=Libraries \
+    -DFORCE_X11_OFF=ON \
     -DKDE4_BUILD_TESTS=OFF \
     -DWITH_KActivities=OFF \
     -DCMAKE_INSTALL_PREFIX=/usr/ \
