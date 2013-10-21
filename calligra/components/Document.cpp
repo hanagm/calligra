@@ -108,6 +108,22 @@ QSize Document::documentSize() const
     return QSize{};
 }
 
+int Document::currentIndex() const
+{
+    if(d->impl) {
+        return d->impl->currentIndex();
+    }
+
+    return -1;
+}
+
+void Document::setCurrentIndex(int newValue)
+{
+    if(d->impl) {
+        d->impl->setCurrentIndex(newValue);
+    }
+}
+
 KoFindBase* Document::finder() const
 {
     if(d->impl) {
@@ -135,6 +151,23 @@ KoCanvasController* Document::canvasController() const
     return nullptr;
 }
 
+KoZoomController* Document::zoomController() const
+{
+    if(d->impl) {
+        return d->impl->zoomController();
+    }
+
+    return nullptr;
+}
+
+KoDocument* Document::koDocument() const
+{
+    if(d->impl) {
+        return d->impl->koDocument();
+    }
+
+    return nullptr;
+}
 
 void Document::Private::updateImpl()
 {
@@ -164,6 +197,7 @@ void Document::Private::updateImpl()
 
     if(impl) {
         connect(impl, &DocumentImpl::documentSizeChanged, q, &Document::documentSizeChanged);
+        connect(impl, &DocumentImpl::currentIndexChanged, q, &Document::currentIndexChanged);
     }
 }
 

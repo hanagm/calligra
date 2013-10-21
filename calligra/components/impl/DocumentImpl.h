@@ -23,6 +23,7 @@
 #include <QtCore/QObject>
 #include "Global.h"
 
+class KoDocument;
 class QGraphicsWidget;
 class KoFindBase;
 class KoCanvasController;
@@ -46,6 +47,8 @@ public:
     virtual ~DocumentImpl();
 
     virtual bool load(const QUrl& url) = 0;
+    virtual int currentIndex() = 0;
+    virtual void setCurrentIndex(int newValue) = 0;
 
     DocumentType::Type documentType() const;
     KoFindBase* finder() const;
@@ -53,12 +56,15 @@ public:
     KoCanvasController* canvasController() const;
     KoZoomController* zoomController() const;
     QSize documentSize() const;
+    KoDocument* koDocument() const;
 
 Q_SIGNALS:
     void documentSizeChanged();
+    void currentIndexChanged();
 
 protected:
     void setDocumentType(DocumentType::Type type);
+    void setKoDocument(KoDocument* document);
     void setCanvas(QGraphicsWidget* newCanvas);
     void setFinder(KoFindBase* newFinder);
 
