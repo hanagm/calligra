@@ -17,29 +17,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef CALLIGRA_COMPONENTS_PRESENTATIONTHUMBNAILMODELIMPL_H
-#define CALLIGRA_COMPONENTS_PRESENTATIONTHUMBNAILMODELIMPL_H
+#ifndef CALLIGRA_COMPONENTS_CONTENTSMODELIMPL_H
+#define CALLIGRA_COMPONENTS_CONTENTSMODELIMPL_H
 
-#include "ThumbnailModelImpl.h"
+#include "ContentsModel.h"
 
+class QVariant;
 namespace Calligra {
 namespace Components {
 
-class PresentationThumbnailModelImpl : public ThumbnailModelImpl
+/**
+ * \brief Defines an interface for handling specific document types in ThumbnailModel.
+ *
+ */
+
+class ContentsModelImpl
 {
 public:
-    PresentationThumbnailModelImpl();
-    ~PresentationThumbnailModelImpl();
+    ContentsModelImpl() { }
+    virtual ~ContentsModelImpl() { }
 
-    virtual QVariant data(int index, Calligra::Components::ThumbnailModel::Role role) const;
-    virtual int rowCount() const;
-
-private:
-    class Private;
-    Private* const d;
+    virtual int rowCount() const = 0;
+    virtual QVariant data(int index, ContentsModel::Role role) const = 0;
+    virtual void setThumbnailSize(const QSize& size) = 0;
 };
 
 } // Namespace Components
 } // Namespace Calligra
 
-#endif // CALLIGRA_COMPONENTS_PRESENTATIONTHUMBNAILMODELIMPL_H
+#endif // CALLIGRA_COMPONENTS_THUMBNAILMODELIMPL_H

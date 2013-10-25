@@ -17,39 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#include "PixmapItem.h"
+#ifndef CALLIGRA_COMPONENTS_SPREADSHEETCONTENTSMODELIMPL_H
+#define CALLIGRA_COMPONENTS_SPREADSHEETCONTENTSMODELIMPL_H
 
-#include <QtGui/QPixmap>
+#include "ContentsModelImpl.h"
 
-using namespace Calligra::Components;
+class KoDocument;
+namespace Calligra {
+namespace Components {
 
-class PixmapItem::Private
+class SpreadsheetContentsModelImpl : public ContentsModelImpl
 {
 public:
-    Private()
-    { }
+    SpreadsheetContentsModelImpl(KoDocument* document);
+    ~SpreadsheetContentsModelImpl();
 
-    QPixmap contents;
+    virtual int rowCount() const Q_DECL_OVERRIDE;
+    virtual QVariant data(int index, Calligra::Components::ContentsModel::Role role) const Q_DECL_OVERRIDE;
+    virtual void setThumbnailSize(const QSize& size) Q_DECL_OVERRIDE;
+
+private:
+    class Private;
+    Private* const d;
 };
-
-PixmapItem::PixmapItem(QQuickItem* parent)
-    : QQuickItem{parent}, d{new Private}
-{
-
+}
 }
 
-PixmapItem::~PixmapItem()
-{
-    delete d;
-}
-
-QPixmap PixmapItem::contents() const
-{
-    return d->contents;
-}
-
-void PixmapItem::setContents(const QPixmap& content)
-{
-    d->contents = content;
-    emit contentsChanged();
-}
+#endif // CALLIGRA_COMPONENTS_SPREADSHEETCONTENTSMODELIMPL_H
