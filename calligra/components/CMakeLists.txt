@@ -16,16 +16,15 @@ set(components_SRCS
     Document.cpp
     Enums.cpp
     Global.cpp
-    PixmapItem.cpp
+    ImageDataItem.cpp
     View.cpp
     ViewController.cpp
 
     models/ContentsModel.cpp
-    models/PresentationThumbnailModelImpl.cpp
-    models/SpreadsheetThumbnailModelImpl.cpp
-    models/TextDocumentThumbnailModelImpl.cpp
-    models/ThumbnailModel.cpp
-
+    models/PresentationContentsModelImpl.cpp
+    models/SpreadsheetContentsModelImpl.cpp
+    models/TextContentsModelImpl.cpp
+    
     impl/DocumentImpl.cpp
     impl/TextDocumentImpl.cpp
     impl/SpreadsheetImpl.cpp
@@ -43,6 +42,7 @@ target_link_libraries( CalligraComponentsPlugin
     wordsprivate
     calligrasheetscommon
     calligrastageprivate
+    kotextlayout
 )
 
 install(TARGETS CalligraComponentsPlugin DESTINATION ${LIB_INSTALL_DIR}/calligra/org/kde/calligra)

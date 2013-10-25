@@ -17,43 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef CALLIGRA_COMPONENTS_THUMBNAILMODEL_H
-#define CALLIGRA_COMPONENTS_THUMBNAILMODEL_H
+#ifndef CALLIGRA_COMPONENTS_PRESENTATIONCONTENTSMODELIMPL_H
+#define CALLIGRA_COMPONENTS_PRESENTATIONCONTENTSMODELIMPL_H
 
-#include <QtCore/QAbstractListModel>
+#include "ContentsModelImpl.h"
 
+class KoDocument;
 namespace Calligra {
 namespace Components {
-class Document;
 
-class ThumbnailModel : public QAbstractListModel
+class PresentationContentsModelImpl : public ContentsModelImpl
 {
-    Q_OBJECT
-    Q_PROPERTY(Document* document READ document WRITE setDocument NOTIFY documentChanged)
-
 public:
-    enum Role {
-        ThumbnailRole = Qt::UserRole + 1,
-    };
+    PresentationContentsModelImpl(KoDocument* document);
+    ~PresentationContentsModelImpl();
 
-    explicit ThumbnailModel(QObject* parent = 0);
-    virtual ~ThumbnailModel();
-
-    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    virtual int rowCount(const QModelIndex& parent = QModelIndex{}) const;
-
-    Document* document() const;
-    void setDocument(Document* newDocument);
-
-Q_SIGNALS:
-    void documentChanged();
+    virtual int rowCount() const Q_DECL_OVERRIDE;
+    virtual QVariant data(int index, ContentsModel::Role role) const Q_DECL_OVERRIDE;
+    virtual void setThumbnailSize(const QSize& size) Q_DECL_OVERRIDE;
 
 private:
     class Private;
     Private* const d;
 };
+}
+}
 
-} // Namespace Components
-} // Namespace Calligra
-
-#endif // CALLIGRA_COMPONENTS_THUMBNAILMODEL_H
+#endif // CALLIGRA_COMPONENTS_PRESENTATIONCONTENTSMODELIMPL_H

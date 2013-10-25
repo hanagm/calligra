@@ -17,29 +17,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef CALLIGRA_COMPONENTS_SPREADSHEETTHUMBNAILMODELIMPL_H
-#define CALLIGRA_COMPONENTS_SPREADSHEETTHUMBNAILMODELIMPL_H
+#ifndef CALLIGRA_COMPONENTS_TEXTCONTENTSMODELIMPL_H
+#define CALLIGRA_COMPONENTS_TEXTCONTENTSMODELIMPL_H
 
-#include "ThumbnailModelImpl.h"
+#include <models/ContentsModelImpl.h>
 
+class KoDocument;
+class KoCanvasBase;
 namespace Calligra {
 namespace Components {
 
-class SpreadsheetThumbnailModelImpl : public ThumbnailModelImpl
+class TextContentsModelImpl : public QObject, public Calligra::Components::ContentsModelImpl
 {
+    Q_OBJECT
 public:
-    SpreadsheetThumbnailModelImpl();
-    ~SpreadsheetThumbnailModelImpl();
+    TextContentsModelImpl(KoDocument* document, KoCanvasBase* canvas);
+    ~TextContentsModelImpl();
 
-    virtual QVariant data(int index, Calligra::Components::ThumbnailModel::Role role) const;
-    virtual int rowCount() const;
+    virtual int rowCount() const Q_DECL_OVERRIDE;
+    virtual QVariant data(int index, Calligra::Components::ContentsModel::Role role) const Q_DECL_OVERRIDE;
+    virtual void setThumbnailSize(const QSize& size) Q_DECL_OVERRIDE;
+
+Q_SIGNALS:
+    void listContentsCompleted();
+
+private Q_SLOTS:
+    void documentLayoutFinished();
 
 private:
     class Private;
     Private* const d;
 };
 
-} // Namespace Components
-} // Namespace Calligra
+}
+}
 
-#endif // CALLIGRA_COMPONENTS_SPREADSHEETTHUMBNAILMODELIMPL_H
+#endif // CALLIGRA_COMPONENTS_TEXTCONTENTSMODELIMPL_H

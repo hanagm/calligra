@@ -17,22 +17,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef CALLIGRA_COMPONENTS_TEXTDOCUMENTTHUMBNAILMODELIMPL_H
-#define CALLIGRA_COMPONENTS_TEXTDOCUMENTTHUMBNAILMODELIMPL_H
+#ifndef CALLIGRA_COMPONENTS_PIXMAPITEM_H
+#define CALLIGRA_COMPONENTS_PIXMAPITEM_H
 
-#include "ThumbnailModelImpl.h"
+#include <QtGui/QPixmap>
+#include <QtQuick/QQuickItem>
 
 namespace Calligra {
 namespace Components {
 
-class TextDocumentThumbnailModelImpl : public ThumbnailModelImpl
-{
-public:
-    TextDocumentThumbnailModelImpl();
-    ~TextDocumentThumbnailModelImpl();
+/**
+ * \brief This provides a simple item that can be used to render Pixmaps.
+ *
+ */
 
-    virtual QVariant data(int index, Calligra::Components::ThumbnailModel::Role role) const;
-    virtual int rowCount() const;
+class ImageDataItem : public QQuickItem
+{
+    Q_OBJECT
+
+    /**
+     * \property data
+     * \brief The data this item needs to display.
+     *
+     * \default null
+     * \get data() const
+     * \set setData()
+     * \notify dataChanged()
+     */
+    Q_PROPERTY(QImage data READ data WRITE setData NOTIFY dataChanged)
+
+public:
+    explicit ImageDataItem(QQuickItem* parent = 0);
+    virtual ~ImageDataItem();
+    
+    /**
+     * Getter for property #data.
+     */
+    QImage data() const;
+    /**
+     * Setter for property #data.
+     */
+    void setData(const QImage& newValue);
+
+Q_SIGNALS:
+    void dataChanged();
+
+protected:
+    virtual QSGNode* updatePaintNode(QSGNode* node, QQuickItem::UpdatePaintNodeData*) Q_DECL_OVERRIDE;
 
 private:
     class Private;
@@ -42,4 +73,4 @@ private:
 } // Namespace Components
 } // Namespace Calligra
 
-#endif // CALLIGRA_COMPONENTS_TEXTDOCUMENTTHUMBNAILMODELIMPL_H
+#endif // CALLIGRA_COMPONENTS_PIXMAPITEM_H
