@@ -1080,10 +1080,10 @@ Group: Development/Libraries
 
 %files sheets-filters
 %defattr(-,root,root,-)
-#%{_datadir}/kde5/services/calligra_filter_xls2odt.desktop
-#%{_libdir}/calligra/calligra_filter_xls2odt.so
-#%{_datadir}/kde5/services/calligra_filter_xlsx2odt.desktop
-#%{_libdir}/calligra/calligra_filter_xlsx2odt.so
+%{_datadir}/kde5/services/calligra_filter_xls2ods.desktop
+%{_libdir}/calligra/calligra_filter_xls2ods.so
+%{_datadir}/kde5/services/calligra_filter_xlsx2ods.desktop
+%{_libdir}/calligra/calligra_filter_xlsx2ods.so
 
 # %{_libdir}/kde5/applixspreadimport.so
 # %{_datadir}/kde5/services/kspread_applixspread_import.desktop
@@ -1107,10 +1107,10 @@ Group: Development/Libraries
 
 %files stage-filters
 %defattr(-,root,root,-)
-%{_datadir}/kde5/services/calligra_filter_ppt2odt.desktop
-%{_libdir}/calligra/calligra_filter_ppt2odt.so
-%{_datadir}/kde5/services/calligra_filter_pptx2odt.desktop
-%{_libdir}/calligra/calligra_filter_pptx2odt.so
+%{_datadir}/kde5/services/calligra_filter_ppt2odp.desktop
+%{_libdir}/calligra/calligra_filter_ppt2odp.so
+%{_datadir}/kde5/services/calligra_filter_pptx2odp.desktop
+%{_libdir}/calligra/calligra_filter_pptx2odp.so
 #
 # %{_datadir}/kde5/services/Filterkpr2odf.desktop
 # %{_libdir}/kde5/Filterkpr2odf.so
