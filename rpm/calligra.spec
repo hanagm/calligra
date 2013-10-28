@@ -1036,6 +1036,7 @@ Group: Development/Libraries
 %{_datadir}/mime/packages/msooxml-all.xml
 %{_libdir}/libkomsooxml.so*
 %{_libdir}/libkoodf2.so*
+%{_libdir}/libkowv2.so*
 
 %files filters
 %defattr(-,root,root,-)
@@ -1049,7 +1050,6 @@ Group: Development/Libraries
 %{_libdir}/calligra/calligra_filter_docx2odt.so
 
 #%{_libdir}/libkwordexportfilters.so.*
-%{_libdir}/libkowv2.so.*
 
 #%{_libdir}/kde5/applixwordimport.so
 #%{_datadir}/kde5/services/words_applixword_import.desktop
