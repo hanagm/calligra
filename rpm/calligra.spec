@@ -1033,7 +1033,9 @@ Group: Development/Libraries
 %files filters-libs
 %defattr(-,root,root,-)
 #%{_libdir}/libmsooxml.so.*
-#%{_datadir}/mime/packages/msooxml-all.xml
+%{_datadir}/mime/packages/msooxml-all.xml
+%{_libdir}/libkomsooxml.so*
+%{_libdir}/libkoodf2.so*
 
 %files filters
 %defattr(-,root,root,-)
@@ -1041,8 +1043,13 @@ Group: Development/Libraries
 
 %files words-filters
 %defattr(-,root,root,-)
+%{_datadir}/kde5/services/calligra_filter_doc2odt.desktop
+%{_libdir}/calligra/calligra_filter_doc2odt.so
+%{_datadir}/kde5/services/calligra_filter_docx2odt.desktop
+%{_libdir}/calligra/calligra_filter_docx2odt.so
+
 #%{_libdir}/libkwordexportfilters.so.*
-#%{_libdir}/libkowv2.so.*
+%{_libdir}/libkowv2.so.*
 
 #%{_libdir}/kde5/applixwordimport.so
 #%{_datadir}/kde5/services/words_applixword_import.desktop
@@ -1073,15 +1080,11 @@ Group: Development/Libraries
 
 %files sheets-filters
 %defattr(-,root,root,-)
-# %{_datadir}/kde5/services/kspread_xlsx_import.desktop
-# %{_libdir}/kde5/xlsximport.so
-#
-# %{_datadir}/kde5/services/sheets_excel_thumbnail.desktop
-# %{_datadir}/kde5/services/sheets_xlsx_thumbnail.desktop
-#
-# %{_datadir}/kde5/services/kspread_excel_import.desktop
-# %{_libdir}/kde5/excelimporttodoc.so
-#
+%{_datadir}/kde5/services/calligra_filter_xls2odt.desktop
+%{_libdir}/calligra/calligra_filter_xls2odt.so
+%{_datadir}/kde5/services/calligra_filter_xlsx2odt.desktop
+%{_libdir}/calligra/calligra_filter_xlsx2odt.so
+
 # %{_libdir}/kde5/applixspreadimport.so
 # %{_datadir}/kde5/services/kspread_applixspread_import.desktop
 #
@@ -1104,11 +1107,10 @@ Group: Development/Libraries
 
 %files stage-filters
 %defattr(-,root,root,-)
-# %{_datadir}/kde5/services/kpresenter_powerpoint_import.desktop
-# %{_libdir}/kde5/powerpointimport.so
-#
-# %{_datadir}/kde5/services/kpresenter_pptx_import.desktop
-# %{_libdir}/kde5/pptximport.so
+%{_datadir}/kde5/services/calligra_filter_ppt2odt.desktop
+%{_libdir}/calligra/calligra_filter_ppt2odt.so
+%{_datadir}/kde5/services/calligra_filter_pptx2odt.desktop
+%{_libdir}/calligra/calligra_filter_pptx2odt.so
 #
 # %{_datadir}/kde5/services/Filterkpr2odf.desktop
 # %{_libdir}/kde5/Filterkpr2odf.so
