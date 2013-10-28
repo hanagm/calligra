@@ -1080,10 +1080,10 @@ Group: Development/Libraries
 
 %files sheets-filters
 %defattr(-,root,root,-)
-%{_datadir}/kde5/services/calligra_filter_xls2odt.desktop
-%{_libdir}/calligra/calligra_filter_xls2odt.so
-%{_datadir}/kde5/services/calligra_filter_xlsx2odt.desktop
-%{_libdir}/calligra/calligra_filter_xlsx2odt.so
+#%{_datadir}/kde5/services/calligra_filter_xls2odt.desktop
+#%{_libdir}/calligra/calligra_filter_xls2odt.so
+#%{_datadir}/kde5/services/calligra_filter_xlsx2odt.desktop
+#%{_libdir}/calligra/calligra_filter_xlsx2odt.so
 
 # %{_libdir}/kde5/applixspreadimport.so
 # %{_datadir}/kde5/services/kspread_applixspread_import.desktop
