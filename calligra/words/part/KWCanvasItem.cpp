@@ -163,6 +163,7 @@ void KWCanvasItem::updateInputMethodInfo()
 void KWCanvasItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *)
 {
     KWCanvasBase::paint(*painter, option->exposedRect);
+    emit canvasUpdated();
 }
 
 void KWCanvasItem::setCursor(const QCursor &cursor)

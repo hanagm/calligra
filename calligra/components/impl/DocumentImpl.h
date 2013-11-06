@@ -64,6 +64,7 @@ public:
 Q_SIGNALS:
     void documentSizeChanged();
     void currentIndexChanged();
+    void requestViewUpdate();
 
 protected:
     void setDocumentType(DocumentType::Type type);
@@ -74,7 +75,7 @@ protected:
     void createAndSetCanvasController(KoCanvasBase* canvas);
     void createAndSetZoomController(KoCanvasBase* canvas);
 
-private Q_SLOTS:
+protected Q_SLOTS:
     void setDocumentSize(const QSize& size);
 
 private:
