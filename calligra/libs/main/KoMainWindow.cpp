@@ -1627,6 +1627,10 @@ void KoMainWindow::viewFullscreen(bool fullScreen)
 
 void KoMainWindow::slotProgress(int value)
 {
+    // Return immediately, just in case this is called.
+    // FIXME Sailfish specific patch - this will need work for further de-widgetification
+    return;
+
     kDebug(30003) << "KoMainWindow::slotProgress" << value;
     if (value <= -1) {
         if (d->progress) {
