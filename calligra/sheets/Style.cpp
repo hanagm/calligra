@@ -1988,8 +1988,10 @@ QString Style::postfix() const
 
 QString Style::fontFamily() const
 {
+    // HACK Work around Sailfish giving us the UI font here. It's sensible enough in
+    // a lot of cases, but here it's just not useful.
     if (!d->subStyles.contains(FontFamily))
-        return KoGlobal::defaultFont().family(); // SubStyleOne<FontFamily, QString>().value1;
+        return QLatin1String("Arial");//KoGlobal::defaultFont().family(); // SubStyleOne<FontFamily, QString>().value1;
     return static_cast<const SubStyleOne<FontFamily, QString>*>(d->subStyles[FontFamily].data())->value1;
 }
 
@@ -2077,8 +2079,10 @@ bool Style::strikeOut() const
 
 int Style::fontSize() const
 {
+    // HACK Work around Sailfish giving us the UI font here. It's sensible enough in
+    // a lot of cases, but here it's just not useful.
     if (!d->subStyles.contains(FontSize))
-        return KoGlobal::defaultFont().pointSize(); //SubStyleOne<FontSize, int>().value1;
+        return 11;//KoGlobal::defaultFont().pointSize(); //SubStyleOne<FontSize, int>().value1;
     return static_cast<const SubStyleOne<FontSize, int>*>(d->subStyles[FontSize].data())->value1;
 }
 
