@@ -23,6 +23,7 @@
 
 #include "ExcelImport.h"
 
+#include <QApplication>
 #include <QString>
 #include <QDate>
 #include <QBuffer>
@@ -275,6 +276,7 @@ KoFilter::ConversionStatus ExcelImport::convert(const QByteArray& from, const QB
         Calligra::Sheets::Sheet* ksheet = map->addNewSheet(sheet->name());
         d->processSheet(sheet, ksheet);
         d->shapesXml->endElement();
+        qApp->processEvents();
     }
 
     // named expressions
@@ -505,11 +507,13 @@ void ExcelImport::Private::processEmbeddedObjects(const KoXmlElement& rootElemen
                                + (EMBEDDEDPROGRESS / qreal(numSheetTotal) * currentCell/numCellElements)
                                + SIDEWINDERPROGRESS + ODFPROGRESS) + 0.5;
             emit q->sigProgress(progress);
+            qApp->processEvents();
         }
 
         ++currentSheet;
         const int progress = int(currentSheet / qreal(numSheetTotal) * EMBEDDEDPROGRESS + SIDEWINDERPROGRESS + ODFPROGRESS + 0.5);
         emit q->sigProgress(progress);
+        qApp->processEvents();
     }
 }
 
@@ -821,6 +825,7 @@ void ExcelImport::Private::processColumn(Sheet* is, unsigned columnIndex, Callig
 
     int styleId = convertStyle(&column->format());
     columnStyles[styleId] += QRect(columnIndex+1, 1, 1, KS_rowMax);
+    qApp->processEvents();
 }
 
 void ExcelImport::Private::processRow(Sheet* is, unsigned rowIndex, Calligra::Sheets::Sheet* os)
@@ -844,9 +849,11 @@ void ExcelImport::Private::processRow(Sheet* is, unsigned rowIndex, Calligra::Sh
         Cell* cell = is->cell(i, rowIndex, false);
         if (!cell) continue;
         processCell(cell, Calligra::Sheets::Cell(os, i+1, rowIndex+1));
+        qApp->processEvents();
     }
 
     addProgress(1);
+    qApp->processEvents();
 }
 
 static QString cellFormulaNamespace(const QString& formula)
