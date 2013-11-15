@@ -46,6 +46,8 @@ int KoPostscriptPaintDevice::metric(QPaintDevice::PaintDeviceMetric metric) cons
     case QPaintDevice::PdmPhysicalDpiX:
     case QPaintDevice::PdmPhysicalDpiY:
         return 72;
+    case QPaintDevice::PdmDevicePixelRatio:
+        return 1;
     }
     return 0; // should never be hit
 }
