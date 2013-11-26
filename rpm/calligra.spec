@@ -4,7 +4,7 @@
 #define kexi 0
 
 Name: calligra
-Version: 2.7.8+afae6db
+Version: 2.7.9+git1.a4a9fb8
 Release: 1%{?dist}
 Group: Applications/Productivity
 URL: http://www.calligra.org/
