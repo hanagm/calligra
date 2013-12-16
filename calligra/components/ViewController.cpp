@@ -381,22 +381,15 @@ void ViewController::documentSizeChanged()
         }
 
         d->documentSize = d->view->document()->documentSize();
-        if(d->documentSize.width() > d->flickable->width()) {
-            setWidth(d->documentSize.width());
-            d->flickable->setProperty("contentWidth", d->documentSize.width());
-        }
-        else {
-            setWidth(d->flickable->width() - 1);
-            d->flickable->setProperty("contentWidth", d->flickable->width() - 1);
-        }
-        if(d->documentSize.height() > d->flickable->height()) {
-            setHeight(d->documentSize.height());
-            d->flickable->setProperty("contentHeight", d->documentSize.height());
-        }
-        else {
-            setHeight(d->flickable->height() - 1);
-            d->flickable->setProperty("contentHeight", d->flickable->height() - 1);
-        }
+        //Limit the size of this item to always be at least the same size
+        //as the flickable, since otherwise we can end up with situations
+        //where children cannot interact, for example when using the
+        //LinkArea as a child of this item.
+        setWidth(qMax(d->flickable->width() - 1, d->documentSize.width()));
+        setHeight(qMax(d->flickable->height() - 1, d->documentSize.height()));
+
+        d->flickable->setProperty("contentWidth", width());
+        d->flickable->setProperty("contentHeight", height());
 
         flickableWidthChanged();
     }
@@ -437,9 +430,6 @@ void ViewController::zoomTimeout()
     float oldX = d->flickable->property("contentX").toReal();
     float oldY = d->flickable->property("contentY").toReal();
 
-    d->ignoreOffsetChange = true;
-    d->view->setZoom(newZoom);
-    d->ignoreOffsetChange = false;
 
     float z = 1.0 + d->zoomChange;
     d->flickable->setProperty("contentX", oldX + ((d->zoomCenter.x() * z - d->zoomCenter.x())) );
@@ -449,6 +439,9 @@ void ViewController::zoomTimeout()
 
     d->zoom = newZoom;
 
+    d->ignoreOffsetChange = true;
+    d->view->setZoom(newZoom);
+    d->ignoreOffsetChange = false;
 
     d->view->setVisible(true);
     d->zoomCenter = QVector3D{};
