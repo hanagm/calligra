@@ -9,6 +9,7 @@ Release: 1%{?dist}
 Group: Applications/Productivity
 URL: http://www.calligra.org/
 Source0: %{name}-%{version}.tar.gz
+Patch0:  0001-calligra-Fix-infinite-loop-while-trying-to-translate.patch
 Summary: Calligra Suite
 License: Open
 BuildRequires: cmake
@@ -1271,6 +1272,7 @@ Group: Development/Libraries
 
 %prep
 %setup -q -n %{name}-%{version}/calligra
+%patch0 -p1
 
 %build
 mkdir -p build && cd build
