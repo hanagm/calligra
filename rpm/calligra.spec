@@ -1272,7 +1272,7 @@ Group: Development/Libraries
 
 %prep
 %setup -q -n %{name}-%{version}/calligra
-%patch0 -p1
+%patch0 -p2
 
 %build
 mkdir -p build && cd build
