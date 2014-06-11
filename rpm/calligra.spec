@@ -978,7 +978,6 @@ Group: Development/Libraries
 
 %files libs
 %defattr(-,root,root,-)
-%{_bindir}/preparetips
 %{_libdir}/libKConfigCore.so*
 %{_libdir}/libKService.so*
 %{_libdir}/libItemViews.so*
@@ -1230,6 +1229,7 @@ Group: Development/Libraries
 
 %files devel
 %defattr(-,root,root,-)
+%{_bindir}/preparetips
 %{_datadir}/cmake/modules/FindCalligraLibs.cmake
 %{_libdir}/cmake/*
 %{_includedir}/*
