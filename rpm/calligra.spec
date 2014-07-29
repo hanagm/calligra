@@ -22,6 +22,7 @@ BuildRequires: pkgconfig(Qt5XmlPatterns)
 BuildRequires: pkgconfig(Qt5Test)
 BuildRequires: pkgconfig(Qt5PrintSupport)
 BuildRequires: pkgconfig(Qt5Concurrent)
+BuildRequires: pkgconfig(Qt5OpenGL)
 BuildRequires: pkgconfig(shared-mime-info)
 BuildRequires: boost-devel
 BuildRequires: pkgconfig(libgsf-1)
