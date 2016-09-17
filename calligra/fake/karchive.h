@@ -28,6 +28,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QHash>
+#include <QtCore/QIODevice>
 
 #include <kofake_export.h>
 

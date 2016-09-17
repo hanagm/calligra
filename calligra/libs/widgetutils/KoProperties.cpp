@@ -22,6 +22,7 @@
 
 #include <QDomDocument>
 #include <QString>
+#include <QDataStream>
 
 class KoProperties::Private
 {
