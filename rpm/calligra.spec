@@ -32,7 +32,6 @@ BuildRequires: pkgconfig(eigen2)
 BuildRequires: pkgconfig(openssl)
 BuildRequires: calligra-extra-cmake-modules
 %if 0%{?krita}
-BuildRequires: pkgconfig(lcms)
 BuildRequires: exiv2-devel giflib-devel
 %endif
 %if 0%{?karbon}
