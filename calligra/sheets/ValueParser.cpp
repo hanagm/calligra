@@ -390,7 +390,10 @@ Value ValueParser::tryParseTime(const QString& str, bool *ok) const
 QDateTime ValueParser::readTime(const QString& intstr, bool withSeconds, bool* ok) const
 {
     QString str = intstr.simplified().toLower();
-    QString format = m_settings->locale()->timeFormat().simplified();
+    // Workaround segfault with gcc 4.8 and Qt5.6 when calling
+    // m_settings->locale()->timeFormat().simplified() all in one line.
+    QString timeFormat = m_settings->locale()->timeFormat();
+    QString format = timeFormat.simplified();
     if (!withSeconds) {
         int n = format.indexOf("%S");
         format = format.left(n - 1);
