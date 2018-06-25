@@ -52,6 +52,8 @@ public:
             m_allMimeTypes << Ptr(new KMimeType(QString("application/vnd.ms-powerpoint.slideshow.macroEnabled.12"), QStringList() << "*.ppsm"));
 
             m_allMimeTypes << Ptr(new KMimeType(QString("application/pdf"), QStringList() << "*.pdf"));
+
+            m_allMimeTypes << Ptr(new KMimeType(QString("application/rtf"), QStringList() << "*.rtf"));
         }
         return m_allMimeTypes;
     }

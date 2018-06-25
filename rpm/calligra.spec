@@ -1011,7 +1011,6 @@ Group: Development/Libraries
 #%{_libdir}/libvectorimage.so*
 %{_libdir}/libflake.so.*
 %{_libdir}/libbasicflakes.so*
-#%{_libdir}/libRtfReader.so*
 %{_libdir}/libkowidgetutils.so*
 
 %{_libdir}/calligra/calligra_tool_basicflakes.so
@@ -1048,6 +1047,9 @@ Group: Development/Libraries
 %{_libdir}/calligra/calligra_filter_doc2odt.so
 %{_datadir}/kde5/services/calligra_filter_docx2odt.desktop
 %{_libdir}/calligra/calligra_filter_docx2odt.so
+%{_datadir}/kde5/services/calligra_filter_rtf2odt.desktop
+%{_libdir}/calligra/calligra_filter_rtf2odt.so
+%{_libdir}/libRtfReader.so*
 
 #%{_libdir}/libkwordexportfilters.so.*
 
