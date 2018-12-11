@@ -1,0 +1,141 @@
+From f35676fddbce01b6a38f79513ddcae089c5fe99f Mon Sep 17 00:00:00 2001
+From: Damien Caliste <dcaliste@free.fr>
+Date: Tue, 11 Dec 2018 13:27:04 +0100
+Subject: [PATCH 10/11] Disable various dependencies on DBus.
+
+---
+ libs/main/KoApplication.cpp | 12 ++++++------
+ libs/main/KoDocument.cpp    | 26 +++++++++++++-------------
+ sheets/part/View.cpp        | 20 ++++++++++----------
+ 3 files changed, 29 insertions(+), 29 deletions(-)
+
+diff --git a/libs/main/KoApplication.cpp b/libs/main/KoApplication.cpp
+index c3d3084..f5a73e1 100644
+--- a/libs/main/KoApplication.cpp
++++ b/libs/main/KoApplication.cpp
+@@ -52,7 +52,7 @@
+ // #include <krecentdirs.h>
+ #include <KAboutData>
+ #include <KSharedConfig>
+-#include <KDBusService>
++// #include <KDBusService>
+ 
+ #include <QFile>
+ #include <QWidget>
+@@ -152,12 +152,12 @@ KoApplication::KoApplication(const QByteArray &nativeMimeType,
+     // Initialize all Calligra directories etc.
+     KoGlobal::initialize();
+ 
+-#ifndef QT_NO_DBUS
+-    KDBusService service(KDBusService::Multiple);
++// #ifndef QT_NO_DBUS
++//     KDBusService service(KDBusService::Multiple);
+ 
+-    new KoApplicationAdaptor(this);
+-    QDBusConnection::sessionBus().registerObject("/application", this);
+-#endif
++//     new KoApplicationAdaptor(this);
++//     QDBusConnection::sessionBus().registerObject("/application", this);
++// #endif
+ 
+ #ifdef Q_OS_MACX
+     if ( QSysInfo::MacintoshVersion > QSysInfo::MV_10_8 )
+diff --git a/libs/main/KoDocument.cpp b/libs/main/KoDocument.cpp
+index 6f79dc9..646b6ee 100644
+--- a/libs/main/KoDocument.cpp
++++ b/libs/main/KoDocument.cpp
+@@ -71,10 +71,10 @@
+ #include <QFileInfo>
+ #include <QPainter>
+ #include <QTimer>
+-#ifndef QT_NO_DBUS
+-#include <KJobWidgets>
+-#include <QDBusConnection>
+-#endif
++// #ifndef QT_NO_DBUS
++// #include <KJobWidgets>
++// #include <QDBusConnection>
++// #endif
+ 
+ // Define the protocol used here for embedded documents' URL
+ // This used to "store" but QUrl didn't like it,
+@@ -321,12 +321,12 @@ public:
+         KIO::JobFlags flags = KIO::DefaultFlags;
+         flags |= KIO::Overwrite;
+         m_job = KIO::file_copy(m_url, destURL, 0600, flags);
+-#ifndef QT_NO_DBUS
+-        KJobWidgets::setWindow(m_job, 0);
+-        if (m_job->ui()) {
+-            KJobWidgets::setWindow(m_job, parentPart->currentMainwindow());
+-        }
+-#endif
++// #ifndef QT_NO_DBUS
++//         KJobWidgets::setWindow(m_job, 0);
++//         if (m_job->ui()) {
++//             KJobWidgets::setWindow(m_job, parentPart->currentMainwindow());
++//         }
++// #endif
+         QObject::connect(m_job, SIGNAL(result(KJob*)), document, SLOT(_k_slotJobFinished(KJob*)));
+         QObject::connect(m_job, SIGNAL(mimetype(KIO::Job*,QString)), document, SLOT(_k_slotGotMimeType(KIO::Job*,QString)));
+     }
+@@ -2656,9 +2656,9 @@ bool KoDocument::saveToUrl()
+             return false;
+         }
+         d->m_uploadJob = KIO::file_move( uploadUrl, d->m_url, -1, KIO::Overwrite );
+-#ifndef QT_NO_DBUS
+-        KJobWidgets::setWindow(d->m_uploadJob, 0);
+-#endif
++// #ifndef QT_NO_DBUS
++//         KJobWidgets::setWindow(d->m_uploadJob, 0);
++// #endif
+         connect( d->m_uploadJob, SIGNAL(result(KJob*)), this, SLOT(_k_slotUploadFinished(KJob*)) );
+         return true;
+     }
+diff --git a/sheets/part/View.cpp b/sheets/part/View.cpp
+index 02e43b8..c89bd40 100644
+--- a/sheets/part/View.cpp
++++ b/sheets/part/View.cpp
+@@ -149,10 +149,10 @@
+ #include "ui/PixmapCachingSheetView.h"
+ 
+ // D-Bus
+-#ifndef QT_NO_DBUS
+-#include "interfaces/ViewAdaptor.h"
+-#include <knotifyconfigwidget.h>
+-#endif
++// #ifndef QT_NO_DBUS
++// #include "interfaces/ViewAdaptor.h"
++// #include <knotifyconfigwidget.h>
++// #endif
+ 
+ using namespace Calligra::Sheets;
+ 
+@@ -612,9 +612,9 @@ View::View(KoPart *part, QWidget *_parent, Doc *_doc)
+     // process, is called from resizeEvent(). The loading flag will be unset
+     // at the end of initialPosition().
+ 
+-#ifndef QT_NO_DBUS
+-    new ViewAdaptor(this);
+-#endif
++// #ifndef QT_NO_DBUS
++//     new ViewAdaptor(this);
++// #endif
+ 
+     d->scrollTimer = new QTimer(this);
+     connect(d->scrollTimer, SIGNAL(timeout()), this, SLOT(slotAutoScroll()));
+@@ -1597,9 +1597,9 @@ void View::showTabBar(bool enable)
+ 
+ void View::optionsNotifications()
+ {  
+-#ifndef QT_NO_DBUS
+-    KNotifyConfigWidget::configure(this);
+-#endif
++// #ifndef QT_NO_DBUS
++//     KNotifyConfigWidget::configure(this);
++// #endif
+ }
+ 
+ void View::preference()
+-- 
+2.7.4
+

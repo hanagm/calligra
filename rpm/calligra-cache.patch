@@ -1,0 +1,25 @@
+From b716d2bfbdb52aaa1835dfaf27d673fac8407e5d Mon Sep 17 00:00:00 2001
+From: Damien Caliste <dcaliste@free.fr>
+Date: Tue, 11 Dec 2018 13:26:34 +0100
+Subject: [PATCH 09/11] Enable page caching to improve performences.
+
+---
+ words/part/KWCanvasBase.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/words/part/KWCanvasBase.cpp b/words/part/KWCanvasBase.cpp
+index f20322a..7e9a35e 100644
+--- a/words/part/KWCanvasBase.cpp
++++ b/words/part/KWCanvasBase.cpp
+@@ -70,7 +70,7 @@ KWCanvasBase::KWCanvasBase(KWDocument *document, QObject *parent)
+ {
+     m_shapeManager = new KoShapeManager(this);
+     m_toolProxy = new KoToolProxy(this, parent);
+-    //setCacheEnabled(true);
++    setCacheEnabled(true);
+ }
+ 
+ KWCanvasBase::~KWCanvasBase()
+-- 
+2.7.4
+

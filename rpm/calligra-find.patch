@@ -1,0 +1,301 @@
+From 5df9e73fdceafb6460f2a3edbc7cd6d9bc94b4d2 Mon Sep 17 00:00:00 2001
+From: Damien Caliste <dcaliste@free.fr>
+Date: Tue, 11 Dec 2018 13:13:11 +0100
+Subject: [PATCH 03/11] Disable windowing actions in find strategy.
+
+---
+ libs/text/FindDirection_p.cpp |  4 ++--
+ libs/text/KoFind.cpp          |  6 ++++++
+ libs/text/KoFind_p.cpp        | 46 ++++++++++++++++++++++++++++++++++++-------
+ libs/text/KoFind_p.h          |  4 ++++
+ 4 files changed, 51 insertions(+), 9 deletions(-)
+
+diff --git a/libs/text/FindDirection_p.cpp b/libs/text/FindDirection_p.cpp
+index 7a0052a..13ccfac 100644
+--- a/libs/text/FindDirection_p.cpp
++++ b/libs/text/FindDirection_p.cpp
+@@ -61,7 +61,7 @@ void FindForward::select(const QTextCursor &cursor)
+ 
+ void FindForward::nextDocument(QTextDocument *document, KoFindPrivate *findPrivate)
+ {
+-    findPrivate->findDocumentSetNext(document);
++    //findPrivate->findDocumentSetNext(document);
+ }
+ 
+ FindBackward::FindBackward(KoCanvasResourceManager *provider)
+@@ -91,6 +91,6 @@ void FindBackward::select(const QTextCursor &cursor)
+ 
+ void FindBackward::nextDocument(QTextDocument *document, KoFindPrivate *findPrivate)
+ {
+-    findPrivate->findDocumentSetPrevious(document);
++    //findPrivate->findDocumentSetPrevious(document);
+ }
+ 
+diff --git a/libs/text/KoFind.cpp b/libs/text/KoFind.cpp
+index 21513b7..8a48a92 100644
+--- a/libs/text/KoFind.cpp
++++ b/libs/text/KoFind.cpp
+@@ -29,14 +29,20 @@
+ 
+ KoFind::KoFind(QWidget *parent, KoCanvasResourceManager *canvasResourceManager, KActionCollection *ac)
+         : QObject(parent)
++#ifdef HAVE_ACTION
+         , d(new KoFindPrivate(this, canvasResourceManager, parent))
++#else
++        , d(0)
++#endif
+ {
+     connect(canvasResourceManager, SIGNAL(canvasResourceChanged(int,QVariant)), this, SLOT(resourceChanged(int,QVariant)));
+     ac->addAction(KStandardAction::Find, "edit_find", this, SLOT(findActivated()));
++#ifdef HAVE_ACTION
+     d->findNext = ac->addAction(KStandardAction::FindNext, "edit_findnext", this, SLOT(findNextActivated()));
+     d->findNext->setEnabled(false);
+     d->findPrev = ac->addAction(KStandardAction::FindPrev, "edit_findprevious", this, SLOT(findPreviousActivated()));
+     d->findPrev->setEnabled(false);
++#endif
+     ac->addAction(KStandardAction::Replace, "edit_replace", this, SLOT(replaceActivated()));
+ }
+ 
+diff --git a/libs/text/KoFind_p.cpp b/libs/text/KoFind_p.cpp
+index d6cdd89..965314f 100644
+--- a/libs/text/KoFind_p.cpp
++++ b/libs/text/KoFind_p.cpp
+@@ -23,9 +23,11 @@
+ 
+ #include <KoCanvasResourceManager.h>
+ 
++#ifdef HAVE_ACTION
+ #include <kwindowsystem.h>
+ #include <kfinddialog.h>
+ #include <kfind.h>
++#endif
+ #include <klocalizedstring.h>
+ 
+ #include <QTextDocument>
+@@ -57,9 +59,11 @@ KoFindPrivate::KoFindPrivate(KoFind *find, KoCanvasResourceManager *crp, QWidget
+         , findPrev(0)
+         , q(find)
+         , provider(crp)
++#ifdef HAVE_ACTION
+         , findStrategy(w)
+         , replaceStrategy(w)
+         , strategy(&findStrategy)
++#endif
+         , document(0)
+         , restarted(false)
+         , start(false)
+@@ -68,8 +72,10 @@ KoFindPrivate::KoFindPrivate(KoFind *find, KoCanvasResourceManager *crp, QWidget
+         , findForward(crp)
+         , findBackward(crp)
+ {
++#ifdef HAVE_ACTION
+     QObject::connect(findStrategy.dialog(), SIGNAL(okClicked()), q, SLOT(startFind()));
+     QObject::connect(replaceStrategy.dialog(), SIGNAL(okClicked()), q, SLOT(startReplace()));
++#endif
+ }
+ 
+ void KoFindPrivate::resourceChanged(int key, const QVariant &variant)
+@@ -81,10 +87,12 @@ void KoFindPrivate::resourceChanged(int key, const QVariant &variant)
+         }
+     } else if (key == KoText::CurrentTextPosition || key == KoText::CurrentTextAnchor) {
+         if (!inFind) {
++#ifdef HAVE_ACTION
+             const int selectionStart = provider->intResource(KoText::CurrentTextPosition);
+             const int selectionEnd = provider->intResource(KoText::CurrentTextAnchor);
+             findStrategy.dialog()->setHasSelection(selectionEnd != selectionStart);
+             replaceStrategy.dialog()->setHasSelection(selectionEnd != selectionStart);
++#endif
+ 
+             start = true;
+             provider->clearResource(KoText::SelectedTextPosition);
+@@ -97,12 +105,14 @@ void KoFindPrivate::findActivated()
+ {
+     start = true;
+ 
++#ifdef HAVE_ACTION
+     findStrategy.dialog()->setFindHistory(strategy->dialog()->findHistory());
+ 
+     strategy = &findStrategy;
+ 
+     strategy->dialog()->show();
+     KWindowSystem::activateWindow(strategy->dialog()->winId());
++#endif
+ 
+     findNext->setEnabled(true);
+     findPrev->setEnabled(true);
+@@ -110,17 +120,21 @@ void KoFindPrivate::findActivated()
+ 
+ void KoFindPrivate::findNextActivated()
+ {
++#ifdef HAVE_ACTION
+     Q_ASSERT(strategy);
+     findStrategy.dialog()->setOptions((strategy->dialog()->options() | KFind::FindBackwards) ^ KFind::FindBackwards);
+     strategy = &findStrategy;
++#endif
+     parseSettingsAndFind();
+ }
+ 
+ void KoFindPrivate::findPreviousActivated()
+ {
++#ifdef HAVE_ACTION
+     Q_ASSERT(strategy);
+     findStrategy.dialog()->setOptions(strategy->dialog()->options() | KFind::FindBackwards);
+     strategy = &findStrategy;
++#endif
+     parseSettingsAndFind();
+ }
+ 
+@@ -128,24 +142,30 @@ void KoFindPrivate::replaceActivated()
+ {
+     start = true;
+ 
++#ifdef HAVE_ACTION
+     replaceStrategy.dialog()->setFindHistory(strategy->dialog()->findHistory());
+ 
+     strategy = &replaceStrategy;
+ 
+     strategy->dialog()->show();
+     KWindowSystem::activateWindow(strategy->dialog()->winId());
++#endif
+ }
+ 
+ void KoFindPrivate::startFind()
+ {
+     parseSettingsAndFind();
+ 
++#ifdef HAVE_ACTION
+     QTimer::singleShot(0, findStrategy.dialog(), SLOT(show())); // show the findDialog again.
++#endif
+ }
+ 
+ void KoFindPrivate::startReplace()
+ {
++#ifdef HAVE_ACTION
+     replaceStrategy.dialog()->hide(); // We don't want the replace dialog to keep popping up
++#endif
+     parseSettingsAndFind();
+ }
+ 
+@@ -166,9 +186,12 @@ void KoFindPrivate::parseSettingsAndFind()
+ 
+     InUse used(inFind);
+ 
++#ifdef HAVE_ACTION
+     long options = strategy->dialog()->options();
++#endif
+ 
+     QTextDocument::FindFlags flags;
++#ifdef HAVE_ACTION
+     if ((options & KFind::WholeWordsOnly) != 0) {
+         flags |= QTextDocument::FindWholeWords;
+     }
+@@ -179,15 +202,20 @@ void KoFindPrivate::parseSettingsAndFind()
+         flags |= QTextDocument::FindBackward;
+         findDirection = &findBackward;
+     } else {
++#endif
+         findDirection = &findForward;
++#ifdef HAVE_ACTION
+     }
++#endif
+ 
+-    const bool selectedText = (options & KFind::SelectedText) != 0;
++        const bool selectedText = false; //(options & KFind::SelectedText) != 0;
+ 
+     if (start) {
+         start = false;
+         restarted = false;
++#ifdef HAVE_ACTION
+         strategy->reset();
++#endif
+         startDocument = document;
+         lastKnownPosition = QTextCursor(document);
+         if (selectedText) {
+@@ -200,6 +228,7 @@ void KoFindPrivate::parseSettingsAndFind()
+             // it would be cool to have the highlighted ligher when searching in selected text
+             provider->setResource(KoText::SelectedTextPosition, selectionStart);
+             provider->setResource(KoText::SelectedTextAnchor, selectionEnd);
++#ifdef HAVE_ACTION
+             if ((options & KFind::FindBackwards) != 0) {
+                 lastKnownPosition.setPosition(selectionEnd);
+                 endPosition.setPosition(selectionStart);
+@@ -207,13 +236,16 @@ void KoFindPrivate::parseSettingsAndFind()
+                 lastKnownPosition.setPosition(selectionStart);
+                 endPosition.setPosition(selectionEnd);
+             }
++#endif
+             startPosition = lastKnownPosition;
+         } else {
++#ifdef HAVE_ACTION
+             if ((options & KFind::FromCursor) != 0) {
+                 lastKnownPosition.setPosition(provider->intResource(KoText::CurrentTextPosition));
+             } else {
+                 lastKnownPosition.setPosition(0);
+             }
++#endif
+             endPosition = lastKnownPosition;
+             startPosition = lastKnownPosition;
+         }
+@@ -221,10 +253,10 @@ void KoFindPrivate::parseSettingsAndFind()
+     }
+ 
+     QRegExp regExp;
+-    QString pattern = strategy->dialog()->pattern();
+-    if (options & KFind::RegularExpression) {
+-        regExp = QRegExp(pattern);
+-    }
++    QString pattern; // = strategy->dialog()->pattern();
++    // if (options & KFind::RegularExpression) {
++    //     regExp = QRegExp(pattern);
++    // }
+ 
+     QTextCursor cursor;
+     if (!regExp.isEmpty() && regExp.isValid()) {
+@@ -237,7 +269,7 @@ void KoFindPrivate::parseSettingsAndFind()
+     if ((((document == startDocument) && restarted) || selectedText)
+             && (cursor.isNull() || findDirection->positionReached(cursor, endPosition))) {
+         restarted = false;
+-        strategy->displayFinalDialog();
++        // strategy->displayFinalDialog();
+         lastKnownPosition = startPosition;
+         return;
+     } else if (cursor.isNull()) {
+@@ -250,7 +282,7 @@ void KoFindPrivate::parseSettingsAndFind()
+         return;
+     } else {
+         // found something
+-        bool goOn = strategy->foundMatch(cursor, findDirection);
++        bool goOn = false; //strategy->foundMatch(cursor, findDirection);
+         lastKnownPosition = cursor;
+         if (goOn) {
+             parseSettingsAndFind();
+diff --git a/libs/text/KoFind_p.h b/libs/text/KoFind_p.h
+index d757099..cf22224 100644
+--- a/libs/text/KoFind_p.h
++++ b/libs/text/KoFind_p.h
+@@ -24,8 +24,10 @@
+ 
+ #include <QTextCursor>
+ 
++#ifdef HAVE_ACTION
+ #include "KoFindStrategy.h"
+ #include "KoReplaceStrategy.h"
++#endif
+ #include "FindDirection_p.h"
+ 
+ class KoFind;
+@@ -68,9 +70,11 @@ protected:
+ private:
+     KoFind * q;
+     KoCanvasResourceManager *provider;
++#ifdef HAVE_ACTION
+     KoFindStrategy findStrategy; /// strategy used for find
+     KoReplaceStrategy replaceStrategy; /// strategy used for replace
+     KoFindStrategyBase * strategy; /// the current strategy used
++#endif
+ 
+     QTextDocument *document;
+     QTextDocument *startDocument;
+-- 
+2.7.4
+

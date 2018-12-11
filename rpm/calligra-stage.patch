@@ -1,0 +1,110 @@
+From d9c4487a6896e0f105e7271ef320421a87c2a9e3 Mon Sep 17 00:00:00 2001
+From: Damien Caliste <dcaliste@free.fr>
+Date: Tue, 11 Dec 2018 13:06:25 +0100
+Subject: [PATCH 02/11] Don't export HTML in stage.
+
+---
+ stage/part/KPrAnimationDirector.cpp   | 2 +-
+ stage/part/KPrHtmlExport.cpp          | 4 ++--
+ stage/part/KPrView.cpp                | 4 ++++
+ stage/part/ui/KPrHtmlExportDialog.cpp | 4 ++++
+ 4 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/stage/part/KPrAnimationDirector.cpp b/stage/part/KPrAnimationDirector.cpp
+index ea67ce9..cbbfbc7 100644
+--- a/stage/part/KPrAnimationDirector.cpp
++++ b/stage/part/KPrAnimationDirector.cpp
+@@ -142,7 +142,7 @@ void KPrAnimationDirector::paint(QPainter& painter, const QRectF &paintRect)
+     // events still get through so that it is possible to cancel the
+     // events. It looks like this is not a problem with nvidia graphic
+     // cards.
+-    qApp->syncX();
++    // qApp->syncX();
+ }
+ 
+ void KPrAnimationDirector::paintEvent( QPaintEvent* event )
+diff --git a/stage/part/KPrHtmlExport.cpp b/stage/part/KPrHtmlExport.cpp
+index 20a856d..d368041 100644
+--- a/stage/part/KPrHtmlExport.cpp
++++ b/stage/part/KPrHtmlExport.cpp
+@@ -28,7 +28,7 @@
+ 
+ #include <kio/copyjob.h>
+ #include <kmessagebox.h>
+-#include <krun.h>
++// #include <krun.h>
+ #include <kzip.h>
+ 
+ #include "KPrHtmlExportUiDelegate.h"
+@@ -161,7 +161,7 @@ void KPrHtmlExport::moveResult(KJob *job)
+         if(m_parameters.openBrowser){
+             QUrl url = m_parameters.destination;
+             url.setPath(url.path() + QLatin1String("/index.html"));
+-            KRun::runUrl(url, "text/html", m_parameters.kprView);
++            // KRun::runUrl(url, "text/html", m_parameters.kprView);
+         }
+     }
+ }
+diff --git a/stage/part/KPrView.cpp b/stage/part/KPrView.cpp
+index b750f5e..87a421c 100644
+--- a/stage/part/KPrView.cpp
++++ b/stage/part/KPrView.cpp
+@@ -63,7 +63,9 @@
+ #include "KPrFactory.h"
+ #include "commands/KPrAnimationCreateCommand.h"
+ #include "KPrPageLayoutWidget.h"
++#ifdef HTML_EXPORT
+ #include "KPrHtmlExport.h"
++#endif
+ #include "KPrCustomSlideShows.h"
+ #include "ui/KPrConfigureSlideShowDialog.h"
+ #include "ui/KPrConfigurePresenterViewDialog.h"
+@@ -496,6 +498,7 @@ void KPrView::configurePresenterView()
+ 
+ void KPrView::exportToHtml()
+ {
++#ifdef HTML_EXPORT
+     KPrHtmlExportDialog *dialog = new KPrHtmlExportDialog(kopaDocument()->pages(),koDocument()->documentInfo()->aboutInfo("title"),
+                                                           koDocument()->documentInfo()->authorInfo("creator"), this);
+     if (dialog->exec() == QDialog::Accepted && !dialog->checkedSlides().isEmpty()) {
+@@ -508,6 +511,7 @@ void KPrView::exportToHtml()
+                                                            dialog->title(), dialog->slidesNames(), dialog->openBrowser()));
+         }
+    }
++#endif
+ }
+ 
+ KoPrintJob *KPrView::createPdfPrintJob()
+diff --git a/stage/part/ui/KPrHtmlExportDialog.cpp b/stage/part/ui/KPrHtmlExportDialog.cpp
+index 3e2bd7a..4115151 100644
+--- a/stage/part/ui/KPrHtmlExportDialog.cpp
++++ b/stage/part/ui/KPrHtmlExportDialog.cpp
+@@ -34,7 +34,9 @@
+ 
+ #include <KPrView.h>
+ 
++#ifdef HTML_EXPORT
+ #include "KPrHtmlExport.h"
++#endif
+ 
+ KPrHtmlExportDialog::KPrHtmlExportDialog(const QList<KoPAPageBase*> &slides, const QString &title, const QString &author, QWidget *parent)
+ : KoDialog(parent)
+@@ -254,6 +256,7 @@ void KPrHtmlExportDialog::generatePreview(int item)
+     ui.toolButton_previous->setEnabled(frameToRender > 0);
+     ui.toolButton_next->setEnabled(frameToRender < (m_allSlides.size() - 1));
+ 
++#ifdef HTML_EXPORT
+     KPrHtmlExport previewGenerator;
+     QList<KoPAPageBase*> slides;
+     QStringList slidesNames;
+@@ -263,6 +266,7 @@ void KPrHtmlExportDialog::generatePreview(int item)
+     QUrl url = previewGenerator.exportPreview(KPrHtmlExport::Parameter(templateUrl(), static_cast<KPrView*>(parentWidget()), slides, QUrl(),
+                                               this->author(), ui.klineedit_title->text(), slidesNames, false));
+ //     preview.mainFrame()->load(url);
++#endif
+ }
+ 
+ void KPrHtmlExportDialog::renderPreview()
+-- 
+2.7.4
+

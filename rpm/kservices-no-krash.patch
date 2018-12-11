@@ -1,0 +1,80 @@
+From fa707d70bf3f5c68eb25a3b09c9eb07bc9b20024 Mon Sep 17 00:00:00 2001
+From: Damien Caliste <dcaliste@free.fr>
+Date: Tue, 11 Dec 2018 12:55:02 +0100
+Subject: [PATCH] Disable KCrash.
+
+---
+ CMakeLists.txt                         | 2 +-
+ src/kbuildsycoca/CMakeLists.txt        | 2 +-
+ src/kbuildsycoca/kbuildsycoca_main.cpp | 6 ++++++
+ 3 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 30f7549..0efda3e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,7 +39,7 @@ find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED DBus Xml)
+ 
+ find_package(KF5Config ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5CoreAddons ${KF5_DEP_VERSION} REQUIRED)
+-find_package(KF5Crash ${KF5_DEP_VERSION} REQUIRED)
++#find_package(KF5Crash ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5DBusAddons ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5I18n ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5DocTools ${KF5_DEP_VERSION})
+diff --git a/src/kbuildsycoca/CMakeLists.txt b/src/kbuildsycoca/CMakeLists.txt
+index 19bdc84..2360e3b 100644
+--- a/src/kbuildsycoca/CMakeLists.txt
++++ b/src/kbuildsycoca/CMakeLists.txt
+@@ -12,7 +12,7 @@ ecm_mark_nongui_executable(kbuildsycoca5)
+ 
+ target_link_libraries(kbuildsycoca5
+    KF5::Service
+-   KF5::Crash      # set a crash handler for the kbuildsycoca binary
++   # KF5::Crash      # set a crash handler for the kbuildsycoca binary
+    KF5::CoreAddons # KAboutData
+    KF5::I18n
+ )
+diff --git a/src/kbuildsycoca/kbuildsycoca_main.cpp b/src/kbuildsycoca/kbuildsycoca_main.cpp
+index 14cb468..cf78e46 100644
+--- a/src/kbuildsycoca/kbuildsycoca_main.cpp
++++ b/src/kbuildsycoca/kbuildsycoca_main.cpp
+@@ -23,7 +23,9 @@
+ 
+ #include <klocalizedstring.h>
+ #include <kaboutdata.h>
++#ifdef HAVE_KCRASH
+ #include <kcrash.h>
++#endif
+ 
+ #include <QCommandLineOption>
+ #include <QCommandLineParser>
+@@ -37,6 +39,7 @@
+ 
+ #include <qplatformdefs.h> // for unlink
+ 
++#ifdef HAVE_KCRASH
+ static void crashHandler(int)
+ {
+     // If we crash while reading sycoca, we delete the database
+@@ -45,6 +48,7 @@ static void crashHandler(int)
+         unlink(KBuildSycoca::sycocaPath());
+     }
+ }
++#endif
+ 
+ int main(int argc, char **argv)
+ {
+@@ -113,7 +117,9 @@ int main(int argc, char **argv)
+         }
+     }
+ 
++#ifdef HAVE_KCRASH
+     KCrash::setEmergencySaveFunction(crashHandler);
++#endif
+ 
+     fprintf(stderr, "%s running...\n", KBUILDSYCOCA_EXENAME);
+ 
+-- 
+2.7.4
+
