@@ -1,9 +1,0 @@
-{
-    "Comment": "Genetics based Resource Constrained Project Scheduler",
-    "Name": "RCPS Scheduler",
-    "Type": "Service",
-    "X-KDE-Library": "kplatorcpsscheduler",
-    "X-KDE-ServiceTypes": [
-        "Plan/SchedulerPlugin"
-    ]
-}

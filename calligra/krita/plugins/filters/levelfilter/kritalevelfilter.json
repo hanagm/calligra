@@ -1,8 +1,0 @@
-{
-    "Comment": "Levels",
-    "Name": "Levels",
-    "ServiceTypes": "Krita/Filter",
-    "Type": "Service",
-    "X-KDE-Library": "kritalevelfilter",
-    "X-Krita-Version": "28"
-}
