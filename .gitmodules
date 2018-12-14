@@ -1,3 +1,45 @@
 [submodule "upstream"]
 	path = upstream
 	url = git://anongit.kde.org/calligra
+[submodule "ki18n"]
+	path = ki18n
+	url = git://anongit.kde.org/ki18n.git
+[submodule "kconfigwidgets"]
+	path = kconfigwidgets
+	url = git://anongit.kde.org/kconfigwidgets.git
+[submodule "kcoreaddons"]
+	path = kcoreaddons
+	url = git://anongit.kde.org/kcoreaddons.git
+[submodule "kcodecs"]
+	path = kcodecs
+	url = git://anongit.kde.org/kcodecs.git
+[submodule "kconfig"]
+	path = kconfig
+	url = git://anongit.kde.org/kconfig.git
+[submodule "kwidgetsaddons"]
+	path = kwidgetsaddons
+	url = git://anongit.kde.org/kwidgetsaddons.git
+[submodule "kguiaddons"]
+	path = kguiaddons
+	url = git://anongit.kde.org/kguiaddons.git
+[submodule "kxmlgui"]
+	path = kxmlgui
+	url = git://anongit.kde.org/kxmlgui.git
+[submodule "kcompletion"]
+	path = kcompletion
+	url = git://anongit.kde.org/kcompletion.git
+[submodule "kiconthemes"]
+	path = kiconthemes
+	url = git://anongit.kde.org/kiconthemes.git
+[submodule "kservice"]
+	path = kservice
+	url = git://anongit.kde.org/kservice.git
+[submodule "kdbusaddons"]
+	path = kdbusaddons
+	url = git://anongit.kde.org/kdbusaddons.git
+[submodule "kio"]
+	path = kio
+	url = git://anongit.kde.org/kio.git
+[submodule "kitemviews"]
+	path = kitemviews
+	url = git://anongit.kde.org/kitemviews.git

@@ -1,0 +1,175 @@
+From 450b654c7744a6683bdf98764f54d94ee5c1a77a Mon Sep 17 00:00:00 2001
+From: Damien Caliste <dcaliste@free.fr>
+Date: Tue, 11 Dec 2018 12:52:02 +0100
+Subject: [PATCH] Disable KAuth.
+
+---
+ CMakeLists.txt                  |  6 +++---
+ KF5ConfigWidgetsConfig.cmake.in |  2 +-
+ src/CMakeLists.txt              |  2 +-
+ src/kcmodule.cpp                | 10 ++++++++++
+ src/kcmodule.h                  |  6 ++++++
+ 5 files changed, 21 insertions(+), 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ae65ee8..52be120 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -26,7 +26,7 @@ ecm_setup_version(PROJECT VARIABLE_PREFIX KCONFIGWIDGETS
+                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5ConfigWidgetsConfigVersion.cmake"
+                         SOVERSION 5)
+ 
+-find_package(KF5Auth ${KF5_DEP_VERSION} REQUIRED)
++#find_package(KF5Auth ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5CoreAddons ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5Codecs ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5Config ${KF5_DEP_VERSION} REQUIRED)
+@@ -59,8 +59,8 @@ if (KF5DocTools_FOUND)
+ endif()
+ 
+ add_subdirectory(src)
+-add_subdirectory(tests)
+-add_subdirectory(autotests)
++#add_subdirectory(tests)
++#add_subdirectory(autotests)
+ 
+ # create a Config.cmake and a ConfigVersion.cmake file and install them
+ set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5ConfigWidgets")
+diff --git a/KF5ConfigWidgetsConfig.cmake.in b/KF5ConfigWidgetsConfig.cmake.in
+index 68a62b5..403e960 100644
+--- a/KF5ConfigWidgetsConfig.cmake.in
++++ b/KF5ConfigWidgetsConfig.cmake.in
+@@ -1,7 +1,7 @@
+ @PACKAGE_INIT@
+ 
+ include(CMakeFindDependencyMacro)
+-find_dependency(KF5Auth "@KF5_DEP_VERSION@")
++#find_dependency(KF5Auth "@KF5_DEP_VERSION@")
+ find_dependency(KF5Codecs "@KF5_DEP_VERSION@")
+ find_dependency(KF5Config "@KF5_DEP_VERSION@")
+ find_dependency(KF5WidgetsAddons "@KF5_DEP_VERSION@")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e39a04d..b311fa7 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -27,7 +27,7 @@ target_link_libraries(KF5ConfigWidgets
+     KF5::Codecs # KCodecActions uses KCharsets, KEncodingProber
+     KF5::WidgetsAddons # For K*Action, KPage*, KViewStateSerializer, KAcceleratorManager, K*GuiItem
+     KF5::ConfigGui # KStandardAction uses KStandardShortcut
+-    KF5::Auth # KCModule uses KAuth::Action
++    #KF5::Auth # KCModule uses KAuth::Action
+   PRIVATE
+     Qt5::DBus # KPasteTextAction talks to Klipper via DBus
+     KF5::CoreAddons # KCModule uses KAboutData, KTipDialog uses KRandom
+diff --git a/src/kcmodule.cpp b/src/kcmodule.cpp
+index 255575e..18407fa 100644
+--- a/src/kcmodule.cpp
++++ b/src/kcmodule.cpp
+@@ -32,7 +32,9 @@
+ #include <kconfigskeleton.h>
+ #include <kconfigdialogmanager.h>
+ #include <klocalizedstring.h>
++#ifdef HAVE_KAUTH
+ #include <kauthexecutejob.h>
++#endif
+ 
+ class KCModulePrivate
+ {
+@@ -43,7 +45,9 @@ public:
+         _useRootOnlyMessage(false),
+         _firstshow(true),
+         _needsAuthorization(false),
++#ifdef HAVE_KAUTH
+         _authAction(),
++#endif
+         _unmanagedWidgetChangeState(false)
+     { }
+ 
+@@ -59,7 +63,9 @@ public:
+     bool _firstshow : 1;
+ 
+     bool  _needsAuthorization : 1;
++#ifdef HAVE_KAUTH
+     KAuth::Action _authAction;
++#endif
+ 
+     // this member is used to record the state on non-automatically
+     // managed widgets, allowing for mixed KConfigXT-drive and manual
+@@ -121,6 +127,7 @@ KConfigDialogManager *KCModule::addConfig(KConfigSkeleton *config, QWidget *widg
+ void KCModule::setNeedsAuthorization(bool needsAuth)
+ {
+     d->_needsAuthorization = needsAuth;
++#ifdef HAVE_KAUTH
+     if (needsAuth && d->_about) {
+         d->_authAction = KAuth::Action(QString("org.kde.kcontrol." + d->_about->componentName() + ".save"));
+         d->_needsAuthorization = d->_authAction.isValid();
+@@ -130,6 +137,7 @@ void KCModule::setNeedsAuthorization(bool needsAuth)
+     } else {
+         d->_authAction = KAuth::Action();
+     }
++#endif
+ }
+ 
+ bool KCModule::needsAuthorization() const
+@@ -137,6 +145,7 @@ bool KCModule::needsAuthorization() const
+     return d->_needsAuthorization;
+ }
+ 
++#ifdef HAVE_KAUTH
+ void KCModule::setAuthAction(const KAuth::Action &action)
+ {
+     if (!action.isValid()) {
+@@ -173,6 +182,7 @@ void KCModule::authStatusChanged(KAuth::Action::AuthStatus status)
+ 
+     qDebug() << useRootOnlyMessage();
+ }
++#endif
+ 
+ KCModule::~KCModule()
+ {
+diff --git a/src/kcmodule.h b/src/kcmodule.h
+index e5ab3ab..1f3c9b3 100644
+--- a/src/kcmodule.h
++++ b/src/kcmodule.h
+@@ -25,7 +25,9 @@
+ 
+ #include <kconfigwidgets_export.h>
+ 
++#ifdef HAVE_KAUTH
+ #include <kauthaction.h>
++#endif
+ 
+ #include <QVariant>
+ #include <QWidget>
+@@ -223,6 +225,7 @@ public:
+      */
+     bool needsAuthorization() const;
+ 
++#ifdef HAVE_KAUTH
+     /**
+      * @brief Set if the module's save() method requires authorization to be executed
+      *
+@@ -241,6 +244,7 @@ public:
+      * @return The action that has to be authorized to execute the save() method.
+      */
+     KAuth::Action authAction() const;
++#endif
+ 
+     /**
+      * Returns the value set by setExportText();
+@@ -380,10 +384,12 @@ protected Q_SLOTS:
+      */
+     void widgetChanged();
+ 
++#ifdef HAVE_KAUTH
+     /**
+      * The status of the auth action, if one, has changed
+      */
+     void authStatusChanged(KAuth::Action::AuthStatus status);
++#endif
+ 
+ protected:
+ 
+-- 
+2.7.4
+

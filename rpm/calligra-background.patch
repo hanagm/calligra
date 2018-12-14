@@ -1,0 +1,25 @@
+From bd61755a38fd8c161694c6d40f4a9910a6b1e046 Mon Sep 17 00:00:00 2001
+From: Damien Caliste <dcaliste@free.fr>
+Date: Tue, 11 Dec 2018 13:27:28 +0100
+Subject: [PATCH 11/11] Reenable transparent background.
+
+---
+ words/part/KWCanvasItem.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/words/part/KWCanvasItem.cpp b/words/part/KWCanvasItem.cpp
+index ce850e5..18f5b40 100644
+--- a/words/part/KWCanvasItem.cpp
++++ b/words/part/KWCanvasItem.cpp
+@@ -163,7 +163,7 @@ void KWCanvasItem::updateCanvas(const QRectF &rc)
+ 
+ void KWCanvasItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *)
+ {
+-    painter->fillRect(option->exposedRect, QColor::fromRgb(232, 233, 234));
++    // painter->fillRect(option->exposedRect, QColor::fromRgb(232, 233, 234));
+     KWCanvasBase::paint(*painter, option->exposedRect);
+ }
+ 
+-- 
+2.7.4
+

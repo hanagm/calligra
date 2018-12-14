@@ -1,5 +1,0 @@
-#ifndef FAKE_COMPONENTIFACE_H
-#define FAKE_COMPONENTIFACE_H
-
-
-#endif

@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8050a1b..388fcc4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,7 +43,7 @@ find_package(KF5DBusAddons ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5I18n ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5Service ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5DocTools ${KF5_DEP_VERSION})
+-find_package(KF5Solid ${KF5_DEP_VERSION} REQUIRED) # for kio_trash
++#find_package(KF5Solid ${KF5_DEP_VERSION} REQUIRED) # for kio_trash
+ 
+ if (NOT KIOCORE_ONLY)
+ find_package(KF5Bookmarks ${KF5_DEP_VERSION} REQUIRED)
+diff --git a/src/ioslaves/CMakeLists.txt b/src/ioslaves/CMakeLists.txt
+index e0536e7..cd69314 100644
+--- a/src/ioslaves/CMakeLists.txt
++++ b/src/ioslaves/CMakeLists.txt
+@@ -4,7 +4,7 @@ add_subdirectory( help )
+ add_subdirectory( http )
+ add_subdirectory( ftp )
+ add_subdirectory( telnet )
+-add_subdirectory( trash )
++#add_subdirectory( trash )
+ add_subdirectory( remote )
+ add_subdirectory( protocols )
+ 

@@ -1,0 +1,325 @@
+From fb1da69570daefccf022e09b7c72e363cf9c0007 Mon Sep 17 00:00:00 2001
+From: Damien Caliste <dcaliste@free.fr>
+Date: Tue, 11 Dec 2018 13:19:59 +0100
+Subject: [PATCH 05/11] Disable various dependencies in libs.
+
+---
+ libs/main/KoApplication.cpp         |  4 ++--
+ libs/main/KoDocument.cpp            | 11 +++++++++--
+ libs/main/KoMainWindow.cpp          |  4 ++--
+ libs/main/KoRecentDocumentsPane.cpp |  6 ++++++
+ libs/store/KoNetAccess.cpp          | 24 ++++++++++++++++++++++--
+ libs/store/KoNetAccess.h            |  2 +-
+ 6 files changed, 42 insertions(+), 9 deletions(-)
+
+diff --git a/libs/main/KoApplication.cpp b/libs/main/KoApplication.cpp
+index efd979b..c3d3084 100644
+--- a/libs/main/KoApplication.cpp
++++ b/libs/main/KoApplication.cpp
+@@ -49,7 +49,7 @@
+ #include <MainDebug.h>
+ #include <kconfig.h>
+ #include <kconfiggroup.h>
+-#include <krecentdirs.h>
++// #include <krecentdirs.h>
+ #include <KAboutData>
+ #include <KSharedConfig>
+ #include <KDBusService>
+@@ -305,7 +305,7 @@ bool KoApplication::start()
+         // to the recent dirs so the open dialog and open pane show
+         // the directory from where the app was started, instead of
+         // the last directory from where we opened a file
+-        KRecentDirs::add(":OpenDialog", QDir::currentPath());
++        // KRecentDirs::add(":OpenDialog", QDir::currentPath());
+         QString errorMsg;
+         KoPart *part = entry.createKoPart(&errorMsg);
+         d->partList << part;
+diff --git a/libs/main/KoDocument.cpp b/libs/main/KoDocument.cpp
+index 1b3f4d4..6f79dc9 100644
+--- a/libs/main/KoDocument.cpp
++++ b/libs/main/KoDocument.cpp
+@@ -25,7 +25,9 @@
+ 
+ #include "KoMainWindow.h" // XXX: remove
+ #include <kmessagebox.h> // XXX: remove
++#ifdef HAVE_NOTIFICATIONS
+ #include <KNotification> // XXX: remove
++#endif
+ 
+ #include "KoComponentData.h"
+ #include "KoPart.h"
+@@ -626,12 +628,14 @@ bool KoDocument::saveFile()
+     }
+     emit clearStatusBarMessage();
+ 
++#ifdef HAVE_NOTIFICATIONS
+     if (ret) {
+         KNotification *notify = new KNotification("DocumentSaved");
+         notify->setText(i18n("Document <i>%1</i> saved", url().url()));
+         notify->addContext("url", url().url());
+         QTimer::singleShot(0, notify, SLOT(sendEvent()));
+     }
++#endif
+ 
+     return ret;
+ }
+@@ -1596,10 +1600,12 @@ bool KoDocument::openFile()
+     if (ok) {
+         setMimeTypeAfterLoading(typeName);
+ 
++#ifdef HAVE_NOTIFICATIONS
+         KNotification *notify = new KNotification("DocumentLoaded");
+         notify->setText(i18n("Document <i>%1</i> loaded", url().url()));
+         notify->addContext("url", url().url());
+         QTimer::singleShot(0, notify, SLOT(sendEvent()));
++#endif
+         d->parentPart->deleteOpenPane();
+     }
+ 
+@@ -1673,8 +1679,7 @@ bool KoDocument::oldLoadAndParse(KoStore *store, const QString& filename, KoXmlD
+         << " Error message: " << errorMsg << endl;
+         d->lastErrorMessage = i18n("Parsing error in %1 at line %2, column %3\nError message: %4"
+                                    , filename  , errorLine, errorColumn ,
+-                                   QCoreApplication::translate("QXml", errorMsg.toUtf8(), 0,
+-                                                               QCoreApplication::UnicodeUTF8));
++                                   QCoreApplication::translate("QXml", errorMsg.toUtf8()));
+         return false;
+     }
+     debugMain << "File" << filename << " loaded and parsed";
+@@ -1878,10 +1883,12 @@ bool KoDocument::loadNativeFormatFromStoreInternal(KoStore *store)
+     }
+ 
+     if (oasis && store->hasFile("VersionList.xml")) {
++#ifdef HAVE_NOTIFICATIONS
+         KNotification *notify = new KNotification("DocumentHasVersions");
+         notify->setText(i18n("Document <i>%1</i> contains several versions. Go to File->Versions to open an old version.", store->urlOfStore().url()));
+         notify->addContext("url", store->urlOfStore().url());
+         QTimer::singleShot(0, notify, SLOT(sendEvent()));
++#endif
+ 
+         KoXmlDocument versionInfo;
+         KoOdfReadStore oasisStore(store);
+diff --git a/libs/main/KoMainWindow.cpp b/libs/main/KoMainWindow.cpp
+index a484d9e..7afe524 100644
+--- a/libs/main/KoMainWindow.cpp
++++ b/libs/main/KoMainWindow.cpp
+@@ -45,7 +45,7 @@
+ #include <KoDockRegistry.h>
+ #include "calligraversion.h"
+ 
+-#include <krecentdirs.h>
++// #include <krecentdirs.h>
+ #include <khelpmenu.h>
+ #include <krecentfilesaction.h>
+ #include <kaboutdata.h>
+@@ -610,7 +610,7 @@ void KoMainWindow::addRecentURL(const QUrl &url)
+             }
+             if (ok) {
+                 KRecentDocument::add(QUrl::fromLocalFile(path));
+-                KRecentDirs::add(":OpenDialog", QFileInfo(path).dir().canonicalPath());
++                // KRecentDirs::add(":OpenDialog", QFileInfo(path).dir().canonicalPath());
+             }
+         } else {
+             KRecentDocument::add(url.adjusted(QUrl::StripTrailingSlash));
+diff --git a/libs/main/KoRecentDocumentsPane.cpp b/libs/main/KoRecentDocumentsPane.cpp
+index b920ea3..e77e47b 100644
+--- a/libs/main/KoRecentDocumentsPane.cpp
++++ b/libs/main/KoRecentDocumentsPane.cpp
+@@ -27,7 +27,9 @@
+ #include <KSharedConfig>
+ #include <KConfigGroup>
+ #include <kfileitem.h>
++#ifdef HAVE_PREVIEW
+ #include <kio/previewjob.h>
++#endif
+ 
+ #include <KoIcon.h>
+ 
+@@ -137,6 +139,7 @@ KoRecentDocumentsPane::KoRecentDocumentsPane(QWidget* parent, const QString& hea
+     m_documentList->selectionModel()->select(firstIndex, QItemSelectionModel::Select);
+     m_documentList->selectionModel()->setCurrentIndex(firstIndex, QItemSelectionModel::Select);
+ 
++#ifdef HAVE_PREVIEW
+     QStringList availablePlugins = KIO::PreviewJob::availablePlugins();
+     KIO::PreviewJob *previewJob = KIO::filePreview(fileList, QSize(IconExtent, IconExtent), &availablePlugins);
+ 
+@@ -144,6 +147,7 @@ KoRecentDocumentsPane::KoRecentDocumentsPane(QWidget* parent, const QString& hea
+     connect(previewJob, SIGNAL(result(KJob*)), SLOT(previewResult(KJob*)));
+     connect(previewJob, SIGNAL(gotPreview(KFileItem,QPixmap)),
+             SLOT(updateIcon(KFileItem,QPixmap)));
++#endif
+ }
+ 
+ KoRecentDocumentsPane::~KoRecentDocumentsPane()
+@@ -164,6 +168,7 @@ void KoRecentDocumentsPane::selectionChanged(const QModelIndex& index)
+         if (preview.isNull()) {
+             // need to fetch preview
+             const KFileItemList fileList = KFileItemList() << fileItem;
++#ifdef HAVE_PREVIEW
+             QStringList availablePlugins = KIO::PreviewJob::availablePlugins();
+             KIO::PreviewJob *previewJob = KIO::filePreview(fileList, QSize(PreviewExtent, PreviewExtent), &availablePlugins);
+ 
+@@ -171,6 +176,7 @@ void KoRecentDocumentsPane::selectionChanged(const QModelIndex& index)
+             connect(previewJob, SIGNAL(result(KJob*)), SLOT(previewResult(KJob*)));
+             connect(previewJob, SIGNAL(gotPreview(KFileItem,QPixmap)),
+                     SLOT(updatePreview(KFileItem,QPixmap)));
++#endif
+ 
+             // for now set preview to icon
+             preview = item->icon().pixmap(PreviewExtent);
+diff --git a/libs/store/KoNetAccess.cpp b/libs/store/KoNetAccess.cpp
+index ed9b556..3a05f7f 100644
+--- a/libs/store/KoNetAccess.cpp
++++ b/libs/store/KoNetAccess.cpp
+@@ -39,7 +39,9 @@
+ #include <qtemporaryfile.h>
+ 
+ #include <klocalizedstring.h>
++#ifdef HAVE_KJOBWIDGETS
+ #include <kjobwidgets.h>
++#endif
+ 
+ #include "kio/job.h"
+ #include "kio/mkdirjob.h"
+@@ -315,9 +317,11 @@ bool NetAccess::filecopyInternal(const QUrl &src, const QUrl &target, int permis
+     KIO::Job *job = move
+                     ? KIO::file_move(src, target, permissions, flags)
+                     : KIO::file_copy(src, target, permissions, flags);
++#ifdef HAVE_KJOBWIDGETS
+     KJobWidgets::setWindow(job, window);
+     connect(job, SIGNAL(result(KJob*)),
+             this, SLOT(slotResult(KJob*)));
++#endif
+ 
+     enter_loop();
+     return d->bJobOK;
+@@ -331,9 +335,11 @@ bool NetAccess::dircopyInternal(const QList<QUrl> &src, const QUrl &target,
+     KIO::Job *job = move
+                     ? KIO::move(src, target)
+                     : KIO::copy(src, target);
++#ifdef HAVE_KJOBWIDGETS
+     KJobWidgets::setWindow(job, window);
+     connect(job, SIGNAL(result(KJob*)),
+             this, SLOT(slotResult(KJob*)));
++#endif
+ 
+     enter_loop();
+     return d->bJobOK;
+@@ -345,11 +351,13 @@ bool NetAccess::statInternal(const QUrl &url, int details, StatSide side,
+     d->bJobOK = true; // success unless further error occurs
+     KIO::JobFlags flags = url.isLocalFile() ? KIO::HideProgressInfo : KIO::DefaultFlags;
+     KIO::StatJob *job = KIO::stat(url, flags);
+-    KJobWidgets::setWindow(job, window);
++    // KJobWidgets::setWindow(job, window);
+     job->setDetails(details);
+     job->setSide(side == SourceSide ? StatJob::SourceSide : StatJob::DestinationSide);
++#ifdef HAVE_KJOBWIDGETS
+     connect(job, SIGNAL(result(KJob*)),
+             this, SLOT(slotResult(KJob*)));
++#endif
+     enter_loop();
+     return d->bJobOK;
+ }
+@@ -358,10 +366,12 @@ bool NetAccess::delInternal(const QUrl &url, QWidget *window)
+ {
+     d->bJobOK = true; // success unless further error occurs
+     KIO::Job *job = KIO::del(url);
++#ifdef HAVE_KJOBWIDGETS
+     KJobWidgets::setWindow(job, window);
+     connect(job, SIGNAL(result(KJob*)),
+             this, SLOT(slotResult(KJob*)));
+     enter_loop();
++#endif
+     return d->bJobOK;
+ }
+ 
+@@ -370,9 +380,11 @@ bool NetAccess::mkdirInternal(const QUrl &url, int permissions,
+ {
+     d->bJobOK = true; // success unless further error occurs
+     KIO::Job *job = KIO::mkdir(url, permissions);
++#ifdef HAVE_KJOBWIDGETS
+     KJobWidgets::setWindow(job, window);
+     connect(job, SIGNAL(result(KJob*)),
+             this, SLOT(slotResult(KJob*)));
++#endif
+     enter_loop();
+     return d->bJobOK;
+ }
+@@ -382,11 +394,13 @@ QString NetAccess::mimetypeInternal(const QUrl &url, QWidget *window)
+     d->bJobOK = true; // success unless further error occurs
+     d->m_mimetype = QLatin1String("unknown");
+     KIO::Job *job = KIO::mimetype(url);
++#ifdef HAVE_KJOBWIDGETS
+     KJobWidgets::setWindow(job, window);
+     connect(job, SIGNAL(result(KJob*)),
+             this, SLOT(slotResult(KJob*)));
+     connect(job, SIGNAL(mimetype(KIO::Job*,QString)),
+             this, SLOT(slotMimetype(KIO::Job*,QString)));
++#endif
+     enter_loop();
+     return d->m_mimetype;
+ }
+@@ -417,9 +431,11 @@ QString NetAccess::fish_executeInternal(const QUrl &url, const QString &command,
+         stream << int('X') << tempPathUrl << command;
+ 
+         KIO::Job *job = KIO::special(tempPathUrl, packedArgs);
++#ifdef HAVE_KJOBWIDGETS
+         KJobWidgets::setWindow(job, window);
+         connect(job, SIGNAL(result(KJob*)),
+                 this, SLOT(slotResult(KJob*)));
++#endif
+         enter_loop();
+ 
+         // since the KIO::special does not provide feedback we need to download the result
+@@ -442,7 +458,7 @@ QString NetAccess::fish_executeInternal(const QUrl &url, const QString &command,
+ bool NetAccess::synchronousRunInternal(Job *job, QWidget *window, QByteArray *data,
+                                        QUrl *finalURL, QMap<QString, QString> *metaData)
+ {
+-    KJobWidgets::setWindow(job, window);
++    // KJobWidgets::setWindow(job, window);
+ 
+     d->m_metaData = metaData;
+     if (d->m_metaData) {
+@@ -458,8 +474,10 @@ bool NetAccess::synchronousRunInternal(Job *job, QWidget *window, QByteArray *da
+         }
+     }
+ 
++#ifdef HAVE_KJOBWIDGETS
+     connect(job, SIGNAL(result(KJob*)),
+             this, SLOT(slotResult(KJob*)));
++#endif
+ 
+     const QMetaObject *meta = job->metaObject();
+ 
+@@ -495,6 +513,7 @@ void NetAccess::enter_loop()
+     eventLoop.exec(QEventLoop::ExcludeUserInputEvents);
+ }
+ 
++#ifdef HAVE_KJOBWIDGETS
+ void NetAccess::slotResult(KJob *job)
+ {
+     lastErrorCode = job->error();
+@@ -517,6 +536,7 @@ void NetAccess::slotResult(KJob *job)
+ 
+     emit leaveModality();
+ }
++#endif
+ 
+ void NetAccess::slotData(KIO::Job *, const QByteArray &data)
+ {
+diff --git a/libs/store/KoNetAccess.h b/libs/store/KoNetAccess.h
+index f3e5f14..d00d33b 100644
+--- a/libs/store/KoNetAccess.h
++++ b/libs/store/KoNetAccess.h
+@@ -474,7 +474,7 @@ private:
+     friend class I_like_this_class;
+ 
+ private Q_SLOTS:
+-    void slotResult(KJob *job);
++    /* void slotResult(KJob *job); */
+     void slotMimetype(KIO::Job *job, const QString &type);
+     void slotData(KIO::Job *, const QByteArray &);
+     void slotRedirection(KIO::Job *, const QUrl &);
+-- 
+2.7.4
+

@@ -1,0 +1,214 @@
+From 85717af9f5e1b5ee36fc8c330778e832a7a9c06d Mon Sep 17 00:00:00 2001
+From: Damien Caliste <dcaliste@free.fr>
+Date: Tue, 11 Dec 2018 13:00:04 +0100
+Subject: [PATCH] Disable various dependencies.
+
+---
+ CMakeLists.txt             | 10 +++++-----
+ src/CMakeLists.txt         |  6 +++---
+ src/khelpmenu.cpp          | 12 ++++++++++++
+ src/kkeysequencewidget.cpp |  6 ++++++
+ src/kmainwindow.cpp        |  2 +-
+ src/kxmlguiwindow.cpp      |  2 +-
+ 6 files changed, 28 insertions(+), 10 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 01e44ff..1e2e363 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,9 +41,9 @@ find_package(KF5Config ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5ConfigWidgets ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5I18n ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5IconThemes ${KF5_DEP_VERSION} REQUIRED)
+-find_package(KF5TextWidgets ${KF5_DEP_VERSION} REQUIRED)
++#find_package(KF5TextWidgets ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5WidgetsAddons ${KF5_DEP_VERSION} REQUIRED)
+-find_package(KF5WindowSystem ${KF5_DEP_VERSION} REQUIRED)
++#find_package(KF5WindowSystem ${KF5_DEP_VERSION} REQUIRED)
+ find_package(KF5Attica ${KF5_DEP_VERSION})
+ set_package_properties(KF5Attica PROPERTIES DESCRIPTION "A Qt library that implements the Open Collaboration Services API"
+                        PURPOSE "Support for Get Hot New Stuff in KXMLGUI"
+@@ -53,7 +53,7 @@ set_package_properties(KF5Attica PROPERTIES DESCRIPTION "A Qt library that imple
+ set (HAVE_ATTICA ${KF5Attica_FOUND})
+ 
+ if (NOT FORCE_DISABLE_KGLOBALACCEL)
+-    find_package(KF5GlobalAccel ${KF5_DEP_VERSION} REQUIRED)
++    find_package(KF5GlobalAccel ${KF5_DEP_VERSION})
+ endif()
+ set (HAVE_GLOBALACCEL ${KF5GlobalAccel_FOUND})
+ 
+@@ -63,8 +63,8 @@ if (IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/po")
+     ki18n_install(po)
+ endif()
+ add_subdirectory(src)
+-add_subdirectory(tests)
+-add_subdirectory(autotests)
++#add_subdirectory(tests)
++#add_subdirectory(autotests)
+ 
+ 
+ # create a Config.cmake and a ConfigVersion.cmake file and install them
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 8126b5e..221905b 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -26,7 +26,7 @@ set(kxmlgui_SRCS
+   kactioncategory.cpp
+   kactioncollection.cpp
+   kactionconflictdetector.cpp
+-  kbugreport.cpp
++  #kbugreport.cpp
+   kedittoolbar.cpp
+   kgesture.cpp
+   kgesturemap.cpp
+@@ -90,8 +90,8 @@ PRIVATE
+     KF5::ItemViews           #KWidgetItemDelegate in KAboutApplicationPersonListDelegate
+     KF5::I18n                #i18n and i18nc in many places
+     KF5::IconThemes         #KIconLoader and KIconThemes in KToolBar
+-    KF5::TextWidgets        #KTextEdit in kbugreport
+-    KF5::WindowSystem       #KKeyServer in kkeysequencewidget
++    #KF5::TextWidgets        #KTextEdit in kbugreport
++    #KF5::WindowSystem       #KKeyServer in kkeysequencewidget
+     ${XMLGUI_EXTRA_LIBS}
+ )
+ 
+diff --git a/src/khelpmenu.cpp b/src/khelpmenu.cpp
+index 27b384f..350a95f 100644
+--- a/src/khelpmenu.cpp
++++ b/src/khelpmenu.cpp
+@@ -41,7 +41,9 @@
+ 
+ #include "kaboutapplicationdialog.h"
+ #include "kaboutkdedialog_p.h"
++#ifdef HAVE_KBUGREPORT
+ #include "kbugreport.h"
++#endif
+ #include "kswitchlanguagedialog_p.h"
+ 
+ #include <kaboutdata.h>
+@@ -64,7 +66,9 @@ public:
+         mMenu = nullptr;
+         mAboutApp = nullptr;
+         mAboutKDE = nullptr;
++#ifdef HAVE_KBUGREPORT
+         mBugReport = nullptr;
++#endif
+         mDonateAction = nullptr;
+         mHandBookAction = nullptr;
+         mWhatsThisAction = nullptr;
+@@ -77,7 +81,9 @@ public:
+         delete mMenu;
+         delete mAboutApp;
+         delete mAboutKDE;
++#ifdef HAVE_KBUGREPORT
+         delete mBugReport;
++#endif
+         delete mSwitchApplicationLanguage;
+     }
+ 
+@@ -86,7 +92,9 @@ public:
+     QMenu *mMenu;
+     QDialog *mAboutApp;
+     KAboutKdeDialog *mAboutKDE;
++#ifdef HAVE_KBUGREPORT
+     KBugReport *mBugReport;
++#endif
+     QAction *mDonateAction;
+     KSwitchLanguageDialog *mSwitchApplicationLanguage;
+ 
+@@ -334,11 +342,13 @@ void KHelpMenu::aboutKDE()
+ 
+ void KHelpMenu::reportBug()
+ {
++#ifdef HAVE_KBUGREPORT
+     if (!d->mBugReport) {
+         d->mBugReport = new KBugReport(d->mAboutData, d->mParent);
+         connect(d->mBugReport, SIGNAL(finished(int)), this, SLOT(dialogFinished()));
+     }
+     d->mBugReport->show();
++#endif
+ }
+ 
+ void KHelpMenu::switchApplicationLanguage()
+@@ -366,9 +376,11 @@ void KHelpMenu::timerExpired()
+         delete d->mAboutKDE; d->mAboutKDE = nullptr;
+     }
+ 
++#ifdef HAVE_KBUGREPORT
+     if (d->mBugReport && !d->mBugReport->isVisible()) {
+         delete d->mBugReport; d->mBugReport = nullptr;
+     }
++#endif
+ 
+     if (d->mSwitchApplicationLanguage && !d->mSwitchApplicationLanguage->isVisible()) {
+         delete d->mSwitchApplicationLanguage; d->mSwitchApplicationLanguage = nullptr;
+diff --git a/src/kkeysequencewidget.cpp b/src/kkeysequencewidget.cpp
+index de02e2d..05aa89e 100644
+--- a/src/kkeysequencewidget.cpp
++++ b/src/kkeysequencewidget.cpp
+@@ -35,7 +35,9 @@
+ 
+ #include <klocalizedstring.h>
+ #include <kmessagebox.h>
++#ifdef HAVE_KKEYSERVER
+ #include <kkeyserver.h>
++#endif
+ #if HAVE_GLOBALACCEL
+ # include <kglobalaccel.h>
+ #endif
+@@ -646,6 +648,7 @@ void KKeySequenceWidgetPrivate::updateShortcutDisplay()
+             if (!s.isEmpty()) {
+                 s.append(QLatin1Char(','));
+             }
++#ifdef HAVE_KKEYSERVER
+             if (modifierKeys & Qt::META) {
+                 s += KKeyServer::modToStringUser(Qt::META) + QLatin1Char('+');
+             }
+@@ -667,6 +670,7 @@ void KKeySequenceWidgetPrivate::updateShortcutDisplay()
+             if (modifierKeys & Qt::SHIFT) {
+                 s += KKeyServer::modToStringUser(Qt::SHIFT) + QLatin1Char('+');
+             }
++#endif
+ 
+         } else if (nKey == 0) {
+             s = i18nc("What the user inputs now will be taken as the new shortcut", "Input");
+@@ -774,8 +778,10 @@ void KKeySequenceButton::keyPressEvent(QKeyEvent *e)
+         if (keyQt) {
+             if ((keyQt == Qt::Key_Backtab) && (d->modifierKeys & Qt::SHIFT)) {
+                 keyQt = Qt::Key_Tab | d->modifierKeys;
++#ifdef HAVE_KKEYSERVER
+             } else if (KKeyServer::isShiftAsModifierAllowed(keyQt)) {
+                 keyQt |= d->modifierKeys;
++#endif
+             } else {
+                 keyQt |= (d->modifierKeys & ~Qt::SHIFT);
+             }
+diff --git a/src/kmainwindow.cpp b/src/kmainwindow.cpp
+index 46588d2..e41ee48 100644
+--- a/src/kmainwindow.cpp
++++ b/src/kmainwindow.cpp
+@@ -53,7 +53,7 @@
+ #include <kconfig.h>
+ #include <ksharedconfig.h>
+ #include <klocalizedstring.h>
+-#include <kwindowsystem.h>
++// #include <kwindowsystem.h>
+ #include <kconfiggroup.h>
+ #include <kwindowconfig.h>
+ #include <kconfiggui.h>
+diff --git a/src/kxmlguiwindow.cpp b/src/kxmlguiwindow.cpp
+index 0cd7560..a2c059c 100644
+--- a/src/kxmlguiwindow.cpp
++++ b/src/kxmlguiwindow.cpp
+@@ -52,7 +52,7 @@
+ #include <kconfig.h>
+ #include <klocalizedstring.h>
+ #include <kaboutdata.h>
+-#include <kwindowsystem.h>
++// #include <kwindowsystem.h>
+ #include <ksharedconfig.h>
+ #include <kconfiggroup.h>
+ 
+-- 
+2.7.4
+

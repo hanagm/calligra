@@ -1,0 +1,82 @@
+From 57e1e04610312fe410b0599114f87edd363b0e9e Mon Sep 17 00:00:00 2001
+From: Damien Caliste <dcaliste@free.fr>
+Date: Tue, 11 Dec 2018 13:26:04 +0100
+Subject: [PATCH 08/11] Waiting for Qt upgrade.
+
+---
+ libs/flake/KoShape.cpp | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
+
+diff --git a/libs/flake/KoShape.cpp b/libs/flake/KoShape.cpp
+index f79e5a4..535be93 100644
+--- a/libs/flake/KoShape.cpp
++++ b/libs/flake/KoShape.cpp
+@@ -1101,7 +1101,8 @@ bool KoShape::isPrintable() const
+ void KoShape::setSelectable(bool selectable)
+ {
+     Q_D(KoShape);
+-    d->allowedInteractions.setFlag(SelectionAllowed, selectable);
++    //d->allowedInteractions.setFlag(SelectionAllowed, selectable);
++    selectable ? (d->allowedInteractions |= SelectionAllowed) : (d->allowedInteractions &= ~SelectionAllowed);
+ }
+ 
+ bool KoShape::isSelectable() const
+@@ -1113,8 +1114,10 @@ bool KoShape::isSelectable() const
+ void KoShape::setGeometryProtected(bool on)
+ {
+     Q_D(KoShape);
+-    d->allowedInteractions.setFlag(MoveAllowed, !on);
+-    d->allowedInteractions.setFlag(ResizeAllowed, !on);
++    //d->allowedInteractions.setFlag(MoveAllowed, !on);
++    (!on) ? (d->allowedInteractions |= MoveAllowed) : (d->allowedInteractions &= ~MoveAllowed);
++    //d->allowedInteractions.setFlag(ResizeAllowed, !on);
++    (!on) ? (d->allowedInteractions |= ResizeAllowed) : (d->allowedInteractions &= ~ResizeAllowed);
+ }
+ 
+ bool KoShape::isGeometryProtected() const
+@@ -1126,7 +1129,8 @@ bool KoShape::isGeometryProtected() const
+ void KoShape::setContentProtected(bool protect)
+ {
+     Q_D(KoShape);
+-    d->allowedInteractions.setFlag(ContentChangeAllowed, !protect);
++    //d->allowedInteractions.setFlag(ContentChangeAllowed, !protect);
++    (!protect) ? (d->allowedInteractions |= ContentChangeAllowed) : (d->allowedInteractions &= ~ContentChangeAllowed);
+ }
+ 
+ bool KoShape::isContentProtected() const
+@@ -1138,7 +1142,8 @@ bool KoShape::isContentProtected() const
+ void KoShape::setDeletable(bool deletable)
+ {
+     Q_D(KoShape);
+-    d->allowedInteractions.setFlag(DeletionAllowed, deletable);
++    //d->allowedInteractions.setFlag(DeletionAllowed, deletable);
++    (deletable) ? (d->allowedInteractions |= DeletionAllowed) : (d->allowedInteractions &= ~DeletionAllowed);
+ }
+ 
+ bool KoShape::isDeletable() const
+@@ -1150,7 +1155,8 @@ bool KoShape::isDeletable() const
+ void KoShape::setAllowedInteraction(KoShape::AllowedInteraction flag, bool value)
+ {
+     Q_D(KoShape);
+-    d->allowedInteractions.setFlag(flag, value);
++    //d->allowedInteractions.setFlag(flag, value);
++    (value) ? (d->allowedInteractions |= flag) : (d->allowedInteractions &= ~flag);
+ }
+ 
+ bool KoShape::allowedInteraction(KoShape::AllowedInteraction flag, bool recursive) const
+@@ -1494,8 +1500,10 @@ void KoShape::loadStyle(const KoXmlElement &element, KoShapeLoadingContext &cont
+     setBorder(d->loadOdfBorder(context));
+ 
+     QString protect(styleStack.property(KoXmlNS::style, "protect"));
+-    d->allowedInteractions.setFlag(MoveAllowed, !protect.contains("position"));
+-    d->allowedInteractions.setFlag(ResizeAllowed, !protect.contains("size"));
++    //d->allowedInteractions.setFlag(MoveAllowed, !protect.contains("position"));
++    (!protect.contains("position")) ? (d->allowedInteractions |= MoveAllowed) : (d->allowedInteractions &= ~MoveAllowed);
++    //d->allowedInteractions.setFlag(ResizeAllowed, !protect.contains("size"));
++    (!protect.contains("size")) ? (d->allowedInteractions |= ResizeAllowed) : (d->allowedInteractions &= ~ResizeAllowed);
+     setContentProtected(protect.contains("content"));
+ 
+     QString margin = styleStack.property(KoXmlNS::fo, "margin");
+-- 
+2.7.4
+

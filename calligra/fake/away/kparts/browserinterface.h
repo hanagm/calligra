@@ -1,5 +1,0 @@
-#ifndef FAKE_BROWSERINTERFACE_H
-#define FAKE_BROWSERINTERFACE_H
-
-
-#endif
