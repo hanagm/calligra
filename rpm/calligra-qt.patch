@@ -1,4 +1,4 @@
-From 57e1e04610312fe410b0599114f87edd363b0e9e Mon Sep 17 00:00:00 2001
+From b6506cdd5537ae398ea78b8439df2fda56da7ae8 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:26:04 +0100
 Subject: [PATCH 08/11] Waiting for Qt upgrade.
@@ -8,7 +8,7 @@ Subject: [PATCH 08/11] Waiting for Qt upgrade.
  1 file changed, 16 insertions(+), 8 deletions(-)
 
 diff --git a/libs/flake/KoShape.cpp b/libs/flake/KoShape.cpp
-index f79e5a4..535be93 100644
+index 744e5551aea..6e3cd036f1e 100644
 --- a/libs/flake/KoShape.cpp
 +++ b/libs/flake/KoShape.cpp
 @@ -1101,7 +1101,8 @@ bool KoShape::isPrintable() const
@@ -78,5 +78,5 @@ index f79e5a4..535be93 100644
  
      QString margin = styleStack.property(KoXmlNS::fo, "margin");
 -- 
-2.7.4
+2.20.1
 

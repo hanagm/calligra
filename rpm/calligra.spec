@@ -310,8 +310,6 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 %{_libdir}/libcalligrasheetsodf.so.*
 %{_libdir}/libcalligrasheetscommon.so.*
 %{_libdir}/qt5/plugins/calligra/parts/calligrasheetspart.so
-%{_libdir}/qt5/plugins/calligra/shapes/calligra_shape_spreadsheet.so
-%{_libdir}/qt5/plugins/calligra/deferred/calligra_shape_spreadsheet-deferred.so
 %{_libdir}/qt5/plugins/calligrasheets
 %{_datadir}/icons/hicolor/256x256/apps/calligrasheets.png
 %{_datadir}/icons/hicolor/512x512/apps/calligrasheets.png
@@ -323,8 +321,6 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 %{_datadir}/icons/hicolor/16x16/apps/calligrasheets.png
 %{_datadir}/icons/hicolor/64x64/apps/calligrasheets.png
 %{_datadir}/icons/hicolor/128x128/apps/calligrasheets.png
-%{_datadir}/calligra/icons/hicolor/22x22/actions/spreadsheetshape.png
-%{_datadir}/calligra/icons/hicolor/32x32/actions/spreadsheetshape.png
 %{_datadir}/calligrasheets/icons/hicolor/16x16/actions
 %{_datadir}/calligrasheets/icons/hicolor/22x22/actions
 %{_datadir}/calligrasheets/icons/hicolor/32x32/actions

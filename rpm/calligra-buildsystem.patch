@@ -1,10 +1,10 @@
-From 56c535fd82cf0803e5420cdc498a299f53987a70 Mon Sep 17 00:00:00 2001
+From dd282581767914695602585d5580615dbed28001 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:13:49 +0100
 Subject: [PATCH 04/11] Disable various dependencies in build system.
 
 ---
- CMakeLists.txt                      | 31 ++++++++++++++++---------------
+ CMakeLists.txt                      | 29 +++++++++++++++--------------
  karbon/CMakeLists.txt               |  3 +++
  libs/main/CMakeLists.txt            |  4 ++--
  libs/store/CMakeLists.txt           |  4 ++--
@@ -16,13 +16,13 @@ Subject: [PATCH 04/11] Disable various dependencies in build system.
  sheets/plugins/CMakeLists.txt       |  2 +-
  sheets/shape/CMakeLists.txt         |  2 +-
  stage/part/CMakeLists.txt           |  4 ++--
- 12 files changed, 47 insertions(+), 40 deletions(-)
+ 12 files changed, 46 insertions(+), 39 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8b148c0..f322eab 100644
+index 81e2a5760ed..05137cd8984 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -195,6 +195,7 @@ include(MacroDesktopToJson)
+@@ -202,6 +202,7 @@ include(MacroDesktopToJson)
  
  set(REQUIRED_KF5_VERSION "5.7.0")
  
@@ -30,7 +30,7 @@ index 8b148c0..f322eab 100644
  find_package(KF5 ${REQUIRED_KF5_VERSION} REQUIRED
      COMPONENTS
      Archive
-@@ -204,24 +205,24 @@ find_package(KF5 ${REQUIRED_KF5_VERSION} REQUIRED
+@@ -211,24 +212,24 @@ find_package(KF5 ${REQUIRED_KF5_VERSION} REQUIRED
      ConfigWidgets
      CoreAddons
      DBusAddons
@@ -67,24 +67,22 @@ index 8b148c0..f322eab 100644
      XmlGui
      )
  
-@@ -270,9 +271,9 @@ find_package(Qt5 ${REQUIRED_QT_VERSION} QUIET
+@@ -270,8 +271,8 @@ find_package(Qt5 ${REQUIRED_QT_VERSION} QUIET
      DBus
      OpenGL
      Quick
 -    QuickWidgets
 -    Sql
--    WebKit
 +#    QuickWidgets
 +#    Sql
-+#    WebKit
-     #         WebKitWidgets
-     )
- message("**********************************************************************************************************************")
+ )
+ 
+ # Qt5Declarative was removed in Qt 5.6.0 so search for it in a separate call
 diff --git a/karbon/CMakeLists.txt b/karbon/CMakeLists.txt
-index a910655..2aa31b6 100644
+index 98eae2b828d..909418d11e7 100644
 --- a/karbon/CMakeLists.txt
 +++ b/karbon/CMakeLists.txt
-@@ -61,6 +61,9 @@ ecm_install_icons(ICONS
+@@ -60,6 +60,9 @@ ecm_install_icons(ICONS
      DESTINATION ${ICON_INSTALL_DIR}
  )
  
@@ -95,7 +93,7 @@ index a910655..2aa31b6 100644
  
  if (APPLE)
 diff --git a/libs/main/CMakeLists.txt b/libs/main/CMakeLists.txt
-index 9aaa9b1..ed9ca61 100644
+index 9aaa9b14e18..ed9ca617a9c 100644
 --- a/libs/main/CMakeLists.txt
 +++ b/libs/main/CMakeLists.txt
 @@ -98,10 +98,10 @@ target_link_libraries(komain
@@ -112,7 +110,7 @@ index 9aaa9b1..ed9ca61 100644
          KF5::Completion
          KF5::IconThemes
 diff --git a/libs/store/CMakeLists.txt b/libs/store/CMakeLists.txt
-index 120c57d..2a59fde 100644
+index 120c57dac81..2a59fde2c69 100644
 --- a/libs/store/CMakeLists.txt
 +++ b/libs/store/CMakeLists.txt
 @@ -36,8 +36,8 @@ target_link_libraries(kostore
@@ -127,7 +125,7 @@ index 120c57d..2a59fde 100644
          KF5::I18n
  )
 diff --git a/libs/text/CMakeLists.txt b/libs/text/CMakeLists.txt
-index 16d7e06..4d7c38d 100644
+index 16d7e066fa2..4d7c38dcfa7 100644
 --- a/libs/text/CMakeLists.txt
 +++ b/libs/text/CMakeLists.txt
 @@ -57,8 +57,8 @@ set(kotext_LIB_SRCS
@@ -155,7 +153,7 @@ index 16d7e06..4d7c38d 100644
  if( SHOULD_BUILD_FEATURE_RDF )
      target_link_libraries(kotext PRIVATE ${SOPRANO_LIBRARIES})
 diff --git a/libs/widgets/CMakeLists.txt b/libs/widgets/CMakeLists.txt
-index dad5d91..cac0998 100644
+index dad5d91e1e3..cac0998057f 100644
 --- a/libs/widgets/CMakeLists.txt
 +++ b/libs/widgets/CMakeLists.txt
 @@ -90,7 +90,7 @@ set(kowidgets_LIB_SRCS
@@ -177,7 +175,7 @@ index dad5d91..cac0998 100644
          KF5::GuiAddons
          KF5::WidgetsAddons
 diff --git a/plugins/pictureshape/CMakeLists.txt b/plugins/pictureshape/CMakeLists.txt
-index b2f9fe2..1800c25 100644
+index b2f9fe20d03..1800c25a802 100644
 --- a/plugins/pictureshape/CMakeLists.txt
 +++ b/plugins/pictureshape/CMakeLists.txt
 @@ -24,14 +24,16 @@ set (pictureshape_LIB_SRCS
@@ -200,10 +198,10 @@ index b2f9fe2..1800c25 100644
  )
  install(TARGETS calligra_shape_picture DESTINATION ${PLUGIN_INSTALL_DIR}/calligra/shapes)
 diff --git a/plugins/textshape/CMakeLists.txt b/plugins/textshape/CMakeLists.txt
-index 41ad0c6..f954878 100644
+index af165b4a621..648f1fd3fa0 100644
 --- a/plugins/textshape/CMakeLists.txt
 +++ b/plugins/textshape/CMakeLists.txt
-@@ -184,8 +184,8 @@ target_link_libraries(calligra_shape_text
+@@ -185,8 +185,8 @@ target_link_libraries(calligra_shape_text
    kotextlayout
    kowidgets
    KF5::KIOCore
@@ -215,10 +213,10 @@ index 41ad0c6..f954878 100644
    KF5::WidgetsAddons
    KF5::Completion
 diff --git a/sheets/CMakeLists.txt b/sheets/CMakeLists.txt
-index ccdc0be..1c70cb9 100644
+index 87a8e6f6f64..0506edd7435 100644
 --- a/sheets/CMakeLists.txt
 +++ b/sheets/CMakeLists.txt
-@@ -67,7 +67,7 @@ set (commands_DIR_SRCS
+@@ -72,7 +72,7 @@ set (commands_DIR_SRCS
      commands/RowColumnManipulators.cpp
      commands/SheetCommands.cpp
      commands/SortManipulator.cpp
@@ -227,7 +225,7 @@ index ccdc0be..1c70cb9 100644
      commands/StyleCommand.cpp
      commands/ValidityCommand.cpp
      )
-@@ -325,7 +325,7 @@ generate_export_header(calligrasheetsodf
+@@ -330,7 +330,7 @@ generate_export_header(calligrasheetsodf
  target_link_libraries(calligrasheetsodf
      PUBLIC
          komain
@@ -236,7 +234,7 @@ index ccdc0be..1c70cb9 100644
      PRIVATE
          koplugin
          KF5::Completion
-@@ -336,8 +336,9 @@ set_target_properties(calligrasheetsodf PROPERTIES
+@@ -341,8 +341,9 @@ set_target_properties(calligrasheetsodf PROPERTIES
  )
  install(TARGETS calligrasheetsodf ${INSTALL_TARGETS_DEFAULT_ARGS})
  
@@ -247,7 +245,7 @@ index ccdc0be..1c70cb9 100644
  generate_export_header(calligrasheetscommon
      EXPORT_FILE_NAME sheets_common_generated_export.h
      BASE_NAME CALLIGRA_SHEETS_COMMON
-@@ -351,10 +352,10 @@ target_link_libraries(calligrasheetscommon
+@@ -356,10 +357,10 @@ target_link_libraries(calligrasheetscommon
          koplugin
          KF5::Completion
          KF5::GuiAddons
@@ -263,7 +261,7 @@ index ccdc0be..1c70cb9 100644
  if(Qt5Sql_FOUND)
      target_link_libraries(calligrasheetscommon PRIVATE Qt5::Sql)
 diff --git a/sheets/plugins/CMakeLists.txt b/sheets/plugins/CMakeLists.txt
-index b18b166..af12e68 100644
+index b18b166b3ac..af12e68b4f0 100644
 --- a/sheets/plugins/CMakeLists.txt
 +++ b/sheets/plugins/CMakeLists.txt
 @@ -1,4 +1,4 @@
@@ -273,7 +271,7 @@ index b18b166..af12e68 100644
  if (SHOULD_BUILD_FEATURE_SCRIPTING)
    add_subdirectory( scripting )
 diff --git a/sheets/shape/CMakeLists.txt b/sheets/shape/CMakeLists.txt
-index 5a9b91a..542c840 100644
+index 5a9b91a2e7c..542c840c259 100644
 --- a/sheets/shape/CMakeLists.txt
 +++ b/sheets/shape/CMakeLists.txt
 @@ -26,7 +26,7 @@ add_library(calligra_shape_spreadsheet MODULE TableShapeFactory.cpp)
@@ -286,7 +284,7 @@ index 5a9b91a..542c840 100644
  install(TARGETS calligra_shape_spreadsheet-deferred DESTINATION ${PLUGIN_INSTALL_DIR}/calligra/deferred)
  install(TARGETS calligra_shape_spreadsheet DESTINATION ${PLUGIN_INSTALL_DIR}/calligra/shapes)
 diff --git a/stage/part/CMakeLists.txt b/stage/part/CMakeLists.txt
-index d6000a1..04df6a3 100644
+index 9bdc840fa65..700d80b154d 100644
 --- a/stage/part/CMakeLists.txt
 +++ b/stage/part/CMakeLists.txt
 @@ -60,8 +60,8 @@ set( calligrastageprivate_LIB_SRCS
@@ -301,5 +299,5 @@ index d6000a1..04df6a3 100644
       KPrPdfPrintJob.cpp
       KPrSlidesSorterDocumentModel.cpp
 -- 
-2.7.4
+2.20.1
 

@@ -1,17 +1,17 @@
-From 5df9e73fdceafb6460f2a3edbc7cd6d9bc94b4d2 Mon Sep 17 00:00:00 2001
+From 922bbf563762ff76aa0ccd4f3ec97ef9550a0df9 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:13:11 +0100
 Subject: [PATCH 03/11] Disable windowing actions in find strategy.
 
 ---
- libs/text/FindDirection_p.cpp |  4 ++--
- libs/text/KoFind.cpp          |  6 ++++++
- libs/text/KoFind_p.cpp        | 46 ++++++++++++++++++++++++++++++++++++-------
- libs/text/KoFind_p.h          |  4 ++++
+ libs/text/FindDirection_p.cpp |  4 +--
+ libs/text/KoFind.cpp          |  6 +++++
+ libs/text/KoFind_p.cpp        | 46 +++++++++++++++++++++++++++++------
+ libs/text/KoFind_p.h          |  4 +++
  4 files changed, 51 insertions(+), 9 deletions(-)
 
 diff --git a/libs/text/FindDirection_p.cpp b/libs/text/FindDirection_p.cpp
-index 7a0052a..13ccfac 100644
+index 7a0052a5a2e..13ccfac7495 100644
 --- a/libs/text/FindDirection_p.cpp
 +++ b/libs/text/FindDirection_p.cpp
 @@ -61,7 +61,7 @@ void FindForward::select(const QTextCursor &cursor)
@@ -32,7 +32,7 @@ index 7a0052a..13ccfac 100644
  }
  
 diff --git a/libs/text/KoFind.cpp b/libs/text/KoFind.cpp
-index 21513b7..8a48a92 100644
+index 21513b7ec20..8a48a923726 100644
 --- a/libs/text/KoFind.cpp
 +++ b/libs/text/KoFind.cpp
 @@ -29,14 +29,20 @@
@@ -57,7 +57,7 @@ index 21513b7..8a48a92 100644
  }
  
 diff --git a/libs/text/KoFind_p.cpp b/libs/text/KoFind_p.cpp
-index d6cdd89..965314f 100644
+index d6cdd891817..965314f19ee 100644
 --- a/libs/text/KoFind_p.cpp
 +++ b/libs/text/KoFind_p.cpp
 @@ -23,9 +23,11 @@
@@ -270,7 +270,7 @@ index d6cdd89..965314f 100644
          if (goOn) {
              parseSettingsAndFind();
 diff --git a/libs/text/KoFind_p.h b/libs/text/KoFind_p.h
-index d757099..cf22224 100644
+index d757099d889..cf22224eef6 100644
 --- a/libs/text/KoFind_p.h
 +++ b/libs/text/KoFind_p.h
 @@ -24,8 +24,10 @@
@@ -297,5 +297,5 @@ index d757099..cf22224 100644
      QTextDocument *document;
      QTextDocument *startDocument;
 -- 
-2.7.4
+2.20.1
 

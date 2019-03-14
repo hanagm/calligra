@@ -1,4 +1,4 @@
-From b716d2bfbdb52aaa1835dfaf27d673fac8407e5d Mon Sep 17 00:00:00 2001
+From 93f5ab5db6210f6583996236ed6b79e912064773 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:26:34 +0100
 Subject: [PATCH 09/11] Enable page caching to improve performences.
@@ -8,7 +8,7 @@ Subject: [PATCH 09/11] Enable page caching to improve performences.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/words/part/KWCanvasBase.cpp b/words/part/KWCanvasBase.cpp
-index f20322a..7e9a35e 100644
+index f20322ab14b..7e9a35ee602 100644
 --- a/words/part/KWCanvasBase.cpp
 +++ b/words/part/KWCanvasBase.cpp
 @@ -70,7 +70,7 @@ KWCanvasBase::KWCanvasBase(KWDocument *document, QObject *parent)
@@ -21,5 +21,5 @@ index f20322a..7e9a35e 100644
  
  KWCanvasBase::~KWCanvasBase()
 -- 
-2.7.4
+2.20.1
 
