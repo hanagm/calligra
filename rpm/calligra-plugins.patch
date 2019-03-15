@@ -1,4 +1,4 @@
-From d44d01c0bfeb36b931137ff9a9d0866677f6f9a1 Mon Sep 17 00:00:00 2001
+From a4f0a0d0a88ccd2a713ca3197ab23dc4ef059d69 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:21:35 +0100
 Subject: [PATCH 06/11] Disable various dependencies in plugins.
@@ -8,13 +8,13 @@ Subject: [PATCH 06/11] Disable various dependencies in plugins.
  1 file changed, 6 insertions(+)
 
 diff --git a/plugins/textshape/TextTool.cpp b/plugins/textshape/TextTool.cpp
-index 2f50a80..42054ea 100644
+index c5ab189ec42..d1852cb41dd 100644
 --- a/plugins/textshape/TextTool.cpp
 +++ b/plugins/textshape/TextTool.cpp
 @@ -76,8 +76,10 @@
+ //#include <ResizeTableCommand.h>
  #include <KoIcon.h>
  
- #include <QDebug>
 +#ifdef HAVE_KRUN
  #include <krun.h>
  #include <kstandardshortcut.h>
@@ -22,7 +22,7 @@ index 2f50a80..42054ea 100644
  #include <kactionmenu.h>
  #include <kstandardaction.h>
  #include <ksharedconfig.h>
-@@ -2900,6 +2902,7 @@ void TextTool::runUrl(KoPointerEvent *event, QString &url)
+@@ -2914,6 +2916,7 @@ void TextTool::runUrl(KoPointerEvent *event, QString &url)
          QMimeDatabase db;
          QString type = db.mimeTypeForUrl(_url).name();
  
@@ -30,7 +30,7 @@ index 2f50a80..42054ea 100644
          if (KRun::isExecutableFile(_url, type)) {
              QString question = i18n("This link points to the program or script '%1'.\n"
                                      "Malicious programs can harm your computer. "
-@@ -2910,10 +2913,13 @@ void TextTool::runUrl(KoPointerEvent *event, QString &url)
+@@ -2924,10 +2927,13 @@ void TextTool::runUrl(KoPointerEvent *event, QString &url)
              if (choice != KMessageBox::Yes)
                  return;
          }
@@ -45,5 +45,5 @@ index 2f50a80..42054ea 100644
  
  void TextTool::debugTextDocument()
 -- 
-2.7.4
+2.20.1
 

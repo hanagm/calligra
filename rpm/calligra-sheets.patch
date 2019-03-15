@@ -1,22 +1,22 @@
-From 1e816c5385f05fbe78fa360ffc981a96a9f5acc7 Mon Sep 17 00:00:00 2001
+From 7a47971fa4d576b0d8b4231e64a5d8567a539f12 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:25:21 +0100
 Subject: [PATCH 07/11] Disable various dependencies in sheets.
 
 ---
- sheets/CalculationSettings.cpp            |  6 +++---
- sheets/commands/AbstractRegionCommand.cpp | 14 ++++++------
- sheets/commands/SpellCheckCommand.cpp     | 26 +++++++++++-----------
+ sheets/CalculationSettings.cpp            |  6 ++--
+ sheets/commands/AbstractRegionCommand.cpp | 14 ++++-----
+ sheets/commands/SpellCheckCommand.cpp     | 26 ++++++++--------
  sheets/commands/SpellCheckCommand.h       |  2 +-
  sheets/dialogs/DocumentSettingsDialog.cpp |  2 +-
- sheets/dialogs/LinkDialog.cpp             | 22 +++++++++----------
- sheets/part/dialogs/PreferenceDialog.cpp  | 36 +++++++++++++++++--------------
- sheets/ui/CellToolBase.cpp                | 12 +++++------
- sheets/ui/HyperlinkStrategy.cpp           |  4 ++++
+ sheets/dialogs/LinkDialog.cpp             | 22 +++++++-------
+ sheets/part/dialogs/PreferenceDialog.cpp  | 36 +++++++++++++----------
+ sheets/ui/CellToolBase.cpp                | 12 ++++----
+ sheets/ui/HyperlinkStrategy.cpp           |  4 +++
  9 files changed, 66 insertions(+), 58 deletions(-)
 
 diff --git a/sheets/CalculationSettings.cpp b/sheets/CalculationSettings.cpp
-index 1717c37..c6d685f 100644
+index 1717c37372a..c6d685ff133 100644
 --- a/sheets/CalculationSettings.cpp
 +++ b/sheets/CalculationSettings.cpp
 @@ -64,7 +64,7 @@ public:
@@ -45,7 +45,7 @@ index 1717c37..c6d685f 100644
  
  void CalculationSettings::setReferenceYear(int year)
 diff --git a/sheets/commands/AbstractRegionCommand.cpp b/sheets/commands/AbstractRegionCommand.cpp
-index 7d0872a..808aff1 100644
+index 7d0872af390..808aff118c8 100644
 --- a/sheets/commands/AbstractRegionCommand.cpp
 +++ b/sheets/commands/AbstractRegionCommand.cpp
 @@ -24,7 +24,7 @@
@@ -84,7 +84,7 @@ index 7d0872a..808aff1 100644
                      }
                  }
 diff --git a/sheets/commands/SpellCheckCommand.cpp b/sheets/commands/SpellCheckCommand.cpp
-index 3564276..20080b5 100644
+index 356427655ee..20080b5c24f 100644
 --- a/sheets/commands/SpellCheckCommand.cpp
 +++ b/sheets/commands/SpellCheckCommand.cpp
 @@ -31,8 +31,8 @@
@@ -156,7 +156,7 @@ index 3564276..20080b5 100644
      command->add(QPoint(d->currentCell.column(), d->currentCell.row()));
      command->setRegisterUndo(false);
 diff --git a/sheets/commands/SpellCheckCommand.h b/sheets/commands/SpellCheckCommand.h
-index 9c801d6..478183e 100644
+index 9c801d6fefe..478183e3142 100644
 --- a/sheets/commands/SpellCheckCommand.h
 +++ b/sheets/commands/SpellCheckCommand.h
 @@ -20,7 +20,7 @@
@@ -169,7 +169,7 @@ index 9c801d6..478183e 100644
  class KoCanvasBase;
  
 diff --git a/sheets/dialogs/DocumentSettingsDialog.cpp b/sheets/dialogs/DocumentSettingsDialog.cpp
-index 39ccd69..266928f 100644
+index 39ccd69f6a9..266928f445d 100644
 --- a/sheets/dialogs/DocumentSettingsDialog.cpp
 +++ b/sheets/dialogs/DocumentSettingsDialog.cpp
 @@ -39,7 +39,7 @@
@@ -182,7 +182,7 @@ index 39ccd69..266928f 100644
  #include <KoIcon.h>
  #include "CalculationSettings.h"
 diff --git a/sheets/dialogs/LinkDialog.cpp b/sheets/dialogs/LinkDialog.cpp
-index 50c94e4..537ae85 100644
+index 50c94e4dcbc..537ae85f5b3 100644
 --- a/sheets/dialogs/LinkDialog.cpp
 +++ b/sheets/dialogs/LinkDialog.cpp
 @@ -43,8 +43,8 @@
@@ -250,7 +250,7 @@ index 50c94e4..537ae85 100644
          return;
      }
 diff --git a/sheets/part/dialogs/PreferenceDialog.cpp b/sheets/part/dialogs/PreferenceDialog.cpp
-index d3c09e3..e013789 100644
+index d3c09e3aca8..e013789035e 100644
 --- a/sheets/part/dialogs/PreferenceDialog.cpp
 +++ b/sheets/part/dialogs/PreferenceDialog.cpp
 @@ -44,11 +44,11 @@
@@ -357,7 +357,7 @@ index d3c09e3..e013789 100644
  }
  
 diff --git a/sheets/ui/CellToolBase.cpp b/sheets/ui/CellToolBase.cpp
-index 6a38dc6..51eee9a 100644
+index 6a38dc6edbc..51eee9a1e97 100644
 --- a/sheets/ui/CellToolBase.cpp
 +++ b/sheets/ui/CellToolBase.cpp
 @@ -75,7 +75,7 @@
@@ -394,7 +394,7 @@ index 6a38dc6..51eee9a 100644
  
  void CellToolBase::inspector()
 diff --git a/sheets/ui/HyperlinkStrategy.cpp b/sheets/ui/HyperlinkStrategy.cpp
-index 50b6667..b9caa87 100644
+index 50b6667efe3..b9caa87eb64 100644
 --- a/sheets/ui/HyperlinkStrategy.cpp
 +++ b/sheets/ui/HyperlinkStrategy.cpp
 @@ -29,7 +29,9 @@
@@ -424,5 +424,5 @@ index 50b6667..b9caa87 100644
      }
  
 -- 
-2.7.4
+2.20.1
 

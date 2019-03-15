@@ -1,4 +1,4 @@
-From f35676fddbce01b6a38f79513ddcae089c5fe99f Mon Sep 17 00:00:00 2001
+From 81a792a398170b1f71753b50293c21fe6ca4cda3 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:27:04 +0100
 Subject: [PATCH 10/11] Disable various dependencies on DBus.
@@ -10,7 +10,7 @@ Subject: [PATCH 10/11] Disable various dependencies on DBus.
  3 files changed, 29 insertions(+), 29 deletions(-)
 
 diff --git a/libs/main/KoApplication.cpp b/libs/main/KoApplication.cpp
-index c3d3084..f5a73e1 100644
+index cea05f88796..e2af716dc9f 100644
 --- a/libs/main/KoApplication.cpp
 +++ b/libs/main/KoApplication.cpp
 @@ -52,7 +52,7 @@
@@ -22,7 +22,7 @@ index c3d3084..f5a73e1 100644
  
  #include <QFile>
  #include <QWidget>
-@@ -152,12 +152,12 @@ KoApplication::KoApplication(const QByteArray &nativeMimeType,
+@@ -155,12 +155,12 @@ KoApplication::KoApplication(const QByteArray &nativeMimeType,
      // Initialize all Calligra directories etc.
      KoGlobal::initialize();
  
@@ -41,7 +41,7 @@ index c3d3084..f5a73e1 100644
  #ifdef Q_OS_MACX
      if ( QSysInfo::MacintoshVersion > QSysInfo::MV_10_8 )
 diff --git a/libs/main/KoDocument.cpp b/libs/main/KoDocument.cpp
-index 6f79dc9..646b6ee 100644
+index 87de27cceb4..9a8cedff8bd 100644
 --- a/libs/main/KoDocument.cpp
 +++ b/libs/main/KoDocument.cpp
 @@ -71,10 +71,10 @@
@@ -59,7 +59,7 @@ index 6f79dc9..646b6ee 100644
  
  // Define the protocol used here for embedded documents' URL
  // This used to "store" but QUrl didn't like it,
-@@ -321,12 +321,12 @@ public:
+@@ -319,12 +319,12 @@ public:
          KIO::JobFlags flags = KIO::DefaultFlags;
          flags |= KIO::Overwrite;
          m_job = KIO::file_copy(m_url, destURL, 0600, flags);
@@ -78,7 +78,7 @@ index 6f79dc9..646b6ee 100644
          QObject::connect(m_job, SIGNAL(result(KJob*)), document, SLOT(_k_slotJobFinished(KJob*)));
          QObject::connect(m_job, SIGNAL(mimetype(KIO::Job*,QString)), document, SLOT(_k_slotGotMimeType(KIO::Job*,QString)));
      }
-@@ -2656,9 +2656,9 @@ bool KoDocument::saveToUrl()
+@@ -2642,9 +2642,9 @@ bool KoDocument::saveToUrl()
              return false;
          }
          d->m_uploadJob = KIO::file_move( uploadUrl, d->m_url, -1, KIO::Overwrite );
@@ -92,7 +92,7 @@ index 6f79dc9..646b6ee 100644
          return true;
      }
 diff --git a/sheets/part/View.cpp b/sheets/part/View.cpp
-index 02e43b8..c89bd40 100644
+index 02e43b81b48..c89bd409a4d 100644
 --- a/sheets/part/View.cpp
 +++ b/sheets/part/View.cpp
 @@ -149,10 +149,10 @@
@@ -137,5 +137,5 @@ index 02e43b8..c89bd40 100644
  
  void View::preference()
 -- 
-2.7.4
+2.20.1
 

@@ -1,4 +1,4 @@
-From d9c4487a6896e0f105e7271ef320421a87c2a9e3 Mon Sep 17 00:00:00 2001
+From 696a3fad8b78b3ef403e0616c9772fcee5c33a14 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:06:25 +0100
 Subject: [PATCH 02/11] Don't export HTML in stage.
@@ -11,7 +11,7 @@ Subject: [PATCH 02/11] Don't export HTML in stage.
  4 files changed, 11 insertions(+), 3 deletions(-)
 
 diff --git a/stage/part/KPrAnimationDirector.cpp b/stage/part/KPrAnimationDirector.cpp
-index ea67ce9..cbbfbc7 100644
+index ea67ce97f5a..cbbfbc73cc0 100644
 --- a/stage/part/KPrAnimationDirector.cpp
 +++ b/stage/part/KPrAnimationDirector.cpp
 @@ -142,7 +142,7 @@ void KPrAnimationDirector::paint(QPainter& painter, const QRectF &paintRect)
@@ -24,7 +24,7 @@ index ea67ce9..cbbfbc7 100644
  
  void KPrAnimationDirector::paintEvent( QPaintEvent* event )
 diff --git a/stage/part/KPrHtmlExport.cpp b/stage/part/KPrHtmlExport.cpp
-index 20a856d..d368041 100644
+index 20a856d176f..d3680413b85 100644
 --- a/stage/part/KPrHtmlExport.cpp
 +++ b/stage/part/KPrHtmlExport.cpp
 @@ -28,7 +28,7 @@
@@ -46,7 +46,7 @@ index 20a856d..d368041 100644
      }
  }
 diff --git a/stage/part/KPrView.cpp b/stage/part/KPrView.cpp
-index b750f5e..87a421c 100644
+index b750f5e03d4..87a421c6e94 100644
 --- a/stage/part/KPrView.cpp
 +++ b/stage/part/KPrView.cpp
 @@ -63,7 +63,9 @@
@@ -76,7 +76,7 @@ index b750f5e..87a421c 100644
  
  KoPrintJob *KPrView::createPdfPrintJob()
 diff --git a/stage/part/ui/KPrHtmlExportDialog.cpp b/stage/part/ui/KPrHtmlExportDialog.cpp
-index 3e2bd7a..4115151 100644
+index 3e2bd7ae1ec..41151517af6 100644
 --- a/stage/part/ui/KPrHtmlExportDialog.cpp
 +++ b/stage/part/ui/KPrHtmlExportDialog.cpp
 @@ -34,7 +34,9 @@
@@ -106,5 +106,5 @@ index 3e2bd7a..4115151 100644
  
  void KPrHtmlExportDialog::renderPreview()
 -- 
-2.7.4
+2.20.1
 
