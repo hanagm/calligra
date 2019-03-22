@@ -1,0 +1,27 @@
+From f51e21873aa52bc70a2f1ff09732b5c23b63e3cb Mon Sep 17 00:00:00 2001
+From: Pekka Vuorela <pekka.vuorela@jolla.com>
+Date: Fri, 22 Mar 2019 10:55:44 +0200
+Subject: [PATCH] Disable Q_COREAPP_STARTUP_FUNCTION
+
+This doesn't work with Calligra loaded as plugin and seems partly
+pointless event if it did. The QGuiApplication is already created
+long ago when this is executed and done it separate thread it
+warns on trying to parent QTranslator into object (qapp) in a
+different thread.
+---
+ src/main.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/main.cpp b/src/main.cpp
+index 6b46f41..3510f2d 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -50,4 +50,4 @@ static void load()
+     }
+ }
+ 
+-Q_COREAPP_STARTUP_FUNCTION(load)
++//Q_COREAPP_STARTUP_FUNCTION(load)
+-- 
+2.20.1
+

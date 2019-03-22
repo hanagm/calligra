@@ -20,8 +20,10 @@ Patch1: kconfigwidgets-no-kauth.patch
 Patch2: kservices-no-krash.patch
 Patch3: kio-no-solid.patch
 Patch4: kxmlgui-no-textwidgets.patch
-Patch5: calligra-fake-kde4libs.patch
-Patch6: calligra-stage.patch
+Patch5: kxmlgui-disable_startup_functions.patch
+Patch6: k18n-disable-q_coreapp_startup_function.patch
+Patch7: calligra-fake-kde4libs.patch
+Patch8: calligra-stage.patch
 # to be arrange for later upstream
 Patch10: calligra-find.patch
 Patch11: calligra-buildsystem.patch
@@ -171,8 +173,10 @@ BuildRequires:  extra-cmake-modules >= 5.34.0
 %patch2 -d kservice -p1
 %patch3 -d kio -p1
 %patch4 -d kxmlgui -p1
-%patch5 -d upstream -p1
-%patch6 -d upstream -p1
+%patch5 -d kxmlgui -p1
+%patch6 -d ki18n -p1
+%patch7 -d upstream -p1
+%patch8 -d upstream -p1
 %patch10 -d upstream -p1
 %patch11 -d upstream -p1
 %patch12 -d upstream -p1

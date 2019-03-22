@@ -1,0 +1,55 @@
+From bc0f163db4e91b7669976510d5964957ef70a540 Mon Sep 17 00:00:00 2001
+From: Pekka Vuorela <pekka.vuorela@jolla.com>
+Date: Fri, 22 Mar 2019 15:31:46 +0200
+Subject: [PATCH 2/2] Comment out Q_COREAPP_STARTUP_FUNCTIONs
+
+Warns on qobject parents when loaded as plugin from another thread.
+Shouldn't be needed.
+---
+ src/kactionconflictdetector.cpp | 3 ++-
+ src/kcheckaccelerators.cpp      | 3 ++-
+ src/kswitchlanguagedialog_p.cpp | 3 ++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/src/kactionconflictdetector.cpp b/src/kactionconflictdetector.cpp
+index 6d4f75c..db4cd45 100644
+--- a/src/kactionconflictdetector.cpp
++++ b/src/kactionconflictdetector.cpp
+@@ -65,4 +65,5 @@ void _k_installConflictDetector()
+     app->installEventFilter(new KActionConflictDetector(app));
+ }
+ 
+-Q_COREAPP_STARTUP_FUNCTION(_k_installConflictDetector)
++// doesn't work when loaded as plugin
++//Q_COREAPP_STARTUP_FUNCTION(_k_installConflictDetector)
+diff --git a/src/kcheckaccelerators.cpp b/src/kcheckaccelerators.cpp
+index 7c551f1..1c78a89 100644
+--- a/src/kcheckaccelerators.cpp
++++ b/src/kcheckaccelerators.cpp
+@@ -87,7 +87,8 @@ static void startupFunc()
+     QMetaObject::invokeMethod(initializer, "initiateIfNeeded", Qt::QueuedConnection);
+ }
+ 
+-Q_COREAPP_STARTUP_FUNCTION(startupFunc)
++// doesn't work when loaded as plugin
++//Q_COREAPP_STARTUP_FUNCTION(startupFunc)
+ 
+ KCheckAccelerators::KCheckAccelerators(QObject *parent, int key_, bool autoCheck_, bool copyWidgetText_)
+     : QObject(parent)
+diff --git a/src/kswitchlanguagedialog_p.cpp b/src/kswitchlanguagedialog_p.cpp
+index 12a1659..b7261e7 100644
+--- a/src/kswitchlanguagedialog_p.cpp
++++ b/src/kswitchlanguagedialog_p.cpp
+@@ -87,7 +87,8 @@ static void initializeLanguages()
+     }
+ }
+ 
+-Q_COREAPP_STARTUP_FUNCTION(initializeLanguages)
++// doesn't work when loaded as plugin
++//Q_COREAPP_STARTUP_FUNCTION(initializeLanguages)
+ 
+ namespace KDEPrivate
+ {
+-- 
+2.20.1
+
