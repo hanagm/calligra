@@ -4,7 +4,6 @@ Date: Tue, 11 Dec 2018 13:25:21 +0100
 Subject: [PATCH 07/11] Disable various dependencies in sheets.
 
 ---
- sheets/CalculationSettings.cpp            |  6 ++--
  sheets/commands/AbstractRegionCommand.cpp | 14 ++++-----
  sheets/commands/SpellCheckCommand.cpp     | 26 ++++++++--------
  sheets/commands/SpellCheckCommand.h       |  2 +-
@@ -13,37 +12,8 @@ Subject: [PATCH 07/11] Disable various dependencies in sheets.
  sheets/part/dialogs/PreferenceDialog.cpp  | 36 +++++++++++++----------
  sheets/ui/CellToolBase.cpp                | 12 ++++----
  sheets/ui/HyperlinkStrategy.cpp           |  4 +++
- 9 files changed, 66 insertions(+), 58 deletions(-)
+ 8 files changed, 63 insertions(+), 55 deletions(-)
 
-diff --git a/sheets/CalculationSettings.cpp b/sheets/CalculationSettings.cpp
-index 1717c37372a..c6d685ff133 100644
---- a/sheets/CalculationSettings.cpp
-+++ b/sheets/CalculationSettings.cpp
-@@ -64,7 +64,7 @@ public:
- CalculationSettings::CalculationSettings()
-         : d(new Private)
- {
--    d->locale = new Localization();
-+    // d->locale = new Localization();
-     d->caseSensitiveComparisons = true;
-     d->precisionAsShown         = false;
-     d->wholeCellSearchCriteria  = true;
-@@ -79,13 +79,13 @@ CalculationSettings::CalculationSettings()
- 
- CalculationSettings::~CalculationSettings()
- {
--    delete d->locale;
-+    // delete d->locale;
-     delete d;
- }
- 
- KLocale* CalculationSettings::locale() const
- {
--    return d->locale;
-+    return 0; // d->locale;
- }
- 
- void CalculationSettings::setReferenceYear(int year)
 diff --git a/sheets/commands/AbstractRegionCommand.cpp b/sheets/commands/AbstractRegionCommand.cpp
 index 7d0872af390..808aff118c8 100644
 --- a/sheets/commands/AbstractRegionCommand.cpp
