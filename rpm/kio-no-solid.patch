@@ -1,5 +1,15 @@
+From 1693d1de33bc794f92e8588ec57393fc29614e98 Mon Sep 17 00:00:00 2001
+From: Pekka Vuorela <pekka.vuorela@jolla.com>
+Date: Tue, 26 Mar 2019 13:48:12 +0200
+Subject: [PATCH] Disable KIO trash
+
+---
+ CMakeLists.txt              | 2 +-
+ src/ioslaves/CMakeLists.txt | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8050a1b..388fcc4 100644
+index 8050a1b7..388fcc4a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -43,7 +43,7 @@ find_package(KF5DBusAddons ${KF5_DEP_VERSION} REQUIRED)
@@ -12,7 +22,7 @@ index 8050a1b..388fcc4 100644
  if (NOT KIOCORE_ONLY)
  find_package(KF5Bookmarks ${KF5_DEP_VERSION} REQUIRED)
 diff --git a/src/ioslaves/CMakeLists.txt b/src/ioslaves/CMakeLists.txt
-index e0536e7..cd69314 100644
+index e0536e76..cd693140 100644
 --- a/src/ioslaves/CMakeLists.txt
 +++ b/src/ioslaves/CMakeLists.txt
 @@ -4,7 +4,7 @@ add_subdirectory( help )
@@ -24,3 +34,6 @@ index e0536e7..cd69314 100644
  add_subdirectory( remote )
  add_subdirectory( protocols )
  
+-- 
+2.20.1
+
