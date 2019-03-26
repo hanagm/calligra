@@ -1,7 +1,7 @@
 From 93f5ab5db6210f6583996236ed6b79e912064773 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:26:34 +0100
-Subject: [PATCH 09/11] Enable page caching to improve performences.
+Subject: [PATCH 08/10] Enable page caching to improve performences.
 
 ---
  words/part/KWCanvasBase.cpp | 2 +-

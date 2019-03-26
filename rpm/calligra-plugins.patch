@@ -1,7 +1,7 @@
 From a4f0a0d0a88ccd2a713ca3197ab23dc4ef059d69 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:21:35 +0100
-Subject: [PATCH 06/11] Disable various dependencies in plugins.
+Subject: [PATCH 06/10] Disable various dependencies in plugins.
 
 ---
  plugins/textshape/TextTool.cpp | 6 ++++++

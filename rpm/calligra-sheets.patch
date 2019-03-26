@@ -1,7 +1,7 @@
 From 7a47971fa4d576b0d8b4231e64a5d8567a539f12 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:25:21 +0100
-Subject: [PATCH 07/11] Disable various dependencies in sheets.
+Subject: [PATCH 07/10] Disable various dependencies in sheets.
 
 ---
  sheets/commands/AbstractRegionCommand.cpp | 14 ++++-----

@@ -1,7 +1,7 @@
 From 81a792a398170b1f71753b50293c21fe6ca4cda3 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:27:04 +0100
-Subject: [PATCH 10/11] Disable various dependencies on DBus.
+Subject: [PATCH 09/10] Disable various dependencies on DBus.
 
 ---
  libs/main/KoApplication.cpp | 12 ++++++------

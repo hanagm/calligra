@@ -1,7 +1,7 @@
 From 20635033602eaa8b6607594558a885569aab9f1d Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:19:59 +0100
-Subject: [PATCH 05/11] Disable various dependencies in libs.
+Subject: [PATCH 05/10] Disable various dependencies in libs.
 
 ---
  libs/main/KoApplication.cpp         |  4 ++--

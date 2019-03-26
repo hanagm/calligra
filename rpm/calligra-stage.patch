@@ -1,28 +1,14 @@
 From 696a3fad8b78b3ef403e0616c9772fcee5c33a14 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:06:25 +0100
-Subject: [PATCH 02/11] Don't export HTML in stage.
+Subject: [PATCH 02/10] Don't export HTML in stage.
 
 ---
- stage/part/KPrAnimationDirector.cpp   | 2 +-
  stage/part/KPrHtmlExport.cpp          | 4 ++--
  stage/part/KPrView.cpp                | 4 ++++
  stage/part/ui/KPrHtmlExportDialog.cpp | 4 ++++
- 4 files changed, 11 insertions(+), 3 deletions(-)
+ 3 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/stage/part/KPrAnimationDirector.cpp b/stage/part/KPrAnimationDirector.cpp
-index ea67ce97f5a..cbbfbc73cc0 100644
---- a/stage/part/KPrAnimationDirector.cpp
-+++ b/stage/part/KPrAnimationDirector.cpp
-@@ -142,7 +142,7 @@ void KPrAnimationDirector::paint(QPainter& painter, const QRectF &paintRect)
-     // events still get through so that it is possible to cancel the
-     // events. It looks like this is not a problem with nvidia graphic
-     // cards.
--    qApp->syncX();
-+    // qApp->syncX();
- }
- 
- void KPrAnimationDirector::paintEvent( QPaintEvent* event )
 diff --git a/stage/part/KPrHtmlExport.cpp b/stage/part/KPrHtmlExport.cpp
 index 20a856d176f..d3680413b85 100644
 --- a/stage/part/KPrHtmlExport.cpp

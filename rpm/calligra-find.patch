@@ -1,7 +1,7 @@
 From 922bbf563762ff76aa0ccd4f3ec97ef9550a0df9 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:13:11 +0100
-Subject: [PATCH 03/11] Disable windowing actions in find strategy.
+Subject: [PATCH 03/10] Disable windowing actions in find strategy.
 
 ---
  libs/text/FindDirection_p.cpp |  4 +--
