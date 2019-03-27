@@ -1,7 +1,7 @@
 From 6596dbd5e5c25f7b5cefea4dbc2f0b2f30fef1c3 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:27:28 +0100
-Subject: [PATCH 11/11] Reenable transparent background.
+Subject: [PATCH 10/10] Reenable transparent background.
 
 ---
  words/part/KWCanvasItem.cpp | 2 +-

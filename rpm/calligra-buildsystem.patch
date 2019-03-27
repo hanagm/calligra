@@ -1,7 +1,7 @@
 From dd282581767914695602585d5580615dbed28001 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:13:49 +0100
-Subject: [PATCH 04/11] Disable various dependencies in build system.
+Subject: [PATCH 04/10] Disable various dependencies in build system.
 
 ---
  CMakeLists.txt                      | 29 +++++++++++++++--------------

@@ -1,10 +1,10 @@
 From 1e5f2946052f9f1712ee24fcd80716aae05dec1f Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:02:17 +0100
-Subject: [PATCH 01/11] Add fake kde4libs headers.
+Subject: [PATCH 01/10] Add fake kde4libs headers.
 
 ---
- plugins/pictureshape/kfile.h       |   65 +
+ plugins/pictureshape/kfile.h       |   64 +
  plugins/pictureshape/kfilewidget.h |  216 +++
  plugins/pictureshape/kurl.h        |  387 +++++
  sheets/kcalendarsystem.h           | 1014 +++++++++++++
@@ -14,7 +14,7 @@ Subject: [PATCH 01/11] Add fake kde4libs headers.
  sheets/kreplace.h                  |   28 +
  sheets/kreplacedialog.h            |   22 +
  sheets/ktextedit.h                 |   13 +
- 10 files changed, 3989 insertions(+)
+ 10 files changed, 3988 insertions(+)
  create mode 100644 plugins/pictureshape/kfile.h
  create mode 100644 plugins/pictureshape/kfilewidget.h
  create mode 100644 plugins/pictureshape/kurl.h
@@ -28,10 +28,10 @@ Subject: [PATCH 01/11] Add fake kde4libs headers.
 
 diff --git a/plugins/pictureshape/kfile.h b/plugins/pictureshape/kfile.h
 new file mode 100644
-index 00000000000..47a67fc3e55
+index 00000000000..975cc53da20
 --- /dev/null
 +++ b/plugins/pictureshape/kfile.h
-@@ -0,0 +1,65 @@
+@@ -0,0 +1,64 @@
 +#ifndef FAKE_KFILE_H
 +#define FAKE_KFILE_H
 +
@@ -74,16 +74,16 @@ index 00000000000..47a67fc3e55
 +#if 0
 +    static bool isSortByName( const QDir::SortFlags& sort );
 +    static bool isSortBySize( const QDir::SortFlags& sort );
-+    static bool isSortByDate( const QDir::SortFlags& sort ); 
++    static bool isSortByDate( const QDir::SortFlags& sort );
 +    static bool isSortByType( const QDir::SortFlags& sort );
 +    static bool isSortDirsFirst( const QDir::SortFlags& sort );
 +    static bool isSortCaseInsensitive( const QDir::SortFlags& sort );
 +
 +    static bool isDefaultView( const FileView& view );
 +    static bool isSimpleView( const FileView& view );
-+    static bool isDetailView( const FileView& view ); 
++    static bool isDetailView( const FileView& view );
 +    static bool isSeparateDirs( const FileView& view );
-+    static bool isPreviewContents( const FileView& view ); 
++    static bool isPreviewContents( const FileView& view );
 +    static bool isPreviewInfo( const FileView& view );
 +    static bool isTreeView( const FileView& view );
 +    static bool isDetailTreeView( const FileView& view );
@@ -96,7 +96,6 @@ index 00000000000..47a67fc3e55
 +Q_DECLARE_OPERATORS_FOR_FLAGS(KFile::Modes)
 +
 +#endif
-+ 
 diff --git a/plugins/pictureshape/kfilewidget.h b/plugins/pictureshape/kfilewidget.h
 new file mode 100644
 index 00000000000..36f0da8750a
@@ -1734,7 +1733,7 @@ index 00000000000..81c1e6496f9
 +#endif
 diff --git a/sheets/kfind.h b/sheets/kfind.h
 new file mode 100644
-index 00000000000..54f84592959
+index 00000000000..772ce46a453
 --- /dev/null
 +++ b/sheets/kfind.h
 @@ -0,0 +1,74 @@
@@ -1764,7 +1763,7 @@ index 00000000000..54f84592959
 +        // Note that KReplaceDialog uses 256 and 512
 +        // User extensions can use boolean options above this value.
 +        MinimumUserOption = 65536 ///< user options start with this bit
-+    };    
++    };
 +#if 0
 +    Q_DECLARE_FLAGS(SearchOptions, Options)
 +#endif
