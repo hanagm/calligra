@@ -1,0 +1,45 @@
+diff --git a/filters/words/ascii/AsciiImport.cpp b/filters/words/ascii/AsciiImport.cpp
+index 74ac6b3..139c143 100644
+--- a/filters/words/ascii/AsciiImport.cpp
++++ b/filters/words/ascii/AsciiImport.cpp
+@@ -135,6 +135,7 @@ KoFilter::ConversionStatus AsciiImport::convert(const QByteArray& from, const QB
+     }
+ 
+     int paragraphStrategy = 0;
++#if 0
+     if (!m_chain->manager()->getBatchMode()) {
+         QPointer<AsciiImportDialog> dialog = new AsciiImportDialog(codec->name(), QApplication::activeWindow());
+         if (!dialog) { in.close(); return KoFilter::StupidError; }
+@@ -142,6 +143,7 @@ KoFilter::ConversionStatus AsciiImport::convert(const QByteArray& from, const QB
+         codec = dialog->getCodec();
+         paragraphStrategy = dialog->getParagraphStrategy();
+     }
++#endif
+     if (!codec) return KoFilter::StupidError;
+     debugAsciiImport << "Charset used:" << codec->name();
+ 
+diff --git a/filters/words/ascii/CMakeLists.txt b/filters/words/ascii/CMakeLists.txt
+index c7643e9..7fa2eb1 100644
+--- a/filters/words/ascii/CMakeLists.txt
++++ b/filters/words/ascii/CMakeLists.txt
+@@ -13,7 +13,7 @@ set(ascii2words_PART_SRCS
+ ki18n_wrap_ui(ascii2words_PART_SRCS ImportDialogUI.ui )
+ add_library(calligra_filter_ascii2words MODULE ${ascii2words_PART_SRCS})
+ calligra_filter_desktop_to_json(calligra_filter_ascii2words calligra_filter_ascii2words.desktop)
+-target_link_libraries(calligra_filter_ascii2words komain kotextlayout wordsprivate KF5::Codecs)
++target_link_libraries(calligra_filter_ascii2words komain kotextlayout wordsprivate KF5::Codecs KF5::Completion)
+ install(TARGETS calligra_filter_ascii2words DESTINATION ${PLUGIN_INSTALL_DIR}/calligra/formatfilters)
+ 
+ endif()
+diff --git a/words/part/wordspart.desktop b/words/part/wordspart.desktop
+index 024d628..7477137 100644
+--- a/words/part/wordspart.desktop
++++ b/words/part/wordspart.desktop
+@@ -41,6 +41,6 @@ X-KDE-Library=wordspart
+ X-KDE-NativeMimeType=application/vnd.oasis.opendocument.text
+ X-KDE-NativeOasisMimeType=application/vnd.oasis.opendocument.text
+ X-KDE-ExtraNativeMimeTypes=application/vnd.oasis.opendocument.text-master,application/vnd.oasis.opendocument.text-template
+-MimeType=application/vnd.oasis.opendocument.text-master;application/vnd.oasis.opendocument.text;application/vnd.oasis.opendocument.text-template;application/msword;application/rtf;application/x-mswrite;application/vnd.openxmlformats-officedocument.wordprocessingml.document;application/vnd.openxmlformats-officedocument.wordprocessingml.template;application/vnd.ms-works;application/vnd.wordperfect;
++MimeType=application/vnd.oasis.opendocument.text-master;application/vnd.oasis.opendocument.text;application/vnd.oasis.opendocument.text-template;application/msword;application/rtf;application/x-mswrite;application/vnd.openxmlformats-officedocument.wordprocessingml.document;application/vnd.openxmlformats-officedocument.wordprocessingml.template;application/vnd.ms-works;application/vnd.wordperfect;text/plain;
+ X-KDE-ServiceTypes=Calligra/Part
+ Icon=calligrawords

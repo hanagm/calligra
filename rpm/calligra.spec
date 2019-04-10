@@ -34,6 +34,7 @@ Patch15: calligra-sheets.patch
 Patch18: calligra-cache.patch
 Patch19: calligra-qtdbus.patch
 Patch20: calligra-background.patch
+Patch21: calligra-ascii-import.patch
 
 %description
 %{summary}.
@@ -184,6 +185,7 @@ BuildRequires:  extra-cmake-modules >= 5.34.0
 %patch18 -d upstream -p1
 %patch19 -d upstream -p1
 %patch20 -d upstream -p1
+%patch21 -d upstream -p1
 
 %define build_kf5() cd %1 ; if [ ! -d build ] ; then mkdir build ; fi ; cd build ; if [ ! -e Makefile ] ; then CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr %2 .. ; fi ; make %{?_smp_mflags} install DESTDIR=%{_buildrootdir}/kf5 ; cd ../.. ;
 %build
@@ -202,7 +204,7 @@ BuildRequires:  extra-cmake-modules >= 5.34.0
 %build_kf5 kio "-DKIOCORE_ONLY=True"
 %build_kf5 kxmlgui
 if [ ! -d upstream/build ] ; then mkdir upstream/build ; fi ; cd upstream/build
-CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr -DPRODUCTSET="PART_WORDS PART_STAGE PART_SHEETS PART_COMPONENTS FILTER_DOCX_TO_ODT FILTER_DOC_TO_ODT FILTER_RTF_TO_ODT FILTER_XLSX_TO_ODS FILTER_XLS_TO_SHEETS FILTER_PPTX_TO_ODP FILTER_PPT_TO_ODP" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release ..
+CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr -DPRODUCTSET="PART_WORDS PART_STAGE PART_SHEETS PART_COMPONENTS FILTER_DOCX_TO_ODT FILTER_DOC_TO_ODT FILTER_RTF_TO_ODT FILTER_XLSX_TO_ODS FILTER_XLS_TO_SHEETS FILTER_PPTX_TO_ODP FILTER_PPT_TO_ODP FILTER_ASCII_TO_WORDS" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release ..
 make %{?_smp_mflags}
 
 %install
