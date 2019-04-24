@@ -240,15 +240,18 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 %files filters
 %defattr(-,root,root,-)
 %{_libdir}/qt5/plugins/calligra/formatfilters
-%{_libdir}/libkomsooxml.so*
-%{_libdir}/libkoodf2.so*
-%{_libdir}/libkowv2.so*
-%{_libdir}/libRtfReader.so*
+%{_libdir}/libkomsooxml.so.*
+%{_libdir}/libkoodf2.so.*
+%{_libdir}/libkowv2.so.*
+%{_libdir}/libRtfReader.so.*
 %exclude %{_libdir}/libRtfReader.so
+%exclude %{_libdir}/libkomsooxml.so
+%exclude %{_libdir}/libkoodf2.so
+%exclude %{_libdir}/libkowv2.so
 
 %files libs
 %defattr(-,root,root,-)
-%{_libdir}/libbasicflakes.so*
+%{_libdir}/libbasicflakes.so.*
 %{_libdir}/libflake.so.*
 %{_libdir}/libkomain.so.*
 %{_libdir}/libkoodf.so.*
@@ -256,12 +259,13 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 %{_libdir}/libkoplugin.so.*
 %{_libdir}/libkostore.so.*
 %{_libdir}/libkotext.so.*
-%{_libdir}/libkotextlayout.so*
-%{_libdir}/libkoversion.so*
+%{_libdir}/libkotextlayout.so.*
+%{_libdir}/libkoversion.so.*
 %{_libdir}/libkowidgets.so.*
-%{_libdir}/libkowidgetutils.so*
-%{_libdir}/libkundo2.so*
+%{_libdir}/libkowidgetutils.so.*
+%{_libdir}/libkundo2.so.*
 %{_libdir}/libpigmentcms.so.*
+%exclude %{_libdir}/libbasicflakes.so
 %exclude %{_libdir}/libflake.so
 %exclude %{_libdir}/libkomain.so
 %exclude %{_libdir}/libkoodf.so
@@ -271,6 +275,10 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 %exclude %{_libdir}/libkotext.so
 %exclude %{_libdir}/libkowidgets.so
 %exclude %{_libdir}/libpigmentcms.so
+%exclude %{_libdir}/libkotextlayout.so
+%exclude %{_libdir}/libkowidgetutils.so
+%exclude %{_libdir}/libkundo2.so
+%exclude %{_libdir}/libkoversion.so
 
 %files plugins
 %defattr(-,root,root,-)
