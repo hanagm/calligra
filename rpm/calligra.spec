@@ -207,7 +207,7 @@ make %{?_smp_mflags}
 
 %install
 install -d %{buildroot}/usr/lib/calligra-kf5/
-install %{_buildrootdir}/kf5/usr/lib/libKF5*.so.* %{buildroot}/usr/lib/calligra-kf5/
+cp -a %{_buildrootdir}/kf5/usr/lib/libKF5*.so.* %{buildroot}/usr/lib/calligra-kf5/
 cd upstream/build
 make install DESTDIR=%{buildroot}
 install -d %{buildroot}/usr/lib/qt5
