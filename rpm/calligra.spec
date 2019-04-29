@@ -185,7 +185,7 @@ BuildRequires:  extra-cmake-modules >= 5.34.0
 %patch19 -d upstream -p1
 %patch20 -d upstream -p1
 
-%define build_kf5() cd %1 ; if [ ! -d build ] ; then mkdir build ; fi ; cd build ; if [ ! -e Makefile ] ; then CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr %2 .. ; fi ; make %{?_smp_mflags} install DESTDIR=%{_buildrootdir}/kf5 ; cd ../.. ;
+%define build_kf5() cd %1 ; if [ ! -d build ] ; then mkdir build ; fi ; cd build ; if [ ! -e Makefile ] ; then CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_RPATH=/usr/lib/calligra-kf5 %{?2} .. ; fi ; make %{?_smp_mflags} install DESTDIR=%{_buildrootdir}/kf5 ; cd ../.. ;
 %build
 %build_kf5 kcodecs
 %build_kf5 kconfig
@@ -207,7 +207,7 @@ make %{?_smp_mflags}
 
 %install
 install -d %{buildroot}/usr/lib/calligra-kf5/
-install %{_buildrootdir}/kf5/usr/lib/libKF5*.so.* %{buildroot}/usr/lib/calligra-kf5/
+cp -a %{_buildrootdir}/kf5/usr/lib/libKF5*.so.* %{buildroot}/usr/lib/calligra-kf5/
 cd upstream/build
 make install DESTDIR=%{buildroot}
 install -d %{buildroot}/usr/lib/qt5
@@ -240,15 +240,18 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 %files filters
 %defattr(-,root,root,-)
 %{_libdir}/qt5/plugins/calligra/formatfilters
-%{_libdir}/libkomsooxml.so*
-%{_libdir}/libkoodf2.so*
-%{_libdir}/libkowv2.so*
-%{_libdir}/libRtfReader.so*
+%{_libdir}/libkomsooxml.so.*
+%{_libdir}/libkoodf2.so.*
+%{_libdir}/libkowv2.so.*
+%{_libdir}/libRtfReader.so.*
 %exclude %{_libdir}/libRtfReader.so
+%exclude %{_libdir}/libkomsooxml.so
+%exclude %{_libdir}/libkoodf2.so
+%exclude %{_libdir}/libkowv2.so
 
 %files libs
 %defattr(-,root,root,-)
-%{_libdir}/libbasicflakes.so*
+%{_libdir}/libbasicflakes.so.*
 %{_libdir}/libflake.so.*
 %{_libdir}/libkomain.so.*
 %{_libdir}/libkoodf.so.*
@@ -256,12 +259,13 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 %{_libdir}/libkoplugin.so.*
 %{_libdir}/libkostore.so.*
 %{_libdir}/libkotext.so.*
-%{_libdir}/libkotextlayout.so*
-%{_libdir}/libkoversion.so*
+%{_libdir}/libkotextlayout.so.*
+%{_libdir}/libkoversion.so.*
 %{_libdir}/libkowidgets.so.*
-%{_libdir}/libkowidgetutils.so*
-%{_libdir}/libkundo2.so*
+%{_libdir}/libkowidgetutils.so.*
+%{_libdir}/libkundo2.so.*
 %{_libdir}/libpigmentcms.so.*
+%exclude %{_libdir}/libbasicflakes.so
 %exclude %{_libdir}/libflake.so
 %exclude %{_libdir}/libkomain.so
 %exclude %{_libdir}/libkoodf.so
@@ -271,6 +275,10 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 %exclude %{_libdir}/libkotext.so
 %exclude %{_libdir}/libkowidgets.so
 %exclude %{_libdir}/libpigmentcms.so
+%exclude %{_libdir}/libkotextlayout.so
+%exclude %{_libdir}/libkowidgetutils.so
+%exclude %{_libdir}/libkundo2.so
+%exclude %{_libdir}/libkoversion.so
 
 %files plugins
 %defattr(-,root,root,-)
