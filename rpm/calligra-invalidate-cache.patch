@@ -1,0 +1,25 @@
+From ade89d081f50bc4d7c8da63fd5da1f62c3e3e442 Mon Sep 17 00:00:00 2001
+From: Andrew den Exter <andrew.den.exter@qinetic.com.au>
+Date: Mon, 13 May 2019 03:24:40 -0400
+Subject: [PATCH 2/2] Update the document cache when an image is reloaded.
+
+---
+ words/part/KWCanvasItem.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/words/part/KWCanvasItem.cpp b/words/part/KWCanvasItem.cpp
+index 18f5b40..0885708 100644
+--- a/words/part/KWCanvasItem.cpp
++++ b/words/part/KWCanvasItem.cpp
+@@ -157,7 +157,7 @@ void KWCanvasItem::updateInputMethodInfo()
+ 
+ void KWCanvasItem::updateCanvas(const QRectF &rc)
+ {
+-    Q_UNUSED(rc)
++    KWCanvasBase::updateCanvas(rc);
+     emit canvasUpdated();
+ }
+ 
+-- 
+1.8.3-rc3
+
