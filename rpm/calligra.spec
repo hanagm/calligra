@@ -29,6 +29,7 @@ Patch10: calligra-find.patch
 Patch11: calligra-buildsystem.patch
 Patch12: calligra-libs.patch
 Patch13: calligra-plugins.patch
+Patch14: calligra-error-reporting.patch
 Patch15: calligra-sheets.patch
 # to be removed after Qt upgrade
 Patch18: calligra-cache.patch
@@ -182,6 +183,7 @@ BuildRequires:  extra-cmake-modules >= 5.34.0
 %patch11 -d upstream -p1
 %patch12 -d upstream -p1
 %patch13 -d upstream -p1
+%patch14 -d upstream -p1
 %patch15 -d upstream -p1
 %patch18 -d upstream -p1
 %patch19 -d upstream -p1

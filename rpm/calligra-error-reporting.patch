@@ -1,0 +1,270 @@
+From a7e305bbfa9015b8a5ce2fbcaaf07d0a397d760f Mon Sep 17 00:00:00 2001
+From: Pekka Vuorela <pekka.vuorela@jolla.com>
+Date: Thu, 23 May 2019 11:13:41 +0300
+Subject: [PATCH] Add error reporting signals for KoDocument and use it in
+ components
+
+---
+ components/Document.cpp              | 16 +++++++++++++
+ components/Document.h                |  6 +++++
+ components/impl/DocumentImpl.h       |  1 +
+ components/impl/PresentationImpl.cpp |  2 ++
+ components/impl/SpreadsheetImpl.cpp  |  2 ++
+ components/impl/TextDocumentImpl.cpp |  2 ++
+ libs/main/KoDocument.cpp             | 36 ++++++++++++++++++++--------
+ libs/main/KoDocument.h               |  3 +++
+ 8 files changed, 58 insertions(+), 10 deletions(-)
+
+diff --git a/components/Document.cpp b/components/Document.cpp
+index e29b871db55..d4267e6685d 100644
+--- a/components/Document.cpp
++++ b/components/Document.cpp
+@@ -53,6 +53,7 @@ public:
+     QUrl source;
+     DocumentImpl* impl;
+     DocumentStatus::Status status;
++    QString lastError;
+ };
+ 
+ Document::Document(QObject* parent)
+@@ -147,6 +148,17 @@ int Document::indexCount() const
+     return 0;
+ }
+ 
++QString Document::lastError() const
++{
++    return d->lastError;
++}
++
++void Document::setLastError(const QString &error)
++{
++    d->lastError = error;
++    emit lastErrorChanged();
++}
++
+ KoFindBase* Document::finder() const
+ {
+     if(d->impl) {
+@@ -232,6 +244,9 @@ void Document::Private::updateImpl()
+     delete impl;
+     impl = nullptr;
+ 
++    lastError.clear();
++    emit q->lastErrorChanged();
++
+     auto type = Global::documentType(source);
+     switch(type) {
+     case DocumentType::TextDocument:
+@@ -248,6 +263,7 @@ void Document::Private::updateImpl()
+     }
+ 
+     if(impl) {
++        connect(impl, &DocumentImpl::loadError, q, &Document::setLastError);
+         connect(impl, &DocumentImpl::documentSizeChanged, q, &Document::documentSizeChanged);
+         connect(impl, &DocumentImpl::currentIndexChanged, q, &Document::currentIndexChanged);
+         connect(impl, &DocumentImpl::requestViewUpdate, q, &Document::requestViewUpdate);
+diff --git a/components/Document.h b/components/Document.h
+index 1f5a005ea29..b350d7e437c 100644
+--- a/components/Document.h
++++ b/components/Document.h
+@@ -88,6 +88,8 @@ class Document : public QObject
+      */
+     Q_PROPERTY(QObject* textEditor READ textEditor NOTIFY textEditorChanged)
+ 
++    Q_PROPERTY(QString lastError READ lastError NOTIFY lastErrorChanged)
++
+ public:
+     explicit Document(QObject* parent = 0);
+     ~Document();
+@@ -114,6 +116,9 @@ public:
+      */
+     int indexCount() const;
+ 
++    QString lastError() const;
++    void setLastError(const QString &error);
++
+     /**
+      * \internal
+      * These methods are used internally by the components and not exposed
+@@ -146,6 +151,7 @@ Q_SIGNALS:
+     void documentSizeChanged();
+     void documentTypeChanged();
+     void textEditorChanged();
++    void lastErrorChanged();
+ 
+     /**
+      * Notify signal for property #currentIndex.
+diff --git a/components/impl/DocumentImpl.h b/components/impl/DocumentImpl.h
+index cddc31c07c5..75f7d64a52e 100644
+--- a/components/impl/DocumentImpl.h
++++ b/components/impl/DocumentImpl.h
+@@ -68,6 +68,7 @@ Q_SIGNALS:
+     void documentSizeChanged();
+     void currentIndexChanged();
+     void requestViewUpdate();
++    void loadError(const QString &error);
+ 
+ protected:
+     void setDocumentType(DocumentType::Type type);
+diff --git a/components/impl/PresentationImpl.cpp b/components/impl/PresentationImpl.cpp
+index 714740f367c..e6381b73881 100644
+--- a/components/impl/PresentationImpl.cpp
++++ b/components/impl/PresentationImpl.cpp
+@@ -164,6 +164,8 @@ bool PresentationImpl::load(const QUrl& url)
+ 
+     d->part = new KPrPart{this};
+     d->document = new KPrDocument{d->part};
++    d->document->setAutoErrorHandlingEnabled(false);
++    connect(d->document, &KoDocument::loadError, this, &DocumentImpl::loadError);
+     setKoDocument(d->document);
+     d->part->setDocument(d->document);
+ 
+diff --git a/components/impl/SpreadsheetImpl.cpp b/components/impl/SpreadsheetImpl.cpp
+index 9512918fe45..260f4975add 100644
+--- a/components/impl/SpreadsheetImpl.cpp
++++ b/components/impl/SpreadsheetImpl.cpp
+@@ -166,6 +166,8 @@ bool SpreadsheetImpl::load(const QUrl& url)
+     d->part = new Calligra::Sheets::Part{this};
+     d->document = new Calligra::Sheets::Doc{d->part};
+     setKoDocument(d->document);
++    d->document->setAutoErrorHandlingEnabled(false);
++    connect(d->document, &KoDocument::loadError, this, &DocumentImpl::loadError);
+     d->part->setDocument(d->document);
+ 
+     bool retval = d->document->openUrl(url);
+diff --git a/components/impl/TextDocumentImpl.cpp b/components/impl/TextDocumentImpl.cpp
+index 5dd7f881aff..6968ccd4746 100644
+--- a/components/impl/TextDocumentImpl.cpp
++++ b/components/impl/TextDocumentImpl.cpp
+@@ -180,6 +180,8 @@ bool TextDocumentImpl::load(const QUrl& url)
+ 
+     d->part = new KWPart{this};
+     d->document = new KWDocument{d->part};
++    d->document->setAutoErrorHandlingEnabled(false);
++    connect(d->document, &KoDocument::loadError, this, &DocumentImpl::loadError);
+     setKoDocument(d->document);
+     d->part->setDocument(d->document);
+ 
+diff --git a/libs/main/KoDocument.cpp b/libs/main/KoDocument.cpp
+index 9a8cedff8bd..0c530106b3e 100644
+--- a/libs/main/KoDocument.cpp
++++ b/libs/main/KoDocument.cpp
+@@ -160,7 +160,7 @@ public:
+         modifiedAfterAutosave(false),
+         autosaving(false),
+         shouldCheckAutoSaveFile(true),
+-        autoErrorHandlingEnabled(true),
++        autoErrorHandlingEnabled(false),
+         backupFile(true),
+         backupPath(QString()),
+         doNotSaveExtDoc(false),
+@@ -464,6 +464,7 @@ KoDocument::KoDocument(KoPart *parent, KUndo2Stack *undoStack)
+ 
+     connect(d->undoStack, SIGNAL(indexChanged(int)), this, SLOT(slotUndoStackIndexChanged(int)));
+ 
++    setAutoErrorHandlingEnabled(true);
+ }
+ 
+ KoDocument::~KoDocument()
+@@ -597,9 +598,9 @@ bool KoDocument::saveFile()
+     if (!ret) {
+         if (!suppressErrorDialog) {
+             if (errorMessage().isEmpty()) {
+-                KMessageBox::error(0, i18n("Could not save\n%1", localFilePath()));
++                emit loadError(i18n("Could not save\n%1", localFilePath()));
+             } else if (errorMessage() != "USER_CANCELED") {
+-                KMessageBox::error(0, i18n("Could not save %1\nReason: %2", localFilePath(), errorMessage()));
++                emit loadError(i18n("Could not save %1\nReason: %2", localFilePath(), errorMessage()));
+             }
+ 
+         }
+@@ -704,7 +705,16 @@ void KoDocument::setCheckAutoSaveFile(bool b)
+ 
+ void KoDocument::setAutoErrorHandlingEnabled(bool b)
+ {
++    if (b == d->autoErrorHandlingEnabled) {
++        return;
++    }
++
+     d->autoErrorHandlingEnabled = b;
++    if (b) {
++        connect(this, &KoDocument::loadError, this, &KoDocument::showError);
++    } else {
++        disconnect(this, &KoDocument::loadError, this, &KoDocument::showError);
++    }
+ }
+ 
+ bool KoDocument::isAutoErrorHandlingEnabled() const
+@@ -1340,9 +1350,8 @@ bool KoDocument::openFile()
+     //debugMain <<"for" << localFilePath();
+     if (!QFile::exists(localFilePath())) {
+         QApplication::restoreOverrideCursor();
+-        if (d->autoErrorHandlingEnabled)
+-            // Maybe offer to create a new document with that name ?
+-            KMessageBox::error(0, i18n("The file %1 does not exist.", localFilePath()));
++        // Maybe offer to create a new document with that name ?
++        emit loadError(i18n("The file %1 does not exist.", localFilePath()));
+         d->isLoading = false;
+         return false;
+     }
+@@ -1541,9 +1550,9 @@ bool KoDocument::openFile()
+             default: msg = i18n("Unknown error"); break;
+             }
+ 
+-            if (d->autoErrorHandlingEnabled && !msg.isEmpty()) {
++            if (!msg.isEmpty()) {
+                 QString errorMsg(i18n("Could not open %2.\nReason: %1.\n%3", msg, prettyPathOrUrl(), errorMessage()));
+-                KMessageBox::error(0, errorMsg);
++                emit loadError(errorMsg);
+             }
+ 
+             d->isLoading = false;
+@@ -1563,8 +1572,10 @@ bool KoDocument::openFile()
+         // The filter, if any, has been applied. It's all native format now.
+         if (!loadNativeFormat(importedFile)) {
+             ok = false;
+-            if (d->autoErrorHandlingEnabled) {
+-                showLoadingErrorDialog();
++            if (errorMessage().isEmpty()) {
++                emit loadError(i18n("Could not open\n%1", localFilePath()));
++            } else if (errorMessage() != "USER_CANCELED") {
++                emit loadError(i18n("Could not open %1\nReason: %2", localFilePath(), errorMessage()));
+             }
+         }
+     }
+@@ -2359,6 +2370,11 @@ void KoDocument::slotUndoStackIndexChanged(int idx)
+     setModified(idx != d->undoStack->cleanIndex());
+ }
+ 
++void KoDocument::showError(const QString &errorString)
++{
++    KMessageBox::error(0, errorString);
++}
++
+ void KoDocument::setProfileStream(QTextStream *profilestream)
+ {
+     d->profileStream = profilestream;
+diff --git a/libs/main/KoDocument.h b/libs/main/KoDocument.h
+index 36472c95a01..4d8cdd35cdf 100644
+--- a/libs/main/KoDocument.h
++++ b/libs/main/KoDocument.h
+@@ -759,6 +759,7 @@ Q_SIGNALS:
+ 
+     void completed();
+     void canceled(const QString &);
++    void loadError(const QString &errorString);
+ 
+ private Q_SLOTS:
+ 
+@@ -767,6 +768,8 @@ private Q_SLOTS:
+     /// Called by the undo stack when undo or redo is called
+     void slotUndoStackIndexChanged(int idx);
+ 
++    void showError(const QString &errorString);
++
+ protected:
+     bool oldLoadAndParse(KoStore *store, const QString& filename, KoXmlDocument& doc);
+ private:
+-- 
+2.20.1
+
