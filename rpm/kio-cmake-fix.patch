@@ -1,0 +1,55 @@
+From 781cfa4e2ba739ee864683a3c783572852f43984 Mon Sep 17 00:00:00 2001
+From: Aleix Pol <aleixpol@kde.org>
+Date: Thu, 6 Apr 2017 14:48:01 +0200
+Subject: Generate a moc_predefs.h file for KIOCore
+
+Summary:
+Otherwise moc gets through wrong files in some platforms that have weird
+preprocessor hacks to support large files on 32 bits systems.
+This should be done by automoc.
+
+See:
+https://gitlab.kitware.com/cmake/cmake/issues/16640
+https://bugreports.qt.io/browse/QTBUG-57796
+
+BUG: 371721
+
+Test Plan: Fixes build of KIO on ARM32 (flatpak)
+
+Reviewers: #frameworks, dfaure, cgilles
+
+Reviewed By: dfaure
+
+Subscribers: #frameworks
+
+Tags: #frameworks
+
+Differential Revision: https://phabricator.kde.org/D5319
+---
+ src/core/CMakeLists.txt  | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+index 4da557e..559c14d 100644
+--- a/src/core/CMakeLists.txt
++++ b/src/core/CMakeLists.txt
+@@ -160,6 +160,16 @@ set_target_properties(KF5KIOCore PROPERTIES VERSION ${KIO_VERSION_STRING}
+                                             EXPORT_NAME KIOCore
+ )
+ 
++# this should be done by cmake, see bug 371721
++if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
++    add_custom_command(
++        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/moc_predefs.h
++        COMMAND "${CMAKE_CXX_COMPILER}" "-dM" "-E" "-c" "${CMAKE_ROOT}/Modules/CMakeCXXCompilerABI.cpp" > ${CMAKE_CURRENT_BINARY_DIR}/moc_predefs.h
++    )
++    set_property(TARGET KF5KIOCore APPEND PROPERTY AUTOMOC_MOC_OPTIONS --include ${CMAKE_CURRENT_BINARY_DIR}/moc_predefs.h)
++    set_property(TARGET KF5KIOCore APPEND PROPERTY AUTOGEN_TARGET_DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/moc_predefs.h)
++endif()
++
+ # Headers prefixed with KIO/
+ ecm_generate_headers(KIOCore_CamelCase_HEADERS
+   HEADER_NAMES
+-- 
+cgit v1.1
+
