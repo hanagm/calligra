@@ -1,0 +1,29 @@
+From a6e6a4bcc448d8448e3d7bb969b7e5e27086a754 Mon Sep 17 00:00:00 2001
+From: Damien Caliste <dcaliste@free.fr>
+Date: Wed, 22 Feb 2017 12:26:04 +0100
+Subject: [PATCH] Work around QLocale().timeFormat().simplified() seg faulting
+ in Qt5.6 with GCC4.8.
+
+---
+ sheets/ValueParser.cpp | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/sheets/ValueParser.cpp b/sheets/ValueParser.cpp
+index 136c97f5..0af1ba7a 100644
+--- a/sheets/ValueParser.cpp
++++ b/sheets/ValueParser.cpp
+@@ -390,7 +390,10 @@ Value ValueParser::tryParseTime(const QString& str, bool *ok) const
+ QDateTime ValueParser::readTime(const QString& intstr, bool withSeconds, bool* ok) const
+ {
+     QString str = intstr.simplified().toLower();
+-    QString format = m_settings->locale()->timeFormat().simplified();
++    // Workaround segfault with gcc 4.8 and Qt5.6 when calling
++    // m_settings->locale()->timeFormat().simplified() all in one line.
++    QString timeFormat = m_settings->locale()->timeFormat();
++    QString format = timeFormat.simplified();
+     if (!withSeconds) {
+         int n = format.indexOf("%S");
+         format = format.left(n - 1);
+-- 
+2.17.1
+
