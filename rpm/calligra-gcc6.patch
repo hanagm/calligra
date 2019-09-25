@@ -1,0 +1,25 @@
+From fe9065fe6771df56604e9735f0eb4fbcdcca9933 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@jolla.com>
+Date: Mon, 9 Sep 2019 21:47:57 +0300
+Subject: [PATCH] Fix build with GCC6 and newer.
+
+---
+ libs/flake/KoSnapStrategy.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libs/flake/KoSnapStrategy.cpp b/libs/flake/KoSnapStrategy.cpp
+index e67b0907367..442827defaa 100644
+--- a/libs/flake/KoSnapStrategy.cpp
++++ b/libs/flake/KoSnapStrategy.cpp
+@@ -177,7 +177,7 @@ bool ExtensionSnapStrategy::snap(const QPointF &mousePosition, KoSnapProxy * pro
+     Q_ASSERT(std::isfinite(maxSnapDistance));
+ 
+     const qreal maxDistance = maxSnapDistance * maxSnapDistance;
+-    qreal minDistances[2] = { HUGE_VAL, HUGE_VAL };
++    qreal minDistances[2] = { (qreal)HUGE_VAL, (qreal)HUGE_VAL };
+ 
+     QPointF snappedPoints[2] = { mousePosition, mousePosition };
+     QPointF startPoints[2];
+-- 
+2.17.1
+

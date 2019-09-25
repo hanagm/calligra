@@ -38,6 +38,7 @@ Patch19: calligra-qtdbus.patch
 Patch20: calligra-background.patch
 Patch21: calligra-rtf.patch
 Patch22: calligra-invalidate-cache.patch
+Patch23: calligra-gcc6.patch
 
 %description
 %{summary}.
@@ -192,6 +193,7 @@ BuildRequires:  extra-cmake-modules >= 5.34.0
 %patch20 -d upstream -p1
 %patch21 -d upstream -p1
 %patch22 -d upstream -p1
+%patch23 -d upstream -p1
 
 %define build_kf5() cd %1 ; if [ ! -d build ] ; then mkdir build ; fi ; cd build ; if [ ! -e Makefile ] ; then CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_RPATH=/usr/lib/calligra-kf5 %{?2} .. ; fi ; make %{?_smp_mflags} install DESTDIR=%{_buildrootdir}/kf5 ; cd ../.. ;
 %build
