@@ -1,0 +1,27 @@
+From c70d858b620b6f9f21be639933ba923587765816 Mon Sep 17 00:00:00 2001
+From: Andrew den Exter <andrew.den.exter@qinetic.com.au>
+Date: Tue, 15 Oct 2019 06:31:51 +0000
+Subject: [PATCH 3/3] Don't drop number styling information from xlsx cell
+ formats which start with a currency symbol.
+
+---
+ filters/libmso/NumberFormatParser.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/filters/libmso/NumberFormatParser.cpp b/filters/libmso/NumberFormatParser.cpp
+index b8d6734..21b2f80 100644
+--- a/filters/libmso/NumberFormatParser.cpp
++++ b/filters/libmso/NumberFormatParser.cpp
+@@ -260,7 +260,8 @@ KoGenStyle NumberFormatParser::parse(const QString& origNumberFormat, KoGenStyle
+             // do following only if we are really a number and not part of another KoGenStyle like a date or time formatting
+             if (type == KoGenStyle::NumericNumberStyle
+ 		|| type == KoGenStyle::NumericFractionStyle
+-		|| type == KoGenStyle::NumericScientificStyle)
++                || type == KoGenStyle::NumericScientificStyle
++                || type == KoGenStyle::NumericCurrencyStyle)
+ 	    {
+                 bool grouping = false;
+                 bool gotDot = false;
+-- 
+1.8.3-rc3
+

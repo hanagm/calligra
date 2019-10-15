@@ -31,14 +31,17 @@ Patch12: calligra-libs.patch
 Patch13: calligra-plugins.patch
 Patch14: calligra-error-reporting.patch
 Patch15: calligra-sheets.patch
+Patch16: calligra-conditional-styles.patch
+Patch17: calligra-double-formatting.patch
+Patch18: calligra-xlsx-styling.patch
 # to be removed after Qt upgrade
-Patch16: calligra-sheets-read-time.patch
-Patch18: calligra-cache.patch
-Patch19: calligra-qtdbus.patch
-Patch20: calligra-background.patch
-Patch21: calligra-rtf.patch
-Patch22: calligra-invalidate-cache.patch
-Patch23: calligra-gcc6.patch
+Patch19: calligra-sheets-read-time.patch
+Patch20: calligra-cache.patch
+Patch21: calligra-qtdbus.patch
+Patch22: calligra-background.patch
+Patch23: calligra-rtf.patch
+Patch24: calligra-invalidate-cache.patch
+Patch25: calligra-gcc6.patch
 
 %description
 %{summary}.
@@ -188,12 +191,15 @@ BuildRequires:  extra-cmake-modules >= 5.34.0
 %patch14 -d upstream -p1
 %patch15 -d upstream -p1
 %patch16 -d upstream -p1
+%patch17 -d upstream -p1
 %patch18 -d upstream -p1
 %patch19 -d upstream -p1
 %patch20 -d upstream -p1
 %patch21 -d upstream -p1
 %patch22 -d upstream -p1
 %patch23 -d upstream -p1
+%patch24 -d upstream -p1
+%patch25 -d upstream -p1
 
 %define build_kf5() cd %1 ; if [ ! -d build ] ; then mkdir build ; fi ; cd build ; if [ ! -e Makefile ] ; then CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_RPATH=/usr/lib/calligra-kf5 %{?2} .. ; fi ; make %{?_smp_mflags} install DESTDIR=%{_buildrootdir}/kf5 ; cd ../.. ;
 %build

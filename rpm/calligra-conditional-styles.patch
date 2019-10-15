@@ -1,0 +1,67 @@
+From dd5370f0e37bb4a481d433cff915c9e282b0d218 Mon Sep 17 00:00:00 2001
+From: Andrew den Exter <andrew.den.exter@qinetic.com.au>
+Date: Mon, 14 Oct 2019 06:54:40 +0000
+Subject: [PATCH 1/3] Fix incorrect conditional styling of spreadsheet cells.
+
+Include the conditions default style when comparing equality and
+calculating the hash to reduce instances of false equivalency.
+
+Then remove the QMap index cache since sorting on a hash an item may
+still produce unstable results in the somewhat unlikely case of a hash
+collision and it's going to take a lot of items before building and
+searching the map starts to be less expensive than a linear scan.
+---
+ sheets/Condition.cpp | 4 +++-
+ sheets/RectStorage.h | 6 +-----
+ 2 files changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/sheets/Condition.cpp b/sheets/Condition.cpp
+index f01f0e1..c1cf7f5 100644
+--- a/sheets/Condition.cpp
++++ b/sheets/Condition.cpp
+@@ -381,6 +381,8 @@ void Conditions::operator=(const Conditions & other)
+ 
+ bool Conditions::operator==(const Conditions& other) const
+ {
++    if (d->defaultStyle != other.d->defaultStyle)
++        return false;
+     if (d->conditionList.count() != other.d->conditionList.count())
+         return false;
+     QLinkedList<Conditional>::ConstIterator end(d->conditionList.end());
+@@ -399,7 +401,7 @@ bool Conditions::operator==(const Conditions& other) const
+ 
+ uint Calligra::Sheets::qHash(const Conditions &c)
+ {
+-    uint res = 0;
++    uint res = qHash(c.defaultStyle());
+     foreach (const Conditional& co, c.conditionList()) {
+         res ^= qHash(co);
+     }
+diff --git a/sheets/RectStorage.h b/sheets/RectStorage.h
+index c9f77ab..c6f00a2 100644
+--- a/sheets/RectStorage.h
++++ b/sheets/RectStorage.h
+@@ -570,19 +570,15 @@ void RectStorageLoader<T>::run()
+ 
+     QList<QPair<QRegion, T> > treeData;
+     typedef QPair<QRegion, T> TRegion;
+-    QMap<T, int> indexCache;
+     foreach (const TRegion& tr, m_data) {
+         const QRegion& reg = tr.first;
+         const T& d = tr.second;
+ 
+-        typename QMap<T, int>::iterator idx = indexCache.find(d);
+-        int index = idx != indexCache.end() ? idx.value() : m_storage->m_storedData.indexOf(d);
++        int index = m_storage->m_storedData.indexOf(d);
+         if (index != -1) {
+             treeData.append(qMakePair(reg, m_storage->m_storedData[index]));
+-            if (idx == indexCache.end()) indexCache.insert(d, index);
+         } else {
+             treeData.append(tr);
+-            if (idx == indexCache.end()) indexCache.insert(d, m_storage->m_storedData.size());
+             m_storage->m_storedData.append(d);
+         }
+     }
+-- 
+1.8.3-rc3
+
