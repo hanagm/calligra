@@ -239,6 +239,7 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 
 %files data
 %defattr(-,root,root,-)
+%dir %{_datadir}/calligra
 %{_datadir}/calligra/calligra_shell.rc
 %{_datadir}/calligra/cursors
 %{_datadir}/calligra/icons
@@ -292,9 +293,12 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 
 %files plugins
 %defattr(-,root,root,-)
-%{_libdir}/qt5/plugins/calligra/pageapptools/*
-%{_libdir}/qt5/plugins/calligra/textinlineobjects/*
-%{_libdir}/qt5/plugins/calligra/tools/*
+%dir %{_libdir}/qt5/plugins/calligra
+%dir %{_libdir}/qt5/plugins/calligra/parts
+%{_libdir}/qt5/plugins/calligra/pageapptools
+%{_libdir}/qt5/plugins/calligra/textinlineobjects
+%{_libdir}/qt5/plugins/calligra/tools
+%dir %{_libdir}/qt5/plugins/calligra/shapes
 %{_libdir}/qt5/plugins/calligra/shapes/calligra_shape_text.so
 %{_libdir}/qt5/plugins/calligra/shapes/calligra_shape_picture.so
 
@@ -302,7 +306,8 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 %defattr(-,root,root,-)
 %{_libdir}/libwordsprivate.so.*
 %{_libdir}/qt5/plugins/calligra/parts/calligrawordspart.so
-%{_datadir}/calligrawords/styles/*
+%dir %{_datadir}/calligrawords
+%{_datadir}/calligrawords/styles
 %{_datadir}/icons/hicolor/256x256/apps/calligrawords.png
 %{_datadir}/icons/hicolor/512x512/apps/calligrawords.png
 %{_datadir}/icons/hicolor/22x22/apps/calligrawords.png
@@ -313,6 +318,9 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 %{_datadir}/icons/hicolor/16x16/apps/calligrawords.png
 %{_datadir}/icons/hicolor/64x64/apps/calligrawords.png
 %{_datadir}/icons/hicolor/128x128/apps/calligrawords.png
+%dir %{_datadir}/calligrawords/icons/
+%dir %{_datadir}/calligrawords/icons/hicolor
+%dir %{_datadir}/calligrawords/icons/hicolor/22x22
 %{_datadir}/calligrawords/icons/hicolor/22x22/actions
 %{_datadir}/kxmlgui5/calligrawords
 %{_sysconfdir}/xdg/calligrawordsrc
@@ -341,12 +349,18 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 %{_datadir}/icons/hicolor/16x16/apps/calligrasheets.png
 %{_datadir}/icons/hicolor/64x64/apps/calligrasheets.png
 %{_datadir}/icons/hicolor/128x128/apps/calligrasheets.png
+%dir %{_datadir}/calligrasheets
+%dir %{_datadir}/calligrasheets/icons
+%dir %{_datadir}/calligrasheets/icons/hicolor
+%dir %{_datadir}/calligrasheets/icons/hicolor/16x16
+%dir %{_datadir}/calligrasheets/icons/hicolor/32x32
+%dir %{_datadir}/calligrasheets/icons/hicolor/22x22
 %{_datadir}/calligrasheets/icons/hicolor/16x16/actions
 %{_datadir}/calligrasheets/icons/hicolor/22x22/actions
 %{_datadir}/calligrasheets/icons/hicolor/32x32/actions
-%{_datadir}/calligrasheets/sheetstyles/*
-%{_datadir}/calligrasheets/functions/*
-%{_datadir}/calligrasheets/dtd/*
+%{_datadir}/calligrasheets/sheetstyles
+%{_datadir}/calligrasheets/functions
+%{_datadir}/calligrasheets/dtd
 %{_datadir}/calligrasheets/CellToolOptionWidgets.xml
 %{_datadir}/config.kcfg/calligrasheets.kcfg
 %{_datadir}/kxmlgui5/calligrasheets
@@ -369,6 +383,12 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 %{_datadir}/calligrastage/cursors
 %{_datadir}/calligrastage/pics
 %{_datadir}/calligrastage/styles
+%dir %{_datadir}/calligrastage
+%dir %{_datadir}/calligrastage/icons
+%dir %{_datadir}/calligrastage/icons/hicolor
+%dir %{_datadir}/calligrastage/icons/hicolor/16x16
+%dir %{_datadir}/calligrastage/icons/hicolor/32x32
+%dir %{_datadir}/calligrastage/icons/hicolor/64x64
 %{_datadir}/calligrastage/icons/hicolor/16x16/actions
 %{_datadir}/calligrastage/icons/hicolor/32x32/actions
 %{_datadir}/calligrastage/icons/hicolor/64x64/actions
