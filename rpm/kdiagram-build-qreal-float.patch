@@ -1,0 +1,124 @@
+From 37c70abcb1ea62b8df57ce59509f48e6535eac97 Mon Sep 17 00:00:00 2001
+From: Andrew den Exter <andrew.den.exter@qinetic.com.au>
+Date: Tue, 22 Oct 2019 04:10:35 +0000
+Subject: [PATCH] Fix build errors with qreal == float.
+
+---
+ src/KChart/Cartesian/KChartCartesianAxis.cpp     | 12 ++++++------
+ src/KChart/Polar/KChartPieDiagram.cpp            |  2 +-
+ src/KChart/Polar/KChartRingDiagram.cpp           |  2 +-
+ src/KChart/Ternary/KChartTernaryLineDiagram.cpp  |  6 +++---
+ src/KChart/Ternary/KChartTernaryPointDiagram.cpp |  6 +++---
+ src/KGantt/kganttitemdelegate.cpp                |  2 +-
+ 6 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/src/KChart/Cartesian/KChartCartesianAxis.cpp b/src/KChart/Cartesian/KChartCartesianAxis.cpp
+index e48b25d..2b16fc5 100644
+--- a/src/KChart/Cartesian/KChartCartesianAxis.cpp
++++ b/src/KChart/Cartesian/KChartCartesianAxis.cpp
+@@ -1014,8 +1014,8 @@ QSize CartesianAxis::Private::calculateMaximumSize() const
+             qreal labelMargin = 0.0;
+             QString text = it.text();
+             if ( !text.isEmpty() ) {
+-                QPointF labelPosition = plane->translate( QPointF( geoXy( drawPos, 1.0 ),
+-                                                                   geoXy( 1.0, drawPos ) ) );
++                QPointF labelPosition = plane->translate( QPointF( geoXy( drawPos, qreal(1.0) ),
++                                                                   geoXy( qreal(1.0), drawPos ) ) );
+                 highestLabelPosition = geoXy( labelPosition.x(), labelPosition.y() );
+ 
+                 if ( it.type() == TickIterator::MajorTick ) {
+@@ -1061,10 +1061,10 @@ QSize CartesianAxis::Private::calculateMaximumSize() const
+                                    highestLabelLongitudinalSize * 0.5 );
+     }
+ 
+-    amountOfLeftOverlap = geoXy( startOverhang, 0.0 );
+-    amountOfRightOverlap = geoXy( endOverhang, 0.0 );
+-    amountOfBottomOverlap = geoXy( 0.0, startOverhang );
+-    amountOfTopOverlap = geoXy( 0.0, endOverhang );
++    amountOfLeftOverlap = geoXy( startOverhang, qreal(0.0) );
++    amountOfRightOverlap = geoXy( endOverhang, qreal(0.0) );
++    amountOfBottomOverlap = geoXy( qreal(0.0), startOverhang );
++    amountOfTopOverlap = geoXy( qreal(0.0), endOverhang );
+ 
+     const TextAttributes titleTA = titleTextAttributesWithAdjustedRotation();
+     if ( titleTA.isVisible() && !axis()->titleText().isEmpty() ) {
+diff --git a/src/KChart/Polar/KChartPieDiagram.cpp b/src/KChart/Polar/KChartPieDiagram.cpp
+index 9f03b41..a7db17d 100644
+--- a/src/KChart/Polar/KChartPieDiagram.cpp
++++ b/src/KChart/Polar/KChartPieDiagram.cpp
+@@ -280,7 +280,7 @@ void PieDiagram::placeLabels( PaintContext* paintContext )
+             if ( maxOverhang > 0.0 ) {
+                 // subtract 2x as much because every side only gets half of the total diameter reduction
+                 // and we have to make up for the overhang on one particular side.
+-                d->size -= qMin( d->size, maxOverhang * 2.0 );
++                d->size -= qMin<qreal>( d->size, maxOverhang * 2.0 );
+                 tryAgain = true;
+             }
+         }
+diff --git a/src/KChart/Polar/KChartRingDiagram.cpp b/src/KChart/Polar/KChartRingDiagram.cpp
+index aa89676..4814649 100644
+--- a/src/KChart/Polar/KChartRingDiagram.cpp
++++ b/src/KChart/Polar/KChartRingDiagram.cpp
+@@ -185,7 +185,7 @@ void RingDiagram::paint( PaintContext* ctx )
+         if ( !d->expandWhenExploded ) {
+             maxOffsetInThisRow -= qreal( i );
+         }
+-        totalOffset += qMax( maxOffsetInThisRow, 0.0 );
++        totalOffset += qMax<qreal>( maxOffsetInThisRow, 0.0 );
+         // FIXME: What if explode factor of inner ring is > 1.0 ?
+         //if ( !d->expandWhenExploded )
+         //      break;
+diff --git a/src/KChart/Ternary/KChartTernaryLineDiagram.cpp b/src/KChart/Ternary/KChartTernaryLineDiagram.cpp
+index 847a573..2bc9c31 100644
+--- a/src/KChart/Ternary/KChartTernaryLineDiagram.cpp
++++ b/src/KChart/Ternary/KChartTernaryLineDiagram.cpp
+@@ -110,11 +110,11 @@ void  TernaryLineDiagram::paint (PaintContext *paintContext)
+                 p->setBrush( brush( base ) );
+ 
+                 // retrieve data
+-                x = qMax( model()->data( model()->index( row, column, rootIndex() ) ).toReal(), // checked
++                x = qMax<qreal>( model()->data( model()->index( row, column, rootIndex() ) ).toReal(), // checked
+                           0.0 );
+-                y = qMax( model()->data( model()->index( row, column+1, rootIndex() ) ).toReal(), // checked
++                y = qMax<qreal>( model()->data( model()->index( row, column+1, rootIndex() ) ).toReal(), // checked
+                           0.0 );
+-                z = qMax( model()->data( model()->index( row, column+2, rootIndex() ) ).toReal(), // checked
++                z = qMax<qreal>( model()->data( model()->index( row, column+2, rootIndex() ) ).toReal(), // checked
+                           0.0 );
+ 
+                 qreal total = x + y + z;
+diff --git a/src/KChart/Ternary/KChartTernaryPointDiagram.cpp b/src/KChart/Ternary/KChartTernaryPointDiagram.cpp
+index d29892c..9e0e352 100644
+--- a/src/KChart/Ternary/KChartTernaryPointDiagram.cpp
++++ b/src/KChart/Ternary/KChartTernaryPointDiagram.cpp
+@@ -98,11 +98,11 @@ void  TernaryPointDiagram::paint (PaintContext *paintContext)
+                 p->setBrush( brush( base ) );
+ 
+                 // retrieve data
+-                x = qMax( model()->data( model()->index( row, column+0, rootIndex() ) ).toReal(), // checked
++                x = qMax<qreal>( model()->data( model()->index( row, column+0, rootIndex() ) ).toReal(), // checked
+                           0.0 );
+-                y = qMax( model()->data( model()->index( row, column+1, rootIndex() ) ).toReal(), // checked
++                y = qMax<qreal>( model()->data( model()->index( row, column+1, rootIndex() ) ).toReal(), // checked
+                           0.0 );
+-                z = qMax( model()->data( model()->index( row, column+2, rootIndex() ) ).toReal(), // checked
++                z = qMax<qreal>( model()->data( model()->index( row, column+2, rootIndex() ) ).toReal(), // checked
+                           0.0 );
+ 
+                 // fix messed up data values (paint as much as possible)
+diff --git a/src/KGantt/kganttitemdelegate.cpp b/src/KGantt/kganttitemdelegate.cpp
+index ef6fde1..22a46b5 100644
+--- a/src/KGantt/kganttitemdelegate.cpp
++++ b/src/KGantt/kganttitemdelegate.cpp
+@@ -325,7 +325,7 @@ void ItemDelegate::paintGanttItem( QPainter* painter,
+             QPainterPath path;
+             const qreal deltaY = r.height()/2.;
+             const qreal deltaXBezierControl = .25*qMin( r.width(), r.height() );
+-            const qreal deltaX = qMin( r.width()/2., r.height() );
++            const qreal deltaX = qMin( r.width()/2, r.height() );
+             path.moveTo( r.topLeft() );
+             path.lineTo( r.topRight() );
+             path.lineTo( QPointF( r.right(), r.top() + 2.*deltaY ) );
+-- 
+1.8.3-rc3
+
