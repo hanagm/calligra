@@ -214,7 +214,7 @@ BuildRequires:  extra-cmake-modules >= 5.34.0
 %build_kf5 kxmlgui
 %build_kf5 kdiagram
 if [ ! -d upstream/build ] ; then mkdir upstream/build ; fi ; cd upstream/build
-CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr -DPRODUCTSET="PART_WORDS PART_STAGE PART_SHEETS PART_COMPONENTS FILTER_DOCX_TO_ODT FILTER_DOC_TO_ODT FILTER_RTF_TO_ODT FILTER_XLSX_TO_ODS FILTER_XLS_TO_SHEETS FILTER_PPTX_TO_ODP FILTER_PPT_TO_ODP PLUGIN_CHARTSHAPE PLUGIN_VARIABLES" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release ..
+CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr -DPRODUCTSET="PART_WORDS PART_STAGE PART_SHEETS PART_COMPONENTS FILTER_DOCX_TO_ODT FILTER_DOC_TO_ODT FILTER_RTF_TO_ODT FILTER_XLSX_TO_ODS FILTER_XLS_TO_SHEETS FILTER_PPTX_TO_ODP FILTER_PPT_TO_ODP PLUGIN_CHARTSHAPE PLUGIN_PATHSHAPES PLUGIN_VARIABLES" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release ..
 make %{?_smp_mflags}
 
 %install
@@ -304,6 +304,7 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 %{_libdir}/qt5/plugins/calligra/shapes/calligra_shape_text.so
 %{_libdir}/qt5/plugins/calligra/shapes/calligra_shape_picture.so
 %{_libdir}/qt5/plugins/calligra/shapes/calligra_shape_chart.so
+%{_libdir}/qt5/plugins/calligra/shapes/calligra_shape_paths.so
 
 %files words-core
 %defattr(-,root,root,-)
