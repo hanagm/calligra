@@ -43,3 +43,6 @@
 [submodule "kitemviews"]
 	path = kitemviews
 	url = git://anongit.kde.org/kitemviews.git
+[submodule "kdiagram"]
+	path = kdiagram
+	url = git://anongit.kde.org/kdiagram.git

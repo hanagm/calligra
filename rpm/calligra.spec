@@ -22,8 +22,10 @@ Patch3: kio-no-solid.patch
 Patch4: kxmlgui-no-textwidgets.patch
 Patch5: kxmlgui-disable_startup_functions.patch
 Patch6: k18n-disable-q_coreapp_startup_function.patch
-Patch7: calligra-fake-kde4libs.patch
-Patch8: calligra-stage.patch
+Patch7: kdiagram-build-qreal-float.patch
+Patch8: calligra-fake-kde4libs.patch
+Patch9: calligra-stage.patch
+
 # to be arrange for later upstream
 Patch10: calligra-find.patch
 Patch11: calligra-buildsystem.patch
@@ -177,8 +179,9 @@ BuildRequires:  extra-cmake-modules >= 5.34.0
 %patch4 -d kxmlgui -p1
 %patch5 -d kxmlgui -p1
 %patch6 -d ki18n -p1
-%patch7 -d upstream -p1
+%patch7 -d kdiagram -p1
 %patch8 -d upstream -p1
+%patch9 -d upstream -p1
 %patch10 -d upstream -p1
 %patch11 -d upstream -p1
 %patch12 -d upstream -p1
@@ -191,7 +194,7 @@ BuildRequires:  extra-cmake-modules >= 5.34.0
 %patch20 -d upstream -p1
 %patch21 -d upstream -p1
 
-%define build_kf5() cd %1 ; if [ ! -d build ] ; then mkdir build ; fi ; cd build ; if [ ! -e Makefile ] ; then CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_RPATH=/usr/lib/calligra-kf5 %{?2} .. ; fi ; make %{?_smp_mflags} install DESTDIR=%{_buildrootdir}/kf5 ; cd ../.. ;
+%define build_kf5() cd %1 ; if [ ! -d build ] ; then mkdir build ; fi ; cd build ; if [ ! -e Makefile ] ; then CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_RPATH=/usr/lib/calligra-kf5 -DBUILD_TESTING=OFF %{?2} .. ; fi ; make %{?_smp_mflags} install DESTDIR=%{_buildrootdir}/kf5 ; cd ../.. ;
 %build
 %build_kf5 kcodecs
 %build_kf5 kconfig
@@ -207,13 +210,14 @@ BuildRequires:  extra-cmake-modules >= 5.34.0
 %build_kf5 kservice
 %build_kf5 kio "-DKIOCORE_ONLY=True"
 %build_kf5 kxmlgui
+%build_kf5 kdiagram
 if [ ! -d upstream/build ] ; then mkdir upstream/build ; fi ; cd upstream/build
-CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr -DPRODUCTSET="PART_WORDS PART_STAGE PART_SHEETS PART_COMPONENTS FILTER_DOCX_TO_ODT FILTER_DOC_TO_ODT FILTER_RTF_TO_ODT FILTER_XLSX_TO_ODS FILTER_XLS_TO_SHEETS FILTER_PPTX_TO_ODP FILTER_PPT_TO_ODP PLUGIN_VARIABLES" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release ..
+CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr -DPRODUCTSET="PART_WORDS PART_STAGE PART_SHEETS PART_COMPONENTS FILTER_DOCX_TO_ODT FILTER_DOC_TO_ODT FILTER_RTF_TO_ODT FILTER_XLSX_TO_ODS FILTER_XLS_TO_SHEETS FILTER_PPTX_TO_ODP FILTER_PPT_TO_ODP PLUGIN_CHARTSHAPE PLUGIN_PATHSHAPES PLUGIN_VARIABLES" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release ..
 make %{?_smp_mflags}
 
 %install
 install -d %{buildroot}/usr/lib/calligra-kf5/
-cp -a %{_buildrootdir}/kf5/usr/lib/libKF5*.so.* %{buildroot}/usr/lib/calligra-kf5/
+cp -a %{_buildrootdir}/kf5/usr/lib/lib{KF5*,KChart}.so.* %{buildroot}/usr/lib/calligra-kf5/
 cd upstream/build
 make install DESTDIR=%{buildroot}
 install -d %{buildroot}/usr/lib/qt5
@@ -297,6 +301,8 @@ if [ -d %{buildroot}/usr/lib/plugins/calligrastage ] ; then mv %{buildroot}/usr/
 %dir %{_libdir}/qt5/plugins/calligra/shapes
 %{_libdir}/qt5/plugins/calligra/shapes/calligra_shape_text.so
 %{_libdir}/qt5/plugins/calligra/shapes/calligra_shape_picture.so
+%{_libdir}/qt5/plugins/calligra/shapes/calligra_shape_chart.so
+%{_libdir}/qt5/plugins/calligra/shapes/calligra_shape_paths.so
 
 %files words-core
 %defattr(-,root,root,-)
