@@ -11,6 +11,7 @@ BuildRequires:  bison
 BuildRequires:  flex
 BuildRequires:  boost-devel
 BuildRequires:  libeigen3-devel
+BuildRequires:  pkgconfig(icu-i18n)
 BuildRequires:  pkgconfig(Qt5OpenGL)
 BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  pkgconfig(shared-mime-info)
@@ -39,6 +40,8 @@ Patch18: calligra-cache.patch
 Patch19: calligra-qtdbus.patch
 Patch20: calligra-background.patch
 Patch21: calligra-invalidate-cache.patch
+
+Patch22: calligra-sheets-csvimport.patch
 
 %description
 %{summary}.
@@ -193,6 +196,7 @@ BuildRequires:  extra-cmake-modules >= 5.34.0
 %patch19 -d upstream -p1
 %patch20 -d upstream -p1
 %patch21 -d upstream -p1
+%patch22 -d upstream -p1
 
 %define build_kf5() cd %1 ; if [ ! -d build ] ; then mkdir build ; fi ; cd build ; if [ ! -e Makefile ] ; then CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_RPATH=/usr/lib/calligra-kf5 -DBUILD_TESTING=OFF %{?2} .. ; fi ; make %{?_smp_mflags} install DESTDIR=%{_buildrootdir}/kf5 ; cd ../.. ;
 %build
@@ -212,7 +216,7 @@ BuildRequires:  extra-cmake-modules >= 5.34.0
 %build_kf5 kxmlgui
 %build_kf5 kdiagram
 if [ ! -d upstream/build ] ; then mkdir upstream/build ; fi ; cd upstream/build
-CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr -DPRODUCTSET="PART_WORDS PART_STAGE PART_SHEETS PART_COMPONENTS FILTER_DOCX_TO_ODT FILTER_DOC_TO_ODT FILTER_RTF_TO_ODT FILTER_XLSX_TO_ODS FILTER_XLS_TO_SHEETS FILTER_PPTX_TO_ODP FILTER_PPT_TO_ODP PLUGIN_CHARTSHAPE PLUGIN_PATHSHAPES PLUGIN_VARIABLES" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release ..
+CMAKE_PREFIX_PATH=%{_buildrootdir}/kf5/usr cmake -DCMAKE_INSTALL_PREFIX=/usr -DPRODUCTSET="PART_WORDS PART_STAGE PART_SHEETS PART_COMPONENTS FILTER_DOCX_TO_ODT FILTER_DOC_TO_ODT FILTER_RTF_TO_ODT FILTER_XLSX_TO_ODS FILTER_XLS_TO_SHEETS FILTER_PPTX_TO_ODP FILTER_PPT_TO_ODP PLUGIN_CHARTSHAPE PLUGIN_PATHSHAPES PLUGIN_VARIABLES FILTER_CSV_TO_SHEETS" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release ..
 make %{?_smp_mflags}
 
 %install

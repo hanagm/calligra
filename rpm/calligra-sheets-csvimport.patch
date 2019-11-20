@@ -1,0 +1,648 @@
+From 3e38ef5dcece7432ab84d0c88981723274ee1cd0 Mon Sep 17 00:00:00 2001
+From: Mikhail Philippov <m.filippov@omprussia.ru>
+Date: Thu, 31 Oct 2019 12:27:33 +0300
+Subject: [PATCH] Handle CSV files
+
+---
+ filters/sheets/csv/CMakeLists.txt |   7 +-
+ filters/sheets/csv/csvimport.cc   |  41 ++-
+ filters/sheets/csv/csvparser.cc   | 435 ++++++++++++++++++++++++++++++
+ filters/sheets/csv/csvparser.h    |  44 +++
+ 4 files changed, 514 insertions(+), 13 deletions(-)
+ create mode 100644 filters/sheets/csv/csvparser.cc
+ create mode 100644 filters/sheets/csv/csvparser.h
+
+diff --git a/filters/sheets/csv/CMakeLists.txt b/filters/sheets/csv/CMakeLists.txt
+index 8034b51f2ff..ab1fae8f98a 100644
+--- a/filters/sheets/csv/CMakeLists.txt
++++ b/filters/sheets/csv/CMakeLists.txt
+@@ -1,16 +1,19 @@
++pkg_check_modules(ICU icu-i18n REQUIRED)
++
+ include_directories(
+     ${CMAKE_SOURCE_DIR}/sheets
+     ${KOMAIN_INCLUDES}
++    ${ICU_INCLUDE_DIRS}
+ )
+ 
+ if(SHOULD_BUILD_FILTER_CSV_TO_SHEETS)
+ 
+-set(csv2sheets_PART_SRCS csvimport.cc)
++set(csv2sheets_PART_SRCS csvimport.cc csvparser.cc)
+ 
+ add_library(calligra_filter_csv2sheets MODULE ${csv2sheets_PART_SRCS})
+ calligra_filter_desktop_to_json(calligra_filter_csv2sheets calligra_filter_csv2sheets.desktop)
+ 
+-target_link_libraries(calligra_filter_csv2sheets calligrasheetscommon kowidgets)
++target_link_libraries(calligra_filter_csv2sheets calligrasheetscommon kowidgets ${ICU_LIBRARIES})
+ 
+ install(TARGETS calligra_filter_csv2sheets DESTINATION ${PLUGIN_INSTALL_DIR}/calligra/formatfilters)
+ 
+diff --git a/filters/sheets/csv/csvimport.cc b/filters/sheets/csv/csvimport.cc
+index 89fb7162e00..b1da155c34a 100644
+--- a/filters/sheets/csv/csvimport.cc
++++ b/filters/sheets/csv/csvimport.cc
+@@ -30,8 +30,11 @@
+ #include <kmessagebox.h>
+ #include <kpluginfactory.h>
+ #include <klocale.h>
+-
++#if 0
+ #include <KoCsvImportDialog.h>
++#else
++#include "csvparser.h"
++#endif
+ #include <KoFilterChain.h>
+ #include <KoFilterManager.h>
+ 
+@@ -104,31 +107,38 @@ KoFilter::ConversionStatus CSVFilter::convert(const QByteArray& from, const QByt
+ 
+     QByteArray inputFile(in.readAll());
+     in.close();
+-
++#if 0
+     KoCsvImportDialog* dialog = new KoCsvImportDialog(0);
+     dialog->setData(inputFile);
+     dialog->setDecimalSymbol(ksdoc->map()->calculationSettings()->locale()->decimalSymbol());
+     dialog->setThousandsSeparator(ksdoc->map()->calculationSettings()->locale()->thousandsSeparator());
+     if (!m_chain->manager()->getBatchMode() && !dialog->exec())
+         return KoFilter::UserCancelled;
++#else
++    CSVParser * parser = new CSVParser();
++    parser->setData( inputFile );
++#endif
+     inputFile.resize(0);   // Release memory (input file content)
+ 
+     ElapsedTime t("Filling data into document");
+ 
+     Sheet *sheet = ksdoc->map()->addNewSheet();
+-
++#if 0
+     int numRows = dialog->rows();
+     int numCols = dialog->cols();
+-
++#else
++    int numRows = parser->getRows();
++    int numCols = parser->getColumns();
++#endif
+     if (numRows == 0)
+         ++numRows;
+-
++#if 0
+     // Initialize the decimal symbol and thousands separator to use for parsing.
+     const QString documentDecimalSymbol = ksdoc->map()->calculationSettings()->locale()->decimalSymbol();
+     const QString documentThousandsSeparator = ksdoc->map()->calculationSettings()->locale()->thousandsSeparator();
+     ksdoc->map()->calculationSettings()->locale()->setDecimalSymbol(dialog->decimalSymbol());
+     ksdoc->map()->calculationSettings()->locale()->setThousandsSeparator(dialog->thousandsSeparator());
+-
++#endif
+     int step = 100 / numRows * numCols;
+     int value = 0;
+ 
+@@ -147,15 +157,18 @@ KoFilter::ConversionStatus CSVFilter::convert(const QByteArray& from, const QByt
+         for (int col = 0; col < numCols; ++col) {
+             value += step;
+             emit sigProgress(value);
++#if 0
+             const QString text(dialog->text(row, col));
+-
++#else
++            const QString text( parser->text( row, col ) );
++#endif
+             // ### FIXME: how to calculate the width of numbers (as they might not be in the right format)
+             const double len = fm.width(text);
+             if (len > widths[col])
+                 widths[col] = len;
+ 
+             cell = Cell(sheet, col + 1, row + 1);
+-
++#if 0
+             switch (dialog->dataType(col)) {
+             case KoCsvImportDialog::Generic:
+             default: {
+@@ -186,6 +199,9 @@ KoFilter::ConversionStatus CSVFilter::convert(const QByteArray& from, const QByt
+                 break;
+             }
+             }
++#else
++            cell.parseUserInput(text);
++#endif
+         }
+     }
+ 
+@@ -195,15 +211,18 @@ KoFilter::ConversionStatus CSVFilter::convert(const QByteArray& from, const QByt
+         if (widths[i] > defaultWidth)
+             sheet->nonDefaultColumnFormat(i + 1)->setWidth(widths[i]);
+     }
+-
++#if 0
+     // Restore the document's decimal symbol and thousands separator.
+     ksdoc->map()->calculationSettings()->locale()->setDecimalSymbol(documentDecimalSymbol);
+     ksdoc->map()->calculationSettings()->locale()->setThousandsSeparator(documentThousandsSeparator);
+-
++#endif
+     emit sigProgress(100);
+     QGuiApplication::restoreOverrideCursor();
++#if 0
+     delete dialog;
+-
++#else
++    delete parser;
++#endif
+     return KoFilter::OK;
+ }
+ 
+diff --git a/filters/sheets/csv/csvparser.cc b/filters/sheets/csv/csvparser.cc
+new file mode 100644
+index 00000000000..f6b9d8f5da6
+--- /dev/null
++++ b/filters/sheets/csv/csvparser.cc
+@@ -0,0 +1,435 @@
++#include "csvparser.h"
++
++#include <QTextStream>
++#include <QSet>
++#include <QDebug>
++
++#include <unicode/ucsdet.h>
++
++CSVParser::CSVParser()
++    : startRow(0)
++    , endRow(0)
++    , startCol(0)
++    , endCol(0)
++    , textQuote('\"')
++{
++}
++
++
++void CSVParser::setData(const QByteArray &data)
++{
++    fillTable(data);
++}
++
++int CSVParser::getRows() const
++{
++    return endRow;
++}
++
++int CSVParser::getColumns() const
++{
++    return endCol;
++}
++
++QString CSVParser::text(int row, int col) const
++{
++    return m_dataList[row][col];
++}
++
++QTextCodec *CSVParser::detectCodec(const char *encodedCharacters, int length)
++{
++    QLocale locale;
++    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
++
++    UErrorCode error = U_ZERO_ERROR;
++    if (UCharsetDetector * const detector = ucsdet_open(&error)) {
++        ucsdet_setText(detector, encodedCharacters, length, &error);
++
++        int32_t count = 0;
++        if (U_FAILURE(error)) {
++            qWarning() << "Unable to detect text encoding" << u_errorName(error);
++        } else if (const UCharsetMatch ** const matches = ucsdet_detectAll(detector, &count, &error)) {
++            int bestConfidenceDetector = 0;
++            QTextCodec * bestMatchDetector = nullptr;
++
++            for (int32_t i = 0; i < count; ++i) {
++                if (QTextCodec *detectedCodec = QTextCodec::codecForName(ucsdet_getName(matches[i], &error))) {
++                    bestConfidenceDetector = ucsdet_getConfidence(matches[i], &error);
++                    bestMatchDetector = detectedCodec;
++
++                    break;
++                }
++            }
++
++            if (bestMatchDetector) {
++                QString localeName = locale.name();
++
++                int bestConfidenceLanguage = 0;
++                QTextCodec * bestMatchLanguage = nullptr;
++
++                for (int32_t i = 0; i < count; ++i) {
++                    if (localeName.left(localeName.indexOf("_")) == QString(ucsdet_getLanguage(matches[i], &error))) {
++                        if (QTextCodec * detectedCodec = QTextCodec::codecForName(ucsdet_getName(matches[i], &error))) {
++                            bestConfidenceLanguage = ucsdet_getConfidence(matches[i], &error) * 1.5;
++                            bestMatchLanguage = detectedCodec;
++
++                            break;
++                        }
++                    }
++                }
++
++                if (bestMatchLanguage) {
++                    codec = bestConfidenceDetector > bestConfidenceLanguage ? bestMatchDetector : bestMatchLanguage;
++                } else {
++                    codec = bestMatchDetector;
++                }
++            }
++        } else {
++            qWarning() << "Unable to detect text encoding" << u_errorName(error);
++        }
++        ucsdet_close(detector);
++    } else {
++        qWarning() << "Unable to detect text encoding" << u_errorName(error);
++    }
++
++    return codec;
++}
++
++QString CSVParser::detectDelimiter(const QString &text)
++{
++    QRegExp bracketsRegExp("\(.*?\)");
++    QRegExp squareBracketsRegExp("\[.*?\]");
++    QRegExp doubleQuotesRegExp("(\"([^\"]|\"\")*\")");
++    QRegExp quotesRegExp("(\'([^\']|\'\')*\')");
++
++    QString str = text;
++
++    str.remove(bracketsRegExp);
++    str.remove(squareBracketsRegExp);
++    str.remove(doubleQuotesRegExp);
++    str.remove(quotesRegExp);
++
++    QStringList lines = str.split("\n", QString::SkipEmptyParts);
++
++    QList<int> commaSeparatedColumns;
++    QList<int> semicolonSeparatedColumns;
++    QList<int> tabSeparatedColumns;
++
++    foreach(QString line, lines)
++    {
++        commaSeparatedColumns << line.count(",");
++        semicolonSeparatedColumns << line.count(";");
++        tabSeparatedColumns << line.count("\t");
++    }
++
++    int maxCommaNum = 0;
++    int maxSemicolonNum = 0;
++    int maxTabNum = 0;
++
++    for(int i = 0; i < lines.count(); i++) {
++        maxCommaNum = qMax(maxCommaNum, commaSeparatedColumns[i]);
++        maxSemicolonNum = qMax(maxSemicolonNum, semicolonSeparatedColumns[i]);
++        maxTabNum = qMax(maxTabNum, tabSeparatedColumns[i]);
++    }
++
++    int maximum = qMax(maxCommaNum, maxSemicolonNum);
++    maximum = qMax(maximum, maxTabNum);
++
++    if(maximum > 0)
++    {
++        if(maximum == maxCommaNum)
++        {
++            return ",";
++        }
++        else if(maximum == maxSemicolonNum)
++        {
++            return ";";
++        }
++        else if(maximum == maxTabNum)
++        {
++            return "\t";
++        }
++    }
++
++    return QString();
++}
++
++void CSVParser::fillTable(const QByteArray &data)
++{
++    int row, column;
++    bool lastCharDelimiter = false;
++
++    enum { Start, InQuotedField, MaybeQuotedFieldEnd, QuotedFieldEnd,
++           MaybeInNormalField, InNormalField } state = Start;
++
++    QChar x;
++    QString field;
++
++    int maxColumn = 1;
++    row = column = 1;
++
++    const int limitSize = qMin(data.size(), 5*1024*1024);
++    QTextCodec * codec = detectCodec(data.constData(), limitSize);
++
++    QTextStream inputStream(data, QIODevice::ReadOnly);
++    inputStream.setCodec( codec->name() );
++
++    QString contents = codec->toUnicode(data);
++    QString delimiter = detectDelimiter(contents);
++
++    QStringList contentsList = contents.split("\n", QString::SkipEmptyParts);
++    endRow = contentsList.count();
++
++    if(contentsList.isEmpty()) {
++        return;
++    }
++
++    QString firstString = contentsList.first();
++    endCol = firstString.split(delimiter, QString::SkipEmptyParts).count();
++
++    m_dataList.clear();
++
++    for(int i = 0; i < endRow; i++) {
++        QStringList colData;
++        for(int j = 0; j < endCol; j++) {
++            colData << QString();
++        }
++        m_dataList << colData;
++
++    }
++
++
++    int delimiterIndex = 0;
++    const int delimiterLength = 1;
++    bool ignoreDuplicates = false;
++
++    bool lastCharWasCr = false; // Last character was a Carriage Return
++
++    while (!inputStream.atEnd())
++    {
++        inputStream >> x; // read one char
++
++        // ### TODO: we should perhaps skip all other control characters
++        if ( x == '\r' )
++        {
++            // We have a Carriage Return, assume that its role is the one of a LineFeed
++            lastCharWasCr = true;
++            x = '\n'; // Replace by Line Feed
++        }
++        else if ( x == '\n' && lastCharWasCr )
++        {
++            // The end of line was already handled by the Carriage Return, so do nothing for this character
++            lastCharWasCr = false;
++            continue;
++        }
++        else if ( x == QChar( 0xc ) )
++        {
++            // We have a FormFeed, skip it
++            lastCharWasCr = false;
++            continue;
++        }
++        else
++        {
++            lastCharWasCr = false;
++        }
++
++        if ( column > maxColumn )
++          maxColumn = column;
++        switch (state)
++        {
++         case Start :
++            if (x == textQuote)
++            {
++                state = InQuotedField;
++            }
++            else if (delimiterIndex < delimiterLength && x == delimiter.at(delimiterIndex))
++            {
++                field += x;
++                delimiterIndex++;
++                if (field.right(delimiterIndex) == delimiter)
++                {
++                    if ((ignoreDuplicates == false) || (lastCharDelimiter == false))
++                        column += delimiterLength;
++                    lastCharDelimiter = true;
++                    field.clear();
++                    delimiterIndex = 0;
++                    state = Start;
++                }
++                else if (delimiterIndex >= delimiterLength)
++                    delimiterIndex = 0;
++            }
++            else if (x == '\n')
++            {
++                ++row;
++                column = 1;
++                if ( row > ( endRow - startRow ) && endRow >= 0 )
++                  break;
++            }
++            else
++            {
++                field += x;
++                state = MaybeInNormalField;
++            }
++            break;
++         case InQuotedField :
++            if (x == textQuote)
++            {
++                state = MaybeQuotedFieldEnd;
++            }
++            else if (x == '\n')
++            {
++                setText(row - startRow, column - startCol, field);
++                field.clear();
++
++                ++row;
++                column = 1;
++                if ( row > ( endRow - startRow ) && endRow >= 0 )
++                  break;
++
++                state = Start;
++            }
++            else
++            {
++                field += x;
++            }
++            break;
++         case MaybeQuotedFieldEnd :
++            if (x == textQuote)
++            {
++                field += x;
++                state = InQuotedField;
++            }
++            else if (x == '\n')
++            {
++                setText(row - startRow, column - startCol, field);
++                field.clear();
++                ++row;
++                column = 1;
++                if ( row > ( endRow - startRow ) && endRow >= 0 )
++                    break;
++                state = Start;
++            }
++            else if (delimiterIndex < delimiterLength && x == delimiter.at(delimiterIndex))
++            {
++                field += x;
++                delimiterIndex++;
++                if (field.right(delimiterIndex) == delimiter)
++                {
++                    setText(row - startRow, column - startCol, field.left(field.count()-delimiterIndex));
++                    field.clear();
++                    if ((ignoreDuplicates == false) || (lastCharDelimiter == false))
++                        column += delimiterLength;
++                    lastCharDelimiter = true;
++                    field.clear();
++                    delimiterIndex = 0;
++                }
++                else if (delimiterIndex >= delimiterLength)
++                    delimiterIndex = 0;
++                state = Start;
++            }
++            else
++            {
++                state = QuotedFieldEnd;
++            }
++            break;
++         case QuotedFieldEnd :
++            if (x == '\n')
++            {
++                setText(row - startRow, column - startCol, field);
++                field.clear();
++                ++row;
++                column = 1;
++                if ( row > ( endRow - startRow ) && endRow >= 0 )
++                    break;
++                state = Start;
++            }
++            else if (delimiterIndex < delimiterLength && x == delimiter.at(delimiterIndex))
++            {
++                field += x;
++                delimiterIndex++;
++                if (field.right(delimiterIndex) == delimiter)
++                {
++                    setText(row - startRow, column - startCol, field.left(field.count()-delimiterIndex));
++                    field.clear();
++                    if ((ignoreDuplicates == false) || (lastCharDelimiter == false))
++                        column += delimiterLength;
++                    lastCharDelimiter = true;
++                    field.clear();
++                    delimiterIndex = 0;
++                }
++                else if (delimiterIndex >= delimiterLength)
++                    delimiterIndex = 0;
++                state = Start;
++            }
++            else
++            {
++                state = QuotedFieldEnd;
++            }
++            break;
++         case MaybeInNormalField :
++            if (x == textQuote)
++            {
++                field.clear();
++                state = InQuotedField;
++                break;
++            }
++            state = InNormalField;
++         case InNormalField :
++            if (x == '\n')
++            {
++                setText(row - startRow, column - startCol, field);
++                field.clear();
++                ++row;
++                column = 1;
++                if ( row > ( endRow - startRow ) && endRow >= 0 )
++                    break;
++                state = Start;
++            }
++            else if (delimiterIndex < delimiterLength && x == delimiter.at(delimiterIndex))
++            {
++                field += x;
++                delimiterIndex++;
++                if (field.right(delimiterIndex) == delimiter)
++                {
++                    setText(row - startRow, column - startCol, field.left(field.count()-delimiterIndex));
++                    field.clear();
++                    if ((ignoreDuplicates == false) || (lastCharDelimiter == false))
++                        column += delimiterLength;
++                    lastCharDelimiter = true;
++                    field.clear();
++                    delimiterIndex = 0;
++                }
++                else if (delimiterIndex >= delimiterLength)
++                    delimiterIndex = 0;
++                state = Start;
++            }
++            else
++            {
++                field += x;
++            }
++        }
++        if (delimiter.isEmpty() || x != delimiter.at(0))
++          lastCharDelimiter = false;
++    }
++
++    if ( !field.isEmpty() )
++    {
++      // the last line of the file had not any line end
++      setText(row - startRow, column - startCol, field);
++      ++row;
++      field.clear();
++    }
++    if (row) row--;  // row is higher by 1, so reduce it
++
++}
++
++void CSVParser::setText(int row, int col, const QString &text)
++{
++    if (row < 1 || col < 1) // skipped by the user
++        return;
++
++    if ((row > (endRow - startRow) && endRow > 0) || (col > (endCol - startCol) && endCol > 0))
++      return;
++
++    m_dataList[row - 1][col - 1] = text;
++}
+diff --git a/filters/sheets/csv/csvparser.h b/filters/sheets/csv/csvparser.h
+new file mode 100644
+index 00000000000..062b3422dcd
+--- /dev/null
++++ b/filters/sheets/csv/csvparser.h
+@@ -0,0 +1,44 @@
++#ifndef CSVPARSER_H
++#define CSVPARSER_H
++
++#include <QTextCodec>
++#include <QString>
++#include <QStringList>
++#include <QMap>
++
++class CSVParser
++{
++public:
++    CSVParser();
++    ~CSVParser(){}
++
++    void setData(const QByteArray & data);
++
++    int getRows() const;
++
++    int getColumns() const;
++
++    QString text(int row, int col) const;
++
++private:
++    int rows;
++    int columns;
++
++    int startRow;
++    int endRow;
++    int startCol;
++    int endCol;
++    
++    QChar textQuote;
++
++    QList<QStringList> m_dataList;
++
++    QTextCodec *detectCodec(const char *encodedCharacters, int length);
++
++    QString detectDelimiter(const QString &text);
++
++    void fillTable(const QByteArray &data);
++    void setText(int row, int col, const QString & text);
++};
++
++#endif // CSVPARSER_H
+-- 
+2.17.1
+
