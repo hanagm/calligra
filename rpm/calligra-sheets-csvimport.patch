@@ -257,8 +257,8 @@ index 00000000000..f6b9d8f5da6
 +
 +QString CSVParser::detectDelimiter(const QString &text)
 +{
-+    QRegExp bracketsRegExp("\(.*?\)");
-+    QRegExp squareBracketsRegExp("\[.*?\]");
++    QRegExp bracketsRegExp("\\(.*?\\)");
++    QRegExp squareBracketsRegExp("\\[.*?\\]");
 +    QRegExp doubleQuotesRegExp("(\"([^\"]|\"\")*\")");
 +    QRegExp quotesRegExp("(\'([^\']|\'\')*\')");
 +
