@@ -1,7 +1,7 @@
-From 3bd0ee6215b699b1249d25e91da53026cb5c9420 Mon Sep 17 00:00:00 2001
+From ccb193205d30adb564315e3d9eaa51bdb7d16d35 Mon Sep 17 00:00:00 2001
 From: Andrew den Exter <andrew.den.exter@qinetic.com.au>
 Date: Mon, 13 May 2019 03:24:40 -0400
-Subject: [PATCH 01/12] Update the document cache when an image is reloaded.
+Subject: [PATCH 13/14] Update the document cache when an image is reloaded.
 
 ---
  sheets/part/CanvasItem.h    | 5 +++--
@@ -9,33 +9,33 @@ Subject: [PATCH 01/12] Update the document cache when an image is reloaded.
  2 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/sheets/part/CanvasItem.h b/sheets/part/CanvasItem.h
-index 9497292..feebf02 100644
+index e1a21dd6aab..3df62375b28 100644
 --- a/sheets/part/CanvasItem.h
 +++ b/sheets/part/CanvasItem.h
 @@ -121,6 +121,7 @@ public Q_SLOTS:
  Q_SIGNALS:
-     /* virtual */ void documentSizeChanged(const QSize&);
+     /* virtual */ void documentSizeChanged(const QSize&) override;
      void obscuredRangeChanged(const Calligra::Sheets::Sheet* sheet, const QSize&);
 +    void canvasUpdated();
  
  public:
-     virtual void mousePressEvent(QGraphicsSceneMouseEvent* _ev);
+     void mousePressEvent(QGraphicsSceneMouseEvent* _ev) override;
 @@ -170,8 +171,8 @@ public:
-     virtual void setVertScrollBarPos(qreal) {}
-     virtual void setHorizScrollBarPos(qreal) {}
+     void setVertScrollBarPos(qreal) override {}
+     void setHorizScrollBarPos(qreal) override {}
  
--    virtual void update() { QGraphicsWidget::update(); }
--    virtual void update(const QRectF& rect) { QGraphicsWidget::update(rect); }
-+    virtual void update() { QGraphicsWidget::update(); emit canvasUpdated(); }
-+    virtual void update(const QRectF& rect) { QGraphicsWidget::update(rect); emit canvasUpdated(); }
-     virtual Qt::LayoutDirection layoutDirection() const { return QGraphicsWidget::layoutDirection(); }
-     virtual QRectF rect() const { return QGraphicsWidget::rect(); }
-     virtual QSizeF size() const { return QGraphicsWidget::size(); }
+-    void update() override { QGraphicsWidget::update(); }
+-    void update(const QRectF& rect) override { QGraphicsWidget::update(rect); }
++    void update() override { QGraphicsWidget::update(); emit canvasUpdated(); }
++    void update(const QRectF& rect) override { QGraphicsWidget::update(rect); emit canvasUpdated(); }
+     Qt::LayoutDirection layoutDirection() const override { return QGraphicsWidget::layoutDirection(); }
+     QRectF rect() const override { return QGraphicsWidget::rect(); }
+     QSizeF size() const override { return QGraphicsWidget::size(); }
 diff --git a/words/part/KWCanvasItem.cpp b/words/part/KWCanvasItem.cpp
-index 18f5b40..0885708 100644
+index 247518b0f44..dc7e759a693 100644
 --- a/words/part/KWCanvasItem.cpp
 +++ b/words/part/KWCanvasItem.cpp
-@@ -157,7 +157,7 @@ void KWCanvasItem::updateInputMethodInfo()
+@@ -156,7 +156,7 @@ void KWCanvasItem::updateInputMethodInfo()
  
  void KWCanvasItem::updateCanvas(const QRectF &rc)
  {
@@ -45,5 +45,5 @@ index 18f5b40..0885708 100644
  }
  
 -- 
-1.8.3-rc3
+2.23.0
 

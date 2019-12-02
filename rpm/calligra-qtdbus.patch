@@ -1,7 +1,7 @@
-From 81a792a398170b1f71753b50293c21fe6ca4cda3 Mon Sep 17 00:00:00 2001
+From 1fe3254084ca02849d42a659cab7b0dce70a99c5 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:27:04 +0100
-Subject: [PATCH 09/10] Disable various dependencies on DBus.
+Subject: [PATCH 11/14] Disable various dependencies on DBus.
 
 ---
  libs/main/KoApplication.cpp | 12 ++++++------
@@ -41,7 +41,7 @@ index cea05f88796..e2af716dc9f 100644
  #ifdef Q_OS_MACX
      if ( QSysInfo::MacintoshVersion > QSysInfo::MV_10_8 )
 diff --git a/libs/main/KoDocument.cpp b/libs/main/KoDocument.cpp
-index 87de27cceb4..9a8cedff8bd 100644
+index c7740fdf786..48011060517 100644
 --- a/libs/main/KoDocument.cpp
 +++ b/libs/main/KoDocument.cpp
 @@ -71,10 +71,10 @@
@@ -78,7 +78,7 @@ index 87de27cceb4..9a8cedff8bd 100644
          QObject::connect(m_job, SIGNAL(result(KJob*)), document, SLOT(_k_slotJobFinished(KJob*)));
          QObject::connect(m_job, SIGNAL(mimetype(KIO::Job*,QString)), document, SLOT(_k_slotGotMimeType(KIO::Job*,QString)));
      }
-@@ -2642,9 +2642,9 @@ bool KoDocument::saveToUrl()
+@@ -2658,9 +2658,9 @@ bool KoDocument::saveToUrl()
              return false;
          }
          d->m_uploadJob = KIO::file_move( uploadUrl, d->m_url, -1, KIO::Overwrite );
@@ -137,5 +137,5 @@ index 02e43b81b48..c89bd409a4d 100644
  
  void View::preference()
 -- 
-2.20.1
+2.23.0
 
