@@ -1,7 +1,7 @@
-From 696a3fad8b78b3ef403e0616c9772fcee5c33a14 Mon Sep 17 00:00:00 2001
+From 66fd1e031f0cee0d199bfebb0a1d280ebcaaafcd Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:06:25 +0100
-Subject: [PATCH 02/10] Don't export HTML in stage.
+Subject: [PATCH 02/14] Don't export HTML in stage.
 
 ---
  stage/part/KPrHtmlExport.cpp          | 4 ++--
@@ -92,5 +92,5 @@ index 3e2bd7ae1ec..41151517af6 100644
  
  void KPrHtmlExportDialog::renderPreview()
 -- 
-2.20.1
+2.23.0
 

@@ -1,7 +1,7 @@
-From 20635033602eaa8b6607594558a885569aab9f1d Mon Sep 17 00:00:00 2001
+From 5e16ef3344e098ed8fc948f1bbb592a27abc920e Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:19:59 +0100
-Subject: [PATCH 05/10] Disable various dependencies in libs.
+Subject: [PATCH 05/14] Disable various dependencies in libs.
 
 ---
  libs/main/KoApplication.cpp         |  4 ++--
@@ -35,7 +35,7 @@ index a8416e0ad69..cea05f88796 100644
          KoPart *part = entry.createKoPart(&errorMsg);
          d->partList << part;
 diff --git a/libs/main/KoDocument.cpp b/libs/main/KoDocument.cpp
-index 4f06210ae05..87de27cceb4 100644
+index 2af8c9c216a..8ab1ca289d0 100644
 --- a/libs/main/KoDocument.cpp
 +++ b/libs/main/KoDocument.cpp
 @@ -25,7 +25,9 @@
@@ -100,7 +100,7 @@ index 4f06210ae05..87de27cceb4 100644
          KoXmlDocument versionInfo;
          KoOdfReadStore oasisStore(store);
 diff --git a/libs/main/KoMainWindow.cpp b/libs/main/KoMainWindow.cpp
-index 8f28680435c..c9bb39b8071 100644
+index 73720ada303..bc104819dcc 100644
 --- a/libs/main/KoMainWindow.cpp
 +++ b/libs/main/KoMainWindow.cpp
 @@ -45,7 +45,7 @@
@@ -122,7 +122,7 @@ index 8f28680435c..c9bb39b8071 100644
          } else {
              KRecentDocument::add(url.adjusted(QUrl::StripTrailingSlash));
 diff --git a/libs/main/KoRecentDocumentsPane.cpp b/libs/main/KoRecentDocumentsPane.cpp
-index b920ea3a303..e77e47bbf4f 100644
+index fe3eaa5878b..3c3081d97c8 100644
 --- a/libs/main/KoRecentDocumentsPane.cpp
 +++ b/libs/main/KoRecentDocumentsPane.cpp
 @@ -27,7 +27,9 @@
@@ -308,7 +308,7 @@ index ed9b5562a7f..3a05f7f6332 100644
  void NetAccess::slotData(KIO::Job *, const QByteArray &data)
  {
 diff --git a/libs/store/KoNetAccess.h b/libs/store/KoNetAccess.h
-index f3e5f14e34c..d00d33b7f0e 100644
+index 9d8cc4979a7..1c061d71e30 100644
 --- a/libs/store/KoNetAccess.h
 +++ b/libs/store/KoNetAccess.h
 @@ -474,7 +474,7 @@ private:
@@ -321,5 +321,5 @@ index f3e5f14e34c..d00d33b7f0e 100644
      void slotData(KIO::Job *, const QByteArray &);
      void slotRedirection(KIO::Job *, const QUrl &);
 -- 
-2.20.1
+2.23.0
 

@@ -1,17 +1,17 @@
-From 6596dbd5e5c25f7b5cefea4dbc2f0b2f30fef1c3 Mon Sep 17 00:00:00 2001
+From 4bb4d98c05e08f90ef9b1725bef60c64137f3206 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:27:28 +0100
-Subject: [PATCH 10/10] Reenable transparent background.
+Subject: [PATCH 12/14] Reenable transparent background.
 
 ---
  words/part/KWCanvasItem.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/words/part/KWCanvasItem.cpp b/words/part/KWCanvasItem.cpp
-index ce850e5e738..18f5b4040c5 100644
+index 1edd07e1764..247518b0f44 100644
 --- a/words/part/KWCanvasItem.cpp
 +++ b/words/part/KWCanvasItem.cpp
-@@ -163,7 +163,7 @@ void KWCanvasItem::updateCanvas(const QRectF &rc)
+@@ -162,7 +162,7 @@ void KWCanvasItem::updateCanvas(const QRectF &rc)
  
  void KWCanvasItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *)
  {
@@ -21,5 +21,5 @@ index ce850e5e738..18f5b4040c5 100644
  }
  
 -- 
-2.20.1
+2.23.0
 

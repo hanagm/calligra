@@ -1,8 +1,8 @@
-From a7e305bbfa9015b8a5ce2fbcaaf07d0a397d760f Mon Sep 17 00:00:00 2001
+From 57c986fbd6e28460549dd32cd60094bfb271714a Mon Sep 17 00:00:00 2001
 From: Pekka Vuorela <pekka.vuorela@jolla.com>
 Date: Thu, 23 May 2019 11:13:41 +0300
-Subject: [PATCH] Add error reporting signals for KoDocument and use it in
- components
+Subject: [PATCH 07/14] Add error reporting signals for KoDocument and use it
+ in components
 
 ---
  components/Document.cpp              | 16 +++++++++++++
@@ -64,7 +64,7 @@ index e29b871db55..d4267e6685d 100644
          connect(impl, &DocumentImpl::currentIndexChanged, q, &Document::currentIndexChanged);
          connect(impl, &DocumentImpl::requestViewUpdate, q, &Document::requestViewUpdate);
 diff --git a/components/Document.h b/components/Document.h
-index 1f5a005ea29..b350d7e437c 100644
+index b846e941bce..70608447ad6 100644
 --- a/components/Document.h
 +++ b/components/Document.h
 @@ -88,6 +88,8 @@ class Document : public QObject
@@ -75,7 +75,7 @@ index 1f5a005ea29..b350d7e437c 100644
 +
  public:
      explicit Document(QObject* parent = 0);
-     ~Document();
+     ~Document() override;
 @@ -114,6 +116,9 @@ public:
       */
      int indexCount() const;
@@ -95,7 +95,7 @@ index 1f5a005ea29..b350d7e437c 100644
      /**
       * Notify signal for property #currentIndex.
 diff --git a/components/impl/DocumentImpl.h b/components/impl/DocumentImpl.h
-index cddc31c07c5..75f7d64a52e 100644
+index 142d56ce284..de148e4491b 100644
 --- a/components/impl/DocumentImpl.h
 +++ b/components/impl/DocumentImpl.h
 @@ -68,6 +68,7 @@ Q_SIGNALS:
@@ -107,10 +107,10 @@ index cddc31c07c5..75f7d64a52e 100644
  protected:
      void setDocumentType(DocumentType::Type type);
 diff --git a/components/impl/PresentationImpl.cpp b/components/impl/PresentationImpl.cpp
-index 714740f367c..e6381b73881 100644
+index 3ca29fb24c2..8e896946a91 100644
 --- a/components/impl/PresentationImpl.cpp
 +++ b/components/impl/PresentationImpl.cpp
-@@ -164,6 +164,8 @@ bool PresentationImpl::load(const QUrl& url)
+@@ -166,6 +166,8 @@ bool PresentationImpl::load(const QUrl& url)
  
      d->part = new KPrPart{this};
      d->document = new KPrDocument{d->part};
@@ -120,10 +120,10 @@ index 714740f367c..e6381b73881 100644
      d->part->setDocument(d->document);
  
 diff --git a/components/impl/SpreadsheetImpl.cpp b/components/impl/SpreadsheetImpl.cpp
-index 9512918fe45..260f4975add 100644
+index 0ab71e1e8d2..9a8d4232353 100644
 --- a/components/impl/SpreadsheetImpl.cpp
 +++ b/components/impl/SpreadsheetImpl.cpp
-@@ -166,6 +166,8 @@ bool SpreadsheetImpl::load(const QUrl& url)
+@@ -168,6 +168,8 @@ bool SpreadsheetImpl::load(const QUrl& url)
      d->part = new Calligra::Sheets::Part{this};
      d->document = new Calligra::Sheets::Doc{d->part};
      setKoDocument(d->document);
@@ -133,10 +133,10 @@ index 9512918fe45..260f4975add 100644
  
      bool retval = d->document->openUrl(url);
 diff --git a/components/impl/TextDocumentImpl.cpp b/components/impl/TextDocumentImpl.cpp
-index 5dd7f881aff..6968ccd4746 100644
+index 63cd5a9b03a..c558d500788 100644
 --- a/components/impl/TextDocumentImpl.cpp
 +++ b/components/impl/TextDocumentImpl.cpp
-@@ -180,6 +180,8 @@ bool TextDocumentImpl::load(const QUrl& url)
+@@ -182,6 +182,8 @@ bool TextDocumentImpl::load(const QUrl& url)
  
      d->part = new KWPart{this};
      d->document = new KWDocument{d->part};
@@ -146,7 +146,7 @@ index 5dd7f881aff..6968ccd4746 100644
      d->part->setDocument(d->document);
  
 diff --git a/libs/main/KoDocument.cpp b/libs/main/KoDocument.cpp
-index 9a8cedff8bd..0c530106b3e 100644
+index 8ab1ca289d0..c7740fdf786 100644
 --- a/libs/main/KoDocument.cpp
 +++ b/libs/main/KoDocument.cpp
 @@ -160,7 +160,7 @@ public:
@@ -245,7 +245,7 @@ index 9a8cedff8bd..0c530106b3e 100644
  {
      d->profileStream = profilestream;
 diff --git a/libs/main/KoDocument.h b/libs/main/KoDocument.h
-index 36472c95a01..4d8cdd35cdf 100644
+index 1af2193d9fd..f2b04ddda42 100644
 --- a/libs/main/KoDocument.h
 +++ b/libs/main/KoDocument.h
 @@ -759,6 +759,7 @@ Q_SIGNALS:
@@ -266,5 +266,5 @@ index 36472c95a01..4d8cdd35cdf 100644
      bool oldLoadAndParse(KoStore *store, const QString& filename, KoXmlDocument& doc);
  private:
 -- 
-2.20.1
+2.23.0
 

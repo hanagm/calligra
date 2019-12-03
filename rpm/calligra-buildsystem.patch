@@ -1,7 +1,7 @@
-From dd282581767914695602585d5580615dbed28001 Mon Sep 17 00:00:00 2001
+From 0caea77821ff484ed0bd017242180d50a118b289 Mon Sep 17 00:00:00 2001
 From: Damien Caliste <dcaliste@free.fr>
 Date: Tue, 11 Dec 2018 13:13:49 +0100
-Subject: [PATCH 04/10] Disable various dependencies in build system.
+Subject: [PATCH 04/14] Disable various dependencies in build system.
 
 ---
  CMakeLists.txt                      | 29 +++++++++++++++--------------
@@ -19,7 +19,7 @@ Subject: [PATCH 04/10] Disable various dependencies in build system.
  12 files changed, 46 insertions(+), 39 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 81e2a5760ed..05137cd8984 100644
+index 273a0b45f3d..8c69e8e37fc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -202,6 +202,7 @@ include(MacroDesktopToJson)
@@ -79,10 +79,10 @@ index 81e2a5760ed..05137cd8984 100644
  
  # Qt5Declarative was removed in Qt 5.6.0 so search for it in a separate call
 diff --git a/karbon/CMakeLists.txt b/karbon/CMakeLists.txt
-index 98eae2b828d..909418d11e7 100644
+index 10b9498c658..2092058bbbe 100644
 --- a/karbon/CMakeLists.txt
 +++ b/karbon/CMakeLists.txt
-@@ -60,6 +60,9 @@ ecm_install_icons(ICONS
+@@ -61,6 +61,9 @@ ecm_install_icons(ICONS
      DESTINATION ${ICON_INSTALL_DIR}
  )
  
@@ -299,5 +299,5 @@ index 9bdc840fa65..700d80b154d 100644
       KPrPdfPrintJob.cpp
       KPrSlidesSorterDocumentModel.cpp
 -- 
-2.20.1
+2.23.0
 
