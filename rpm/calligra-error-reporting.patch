@@ -1,4 +1,4 @@
-From 57c986fbd6e28460549dd32cd60094bfb271714a Mon Sep 17 00:00:00 2001
+From e239414509c50c57ba6a40a5f1ea2643ac6e50ec Mon Sep 17 00:00:00 2001
 From: Pekka Vuorela <pekka.vuorela@jolla.com>
 Date: Thu, 23 May 2019 11:13:41 +0300
 Subject: [PATCH 07/14] Add error reporting signals for KoDocument and use it
@@ -16,18 +16,18 @@ Subject: [PATCH 07/14] Add error reporting signals for KoDocument and use it
  8 files changed, 58 insertions(+), 10 deletions(-)
 
 diff --git a/components/Document.cpp b/components/Document.cpp
-index e29b871db55..d4267e6685d 100644
+index 90b34609854..6a9356c64c4 100644
 --- a/components/Document.cpp
 +++ b/components/Document.cpp
-@@ -53,6 +53,7 @@ public:
-     QUrl source;
+@@ -54,6 +54,7 @@ public:
      DocumentImpl* impl;
      DocumentStatus::Status status;
+     bool readOnly;
 +    QString lastError;
  };
  
  Document::Document(QObject* parent)
-@@ -147,6 +148,17 @@ int Document::indexCount() const
+@@ -163,6 +164,17 @@ int Document::indexCount() const
      return 0;
  }
  
@@ -45,7 +45,7 @@ index e29b871db55..d4267e6685d 100644
  KoFindBase* Document::finder() const
  {
      if(d->impl) {
-@@ -232,6 +244,9 @@ void Document::Private::updateImpl()
+@@ -248,6 +260,9 @@ void Document::Private::updateImpl()
      delete impl;
      impl = nullptr;
  
@@ -55,7 +55,7 @@ index e29b871db55..d4267e6685d 100644
      auto type = Global::documentType(source);
      switch(type) {
      case DocumentType::TextDocument:
-@@ -248,6 +263,7 @@ void Document::Private::updateImpl()
+@@ -264,6 +279,7 @@ void Document::Private::updateImpl()
      }
  
      if(impl) {
@@ -64,10 +64,10 @@ index e29b871db55..d4267e6685d 100644
          connect(impl, &DocumentImpl::currentIndexChanged, q, &Document::currentIndexChanged);
          connect(impl, &DocumentImpl::requestViewUpdate, q, &Document::requestViewUpdate);
 diff --git a/components/Document.h b/components/Document.h
-index b846e941bce..70608447ad6 100644
+index b4bcf2270dd..259acfdd632 100644
 --- a/components/Document.h
 +++ b/components/Document.h
-@@ -88,6 +88,8 @@ class Document : public QObject
+@@ -89,6 +89,8 @@ class Document : public QObject
       */
      Q_PROPERTY(QObject* textEditor READ textEditor NOTIFY textEditorChanged)
  
@@ -76,7 +76,7 @@ index b846e941bce..70608447ad6 100644
  public:
      explicit Document(QObject* parent = 0);
      ~Document() override;
-@@ -114,6 +116,9 @@ public:
+@@ -118,6 +120,9 @@ public:
       */
      int indexCount() const;
  
@@ -86,7 +86,7 @@ index b846e941bce..70608447ad6 100644
      /**
       * \internal
       * These methods are used internally by the components and not exposed
-@@ -146,6 +151,7 @@ Q_SIGNALS:
+@@ -151,6 +156,7 @@ Q_SIGNALS:
      void documentSizeChanged();
      void documentTypeChanged();
      void textEditorChanged();
@@ -95,10 +95,10 @@ index b846e941bce..70608447ad6 100644
      /**
       * Notify signal for property #currentIndex.
 diff --git a/components/impl/DocumentImpl.h b/components/impl/DocumentImpl.h
-index 142d56ce284..de148e4491b 100644
+index 477e360e4d8..729e27b46dd 100644
 --- a/components/impl/DocumentImpl.h
 +++ b/components/impl/DocumentImpl.h
-@@ -68,6 +68,7 @@ Q_SIGNALS:
+@@ -70,6 +70,7 @@ Q_SIGNALS:
      void documentSizeChanged();
      void currentIndexChanged();
      void requestViewUpdate();
@@ -266,5 +266,5 @@ index 1af2193d9fd..f2b04ddda42 100644
      bool oldLoadAndParse(KoStore *store, const QString& filename, KoXmlDocument& doc);
  private:
 -- 
-2.23.0
+2.24.1
 
