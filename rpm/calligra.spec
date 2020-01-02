@@ -1,5 +1,5 @@
 Name:           calligra
-Version:        3.1.0
+Version:        3.1.0+git18
 Release:        1
 Summary:        Calligra suite
 License:        GPLv2
